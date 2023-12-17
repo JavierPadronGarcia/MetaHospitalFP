@@ -75,6 +75,10 @@ require("./routes/grade.routes")(app);
 require("./routes/color.routes")(app);
 require("./routes/workunitcolors.routes")(app);
 require("./routes/workunitgroup.routes")(app);
+require("./routes/studentschool.routes")(app);
+require("./routes/teacherschool.routes")(app);
+require("./routes/course.routes")(app);
+require("./routes/school.routes")(app);
 
 
 let server = null;
