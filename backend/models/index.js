@@ -27,6 +27,9 @@ db.grade = require('./grade.model.js')(sequelize, Sequelize);
 db.color = require('./color.model.js')(sequelize, Sequelize);
 db.workUnitColor = require('./workUnitColor.model.js')(sequelize, Sequelize);
 db.workUnitGroup = require('./workunitGroup.model.js')(sequelize, Sequelize);
+db.studentSchool = require('./studentschool.model.js')(sequelize, Sequelize);
+db.school = require('./school.model.js')(sequelize, Sequelize);
+db.teacherSchool = require('./teacherschool.model.js')(sequelize, Sequelize);
 
 //teacher - groups relations
 db.users.hasMany(db.teachercourse, { foreignKey: 'UserID' });
