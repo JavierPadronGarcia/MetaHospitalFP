@@ -30,6 +30,25 @@ db.workUnitGroup = require('./workunitGroup.model.js')(sequelize, Sequelize);
 db.studentSchool = require('./studentschool.model.js')(sequelize, Sequelize);
 db.school = require('./school.model.js')(sequelize, Sequelize);
 db.teacherSchool = require('./teacherschool.model.js')(sequelize, Sequelize);
+db.course = require('./course.model.js')(sequelize, Sequelize);
+
+//user, student-school, teacher-school relations
+
+db.school.belongsToMany(db.users, { through: db.studentSchool });
+db.school.belongsToMany(db.users, { through: db.teacherSchool });
+
+db.teacherSchool.belongsTo(db.school);
+db.teacherSchool.belongsTo(db.users);
+
+db.studentSchool.belongsTo(db.school);
+db.studentSchool.belongsTo(db.users);
+
+//user groups
+
+db.users.belongsToMany(db.school, { through: db.studentSchool });
+db.users.belongsToMany(db.school, { through: db.teacherSchool });
+
+db.users.belongsTo(db.school, { through: 'AdminSchoolId' })
 
 //teacher - groups relations
 db.users.hasMany(db.teachercourse, { foreignKey: 'UserID' });
