@@ -12,7 +12,7 @@ exports.getStudentsBySchool = async (req, res) => {
             },
             include: [{
                 model: User,
-                attributes: { exclude: ['password','discriminator'] },
+                attributes: { exclude: ['password','role'] },
             }],
         });
 
@@ -33,7 +33,7 @@ exports.addStudentToSchool = async (req, res) => {
         const user = await User.findOne({
             where: {
                 id: userId,
-                discriminator: 'estudiante'
+                role: 'estudiante'
             }
         });
 
