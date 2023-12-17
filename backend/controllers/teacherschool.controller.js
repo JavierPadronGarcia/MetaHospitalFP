@@ -12,7 +12,7 @@ exports.getTeachersBySchool = async (req, res) => {
             },
             include: [{
                 model: User,
-                attributes: { exclude: ['password','discriminator'] },
+                attributes: { exclude: ['password', 'role'] },
             }],
         });
 
@@ -29,11 +29,11 @@ exports.addTeacherToSchool = async (req, res) => {
     const schoolId = req.params.schoolId;
 
     try {
-        
+
         const user = await User.findOne({
             where: {
                 id: userId,
-                discriminator: 'profesor'
+                role: 'profesor'
             }
         });
 
@@ -60,9 +60,10 @@ exports.deleteTeacherFromSchool = async (req, res) => {
     try {
         await TeacherSchool.destroy({
             where: {
-            userId: userId,
-            schoolId: schoolId,
-        }});
+                userId: userId,
+                schoolId: schoolId,
+            }
+        });
 
     } catch (error) {
         console.error(error);
