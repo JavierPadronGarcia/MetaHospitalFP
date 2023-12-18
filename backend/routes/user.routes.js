@@ -35,6 +35,8 @@ module.exports = app => {
   //Sign in
   router.post('/signin', auth.signin);
 
+  router.post('/signinCode', auth.codeSignin);
+
   //get the role of the user authenticated
   router.post("/my-role", auth.isAuthenticated, auth.getRole);
 
