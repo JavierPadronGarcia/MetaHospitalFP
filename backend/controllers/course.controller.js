@@ -1,5 +1,5 @@
 const db = require("../models");
-const Course = db.Course;
+const Course = db.course;
 
 exports.create = (req, res) => {
     if (!req.body.name||!req.body.acronyms) {

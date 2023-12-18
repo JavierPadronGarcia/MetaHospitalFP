@@ -1,5 +1,5 @@
 const db = require("../models");
-const School = db.School;
+const School = db.school;
 
 exports.create = (req, res) => {
     if (!req.body.name) {

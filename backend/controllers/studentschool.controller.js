@@ -1,6 +1,6 @@
 const db = require("../models");
-const StudentSchool = db.StudentSchool;
-const User = db.User;
+const StudentSchool = db.studentSchool;
+const User = db.users;
 
 exports.getStudentsBySchool = async (req, res) => {
     const schoolId = req.params.schoolId;
