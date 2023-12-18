@@ -92,4 +92,7 @@ db.exercise.belongsTo(db.users, { foreignKey: 'UserID' })
 db.grade.belongsTo(db.item, { foreignKey: 'ItemID' });
 db.grade.belongsTo(db.exercise, { foreignKey: 'ExerciseID' });
 
+//course relations
+db.course.belongsTo(db.groups, { through: 'GroupId' });
+
 module.exports = db;
