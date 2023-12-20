@@ -50,7 +50,7 @@ db.users.belongsToMany(db.school, { through: db.teacherSchool });
 
 db.users.belongsTo(db.school, { through: 'AdminSchoolId' })
 
-//teacher - groups relations
+//teacher - groups relations 
 db.users.hasMany(db.teachercourse, { foreignKey: 'UserID' });
 db.groups.hasMany(db.teachercourse, { foreignKey: 'GroupID' });
 
