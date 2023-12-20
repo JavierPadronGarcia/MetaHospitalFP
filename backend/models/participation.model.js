@@ -7,12 +7,24 @@ module.exports = (sequelize, Sequelize) => {
     },
     ExerciseId: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     UserId: {
       type: Sequelize.INTEGER,
       allowNull: false
     },
+    FinalGrade: {
+      type: Sequelize.FLOAT,
+      allowNull: true
+    },
+    SubmittedAt: {
+      type: Sequelize.DATE,
+      allowNull: true
+    },
+    Role: {
+      type: Sequelize.STRING,
+      allowNull: true
+    }
   })
   return Participation;
 }

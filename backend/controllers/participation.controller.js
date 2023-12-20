@@ -3,15 +3,15 @@ const Participation = db.participation;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-  const { exerciseID, userID } = req.body;
+  const { exerciseId, userId } = req.body;
 
-  if (!exerciseID || !userID) {
+  if (!exerciseId || !userId) {
     return res.status(403).send({ message: "Please fill all fields" });
   }
 
   const newParticipation = {
-    ExerciseId: exerciseID,
-    UserId: userID,
+    ExerciseId: exerciseId,
+    UserId: userId,
   }
 
   Participation.create(newParticipation).then((data) => {
@@ -69,6 +69,33 @@ exports.update = (req, res) => {
         error: err.message || "Some error occurred while updating Participations"
       })
     })
+}
+
+exports.submitGrade = (req, res) => {
+  const { finalGrade, role, submittedTime, userId, exerciseId } = req.body;
+
+  Participation.findOne({
+    where: {
+      UserId: userId,
+      ExerciseId: exerciseId
+    },
+  }).then(participation => {
+    if (!participation) {
+      return res.status(404).send("No such participation found!");
+    }
+    participation.FinalGrade = finalGrade;
+    participation.Role = role;
+    participation.SubmittedAt = submittedTime;
+    participation.save();
+    res.send({
+      message: 'participation final grade added successfully',
+      data: participation
+    })
+  }).catch(err => {
+    return res.status(500).send({
+      error: err || "Error when trying to update the final grade!"
+    })
+  })
 }
 
 exports.delete = (req, res) => {

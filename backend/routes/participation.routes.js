@@ -13,9 +13,11 @@ module.exports = app => {
   // retrieve one participation by id
   router.get("/:id", auth.isAuthenticated, Participation.findOne);
 
+  router.put("/submitGrade", auth.isAuthenticated, Participation.submitGrade);
+
   //update one participation by id
   router.put("/:id", auth.isAuthenticated, Participation.update);
-
+  
   //delete one participation by id
   router.delete("/:id", auth.isAuthenticated, Participation.delete);
 
