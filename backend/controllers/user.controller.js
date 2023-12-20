@@ -223,6 +223,20 @@ exports.assignCode = async (req, res) => {
   })
 }
 
+exports.unAssignCode = async (req, res) => {
+  const userId = req.user.id;
+  User.findOne({ where: { id: userId } }).then(user => {
+    user.code = null;
+    user.codeExpirationDate = null;
+    user.save();
+    return res.send({ message: "expDate and code eliminated" });
+  }).catch(err => {
+    return res.status(500).send({
+      error: err.message || "Error unAssignnin the code"
+    })
+  })
+}
+
 exports.assignDirector = (req, res) => {
   const newDirector = req.params.id;
   const previousDirector = req.body.directorId;

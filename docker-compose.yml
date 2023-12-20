@@ -11,7 +11,7 @@ services:
     networks:
       - app-network
   api:
-    image: javier_metahospitalfp_api
+    image: metahospitalfp_api
     build: ./backend
     env_file:
       - ./backend/.env
@@ -23,21 +23,21 @@ services:
       - app-network
     depends_on:
       - db
-  # app:
-  #   image: javier_metahospitalfp_app
-  #   tty: true
-  #   build: ./frontend
-  #   env_file:
-  #     - ./frontend/.env
-  #   ports: 
-  #     - '12081:12081'
-  #   expose:
-  #     - '12081'
-  #   stdin_open: true
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - api
+  app:
+    image: metahospitalfp_app
+    tty: true
+    build: ./frontend
+    env_file:
+      - ./frontend/.env
+    ports: 
+      - '12081:12081'
+    expose:
+      - '12081'
+    stdin_open: true
+    networks:
+      - app-network
+    depends_on:
+      - api
 volumes:
   my-db:
     driver: local

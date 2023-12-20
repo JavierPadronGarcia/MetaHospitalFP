@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false
     },
-    ExerciseID: {
+    ParticipationID: {
       type: Sequelize.INTEGER,
       allowNull: false
     }

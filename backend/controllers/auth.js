@@ -32,6 +32,29 @@ exports.signin = (req, res) => {
   })
 }
 
+exports.codeSignin = (req, res) => {
+  const code = req.body.username;
+  
+  if (!code) {
+    return res.status(400).json({
+      error: true,
+      message: "Code required."
+    });
+  }
+
+  User.findOne({ where: { code: code } }).then(user => {
+    if (!user) {
+      return res.status(404).json({
+        error: true,
+        message: "User not found"
+      });
+    }
+    const token = utils.generateToken(user);
+    const userObj = utils.getCleanUser(user);
+    return res.json({ user: userObj, access_token: token })
+  })
+}
+
 exports.isAuthenticated = (req, res, next) => {
   var token = req.token;
   if (!token) {
