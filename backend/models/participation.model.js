@@ -1,22 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
-  const Grade = sequelize.define("grade", {
+  const Participation = sequelize.define("participation", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    value: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    ItemID: {
+    ExerciseId: {
       type: Sequelize.INTEGER,
       allowNull: false
     },
-    ParticipationID: {
+    UserId: {
       type: Sequelize.INTEGER,
       allowNull: false
-    }
+    },
   })
-  return Grade;
+  return Participation;
 }

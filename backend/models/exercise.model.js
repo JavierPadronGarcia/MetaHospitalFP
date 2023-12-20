@@ -17,10 +17,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false
     },
-    UserID: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    }
   })
   return Exercise;
 }

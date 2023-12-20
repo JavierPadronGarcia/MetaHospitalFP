@@ -11,10 +11,10 @@ exports.create = (req, res) => {
   const newExercise = {
     assigned: req.body.assigned,
     CaseID: req.body.CaseID,
-    UserID: req.body.UserID
+    finishDate: req.body.finishDate
   }
 
-  if (!newExercise.assigned || !newExercise.CaseID || !newExercise.UserID) {
+  if (!newExercise.assigned || !newExercise.CaseID) {
     return res.status(403).send({ message: "Please fill all fields" });
   }
 
@@ -27,37 +27,37 @@ exports.create = (req, res) => {
   });
 };
 
-exports.createSomeExercises = (req, res) => {
+// exports.createSomeExercises = (req, res) => {
 
-  const { CaseID, Students, assigned, finishDate } = req.body;
-  let newFinishDate = new Date(finishDate)
+//   const { CaseID, Students, assigned, finishDate } = req.body;
+//   let newFinishDate = new Date(finishDate)
 
-  const creationExercises = [];
-  const splittedStudents = Students.split(',');
-  if (newFinishDate instanceof Date && !isNaN(newFinishDate)) {
-    splittedStudents.forEach(studentId => {
-      creationExercises.push({
-        assigned: assigned,
-        CaseID: CaseID,
-        UserID: studentId,
-        finishDate: newFinishDate
-      })
-    });
-  } else {
-    splittedStudents.forEach(studentId => {
-      creationExercises.push({
-        assigned: assigned,
-        CaseID: CaseID,
-        UserID: studentId,
-        finishDate: null
-      })
-    });
-  }
+//   const creationExercises = [];
+//   const splittedStudents = Students.split(',');
+//   if (newFinishDate instanceof Date && !isNaN(newFinishDate)) {
+//     splittedStudents.forEach(studentId => {
+//       creationExercises.push({
+//         assigned: assigned,
+//         CaseID: CaseID,
+//         UserID: studentId,
+//         finishDate: newFinishDate
+//       })
+//     });
+//   } else {
+//     splittedStudents.forEach(studentId => {
+//       creationExercises.push({
+//         assigned: assigned,
+//         CaseID: CaseID,
+//         UserID: studentId,
+//         finishDate: null
+//       })
+//     });
+//   }
 
-  Exercise.bulkCreate(creationExercises).then(data => {
-    return res.send(data)
-  })
-}
+//   Exercise.bulkCreate(creationExercises).then(data => {
+//     return res.send(data)
+//   })
+// }
 
 exports.findAll = (req, res) => {
   Exercise.findAll().then(data => {

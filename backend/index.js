@@ -79,7 +79,7 @@ require("./routes/studentschool.routes")(app);
 require("./routes/teacherschool.routes")(app);
 require("./routes/course.routes")(app);
 require("./routes/school.routes")(app);
-
+require("./routes/participation.routes")(app);
 
 let server = null;
 
