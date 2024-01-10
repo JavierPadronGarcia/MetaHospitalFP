@@ -1,5 +1,7 @@
 const db = require("../models");
 const Participation = db.participation;
+const Grade = db.grade
+const Exercise = db.exercise;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -72,25 +74,71 @@ exports.update = (req, res) => {
 }
 
 exports.submitGrade = (req, res) => {
-  const { finalGrade, role, submittedTime, userId, exerciseId } = req.body;
+  const { finalGrade, role, submittedTime, userId, exerciseId, items } = req.body;
+  const handWash = [req.body.handWashInit, req.body.handWashEnd];
 
   Participation.findOne({
     where: {
       UserId: userId,
-      ExerciseId: exerciseId
     },
+    include: [
+      {
+        model: Exercise,
+        where: {
+          CaseID: exerciseId
+        }
+      }
+    ]
   }).then(participation => {
     if (!participation) {
       return res.status(404).send("No such participation found!");
     }
-    participation.FinalGrade = finalGrade;
-    participation.Role = role;
-    participation.SubmittedAt = submittedTime;
-    participation.save();
-    res.send({
-      message: 'participation final grade added successfully',
-      data: participation
-    })
+
+    if (items && items?.length !== 0
+      && handWash[0] !== undefined
+      && handWash[1] !== undefined) {
+      const participationId = participation.id;
+
+      participation.FinalGrade = finalGrade;
+      participation.Role = role;
+      participation.SubmittedAt = submittedTime;
+      participation.save();
+
+      const grades = [];
+      for (let i = 0; i < items.length; i++) {
+        grades.push({
+          grade: items[i].grade,
+          correct: items[i].correct,
+          ItemID: items[i].itemId,
+          ParticipationID: participationId
+        })
+      }
+
+      grades.push({
+        grade: handWash[0].grade,
+        correct: handWash[0].correct,
+        ItemID: handWash[0].itemId,
+        ParticipationID: participationId
+      }, {
+        grade: handWash[1].grade,
+        correct: handWash[1].correct,
+        ItemID: handWash[1].itemId,
+        ParticipationID: participationId
+      })
+
+      Grade.bulkCreate(grades).then(response => {
+        return res.send({
+          message: 'grades added successfully',
+        })
+      }).catch(err => {
+        return res.status(500).send(
+          "Error adding the grading information to the database!: " + err
+        )
+      })
+    } else {
+      return res.status(404).send("No item grades found")
+    }
+
   }).catch(err => {
     return res.status(500).send({
       error: err || "Error when trying to update the final grade!"

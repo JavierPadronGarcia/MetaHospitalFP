@@ -5,7 +5,11 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    value: {
+    correct: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false
+    },
+    grade: {
       type: Sequelize.STRING,
       allowNull: false
     },
