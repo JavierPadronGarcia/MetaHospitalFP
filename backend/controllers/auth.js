@@ -3,7 +3,7 @@ const utils = require("../utils");
 const bcrypt = require('bcryptjs');
 
 const db = require("../models");
-const User = db.users;
+const User = db.userAccounts;
 
 exports.signin = (req, res) => {
   const user = req.body.username;
@@ -34,7 +34,7 @@ exports.signin = (req, res) => {
 
 exports.codeSignin = (req, res) => {
   const code = req.body.username;
-  
+
   if (!code) {
     return res.status(400).json({
       error: true,
@@ -80,6 +80,7 @@ exports.isAuthenticated = (req, res, next) => {
       next();
     }).catch(err => {
       res.status(500).send({
+        error: true,
         message:
           err.message || "Some error occurred while retrieving users."
       })
