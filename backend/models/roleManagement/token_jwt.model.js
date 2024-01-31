@@ -1,17 +1,19 @@
 module.exports = (sequelize, Sequelize) => {
-  const Case = sequelize.define("case", {
+  const Token_jwt = sequelize.define('Token_jwt', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    WorkUnitId: {
+    UserID: {
       type: Sequelize.INTEGER,
     },
-    name: {
+    token: {
       type: Sequelize.STRING,
-      allowNull: false
     },
+    expireDate: {
+      type: Sequelize.STRING,
+    }
   })
-  return Case;
+  return Token_jwt
 }

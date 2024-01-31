@@ -1,12 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
   const WorkUnitColor = sequelize.define("workUnitColor", {
-    WorkUnitId: {
+    id: {
       type: Sequelize.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    ColorId: {
+    ColorID: {
       type: Sequelize.INTEGER,
-      primaryKey: true
+    },
+    WorkUnitGroupID: {
+      type: Sequelize.INTEGER
     },
     visibility: {
       type: Sequelize.BOOLEAN,

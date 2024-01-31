@@ -15,87 +15,85 @@ if (config.use_env_variable) {
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.groups = require("./group.model.js")(sequelize, Sequelize);
-db.users = require("./user.model.js")(sequelize, Sequelize);
-db.teachercourse = require("./teachercourse.model.js")(sequelize, Sequelize);
-db.groupEnrolement = require("./groupenrolement.model.js")(sequelize, Sequelize);
-db.workUnit = require('./workunit.model.js')(sequelize, Sequelize);
-db.case = require('./case.model.js')(sequelize, Sequelize);
-db.item = require('./item.model.js')(sequelize, Sequelize);
-db.exercise = require('./exercise.model.js')(sequelize, Sequelize);
-db.grade = require('./grade.model.js')(sequelize, Sequelize);
-db.color = require('./color.model.js')(sequelize, Sequelize);
-db.workUnitColor = require('./workUnitColor.model.js')(sequelize, Sequelize);
-db.workUnitGroup = require('./workunitGroup.model.js')(sequelize, Sequelize);
-db.studentSchool = require('./studentschool.model.js')(sequelize, Sequelize);
-db.school = require('./school.model.js')(sequelize, Sequelize);
-db.teacherSchool = require('./teacherschool.model.js')(sequelize, Sequelize);
-db.course = require('./course.model.js')(sequelize, Sequelize);
-db.participation = require('./participation.model.js')(sequelize, Sequelize)
+// Role Management
+db.application = require("./roleManagement/application.model.js")(sequelize, Sequelize);
+db.role = require('./roleManagement/role.model.js')(sequelize, Sequelize);
+db.userAccounts = require('./roleManagement/userAccounts.model.js')(sequelize, Sequelize);
+db.tokenJWT = require('./roleManagement/token_jwt.model.js')(sequelize, Sequelize);
+db.student = require('./roleManagement/student.model.js')(sequelize, Sequelize);
+db.teacher = require('./roleManagement/teacher.model.js')(sequelize, Sequelize);
+db.admin = require('./roleManagement/admin.model.js')(sequelize, Sequelize);
+db.userRole = require('./roleManagement/userRole.model.js')(sequelize, Sequelize);
 
-//user, student-school, teacher-school relations
+// Administration
+db.course = require('./administration/course.model.js')(sequelize, Sequelize);
+db.school = require('./administration/school.model.js')(sequelize, Sequelize);
+db.groups = require("./administration/group.model.js")(sequelize, Sequelize);
+db.studentSchool = require('./administration/studentschool.model.js')(sequelize, Sequelize);
+db.teacherSchool = require('./administration/teacherschool.model.js')(sequelize, Sequelize);
+db.studentGroup = require('./administration/studentgroup.model.js')(sequelize, Sequelize);
+db.teacherGroup = require('./administration/teachergroup.model.js')(sequelize, Sequelize);
 
-db.school.belongsToMany(db.users, { through: db.studentSchool });
-db.school.belongsToMany(db.users, { through: db.teacherSchool });
+// Educational
+db.workUnit = require('./educational/workunit.model.js')(sequelize, Sequelize);
+db.case = require('./educational/case.model.js')(sequelize, Sequelize);
+db.item = require('./educational/item.model.js')(sequelize, Sequelize);
+db.exercise = require('./educational/exercise.model.js')(sequelize, Sequelize);
+db.participation = require('./educational/participation.model.js')(sequelize, Sequelize);
+db.grade = require('./educational/grade.model.js')(sequelize, Sequelize);
+db.color = require('./educational/color.model.js')(sequelize, Sequelize);
+db.workUnitGroup = require('./educational/workunitGroup.model.js')(sequelize, Sequelize);
+db.workUnitColor = require('./educational/workUnitColor.model.js')(sequelize, Sequelize);
+db.itemPlayerRole = require('./educational/itemplayerrole.model.js')(sequelize, Sequelize);
+db.playerRole = require('./educational/playerrole.model.js')(sequelize, Sequelize);
 
-db.teacherSchool.belongsTo(db.school);
-db.teacherSchool.belongsTo(db.users);
+// Role Management Relations
+db.application.hasMany(db.userRole, { foreignKey: 'AppID' });
+db.role.hasMany(db.userRole, { foreignKey: 'RoleID' });
+db.userAccounts.hasMany(db.userRole, { foreignKey: 'UserID' });
+db.tokenJWT.belongsTo(db.userAccounts, { foreignKey: 'UserID' });
 
-db.studentSchool.belongsTo(db.school);
-db.studentSchool.belongsTo(db.users);
+db.userAccounts.hasOne(db.student, { foreignKey: 'id' });
+db.userAccounts.hasOne(db.teacher, { foreignKey: 'id' });
+db.userAccounts.hasOne(db.admin, { foreignKey: 'id' });
 
-//user groups
+// Administration relations
+db.student.hasMany(db.studentSchool, { foreignKey: 'StudentID' });
+db.student.hasMany(db.studentGroup, { foreignKey: 'StudentID' });
 
-db.users.belongsToMany(db.school, { through: db.studentSchool });
-db.users.belongsToMany(db.school, { through: db.teacherSchool });
+db.teacher.hasMany(db.teacherSchool, { foreignKey: 'TeacherID' });
+db.teacher.hasMany(db.teacherGroup, { foreignKey: 'TeacherID' });
 
-db.users.belongsTo(db.school, { through: 'AdminSchoolId' });
+db.school.hasMany(db.studentSchool, { foreignKey: 'SchoolID' });
+db.school.hasMany(db.teacherSchool, { foreignKey: 'SchoolID' });
 
-//teacher - groups relations 
-db.users.hasMany(db.teachercourse, { foreignKey: 'UserID' });
-db.groups.hasMany(db.teachercourse, { foreignKey: 'GroupID' });
+db.groups.hasMany(db.studentGroup, { foreignKey: 'GroupID' });
+db.groups.hasMany(db.teacherGroup, { foreignKey: 'GroupID' });
 
-db.teachercourse.belongsTo(db.users, { foreignKey: 'UserID' });
-db.teachercourse.belongsTo(db.groups, { foreignKey: 'GroupID' });
+db.school.hasMany(db.groups, { foreignKey: 'SchoolID' });
+db.course.hasMany(db.groups, { foreignKey: 'CourseID' });
 
-//student - groups relations
-db.users.hasMany(db.groupEnrolement, { foreignKey: 'UserID' });
-db.groups.hasMany(db.groupEnrolement, { foreignKey: 'GroupID' });
-
-db.groupEnrolement.belongsTo(db.users, { foreignKey: 'UserID' });
-db.groupEnrolement.belongsTo(db.groups, { foreignKey: 'GroupID' });
-
-//work unit - case relations
-db.workUnit.hasMany(db.case, { foreignKey: 'WorkUnitId' });
-
-//work unit - color relations
-db.workUnit.hasMany(db.workUnitColor, { foreignKey: 'WorkUnitId' });
-db.color.hasMany(db.workUnitColor, { foreignKey: 'ColorId' });
-
-db.workUnitColor.belongsTo(db.workUnit, { foreignKey: 'WorkUnitId' });
-db.workUnitColor.belongsTo(db.color, { foreignKey: 'ColorId' });
-
-//work unit - groups relations
+// Educational Relations
 db.groups.hasMany(db.workUnitGroup, { foreignKey: 'GroupID' });
+
 db.workUnit.hasMany(db.workUnitGroup, { foreignKey: 'WorkUnitID' });
+db.workUnit.hasMany(db.case, { foreignKey: 'WorkUnitID' });
 
-db.workUnitGroup.belongsTo(db.groups, { foreignKey: 'GroupID' });
-db.workUnitGroup.belongsTo(db.workUnit, { foreignKey: 'WorkUnitID' });
+db.color.hasMany(db.workUnitColor, { foreignKey: 'ColorID' });
+db.workUnitGroup.hasMany(db.workUnitColor, { foreignKey: 'WorkUnitGroupID' });
 
-//items - cases relations
-db.case.hasMany(db.item, { foreignKey: 'CaseId' });
+db.case.hasMany(db.item, { foreignKey: 'CaseID' });
 
-//exercises relations
-db.exercise.belongsTo(db.case, { foreignKey: 'CaseID' });
+db.item.hasMany(db.itemPlayerRole, { foreignKey: 'ItemID' });
+db.playerRole.hasMany(db.itemPlayerRole, { foreignKey: 'PlayerRoleID' });
 
-db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseId' });
-db.participation.belongsTo(db.users, { foreignKey: 'UserId' });
+db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
 
-//grade relations
-db.grade.belongsTo(db.item, { foreignKey: 'ItemID' });
-db.grade.belongsTo(db.participation, { foreignKey: 'ParticipationID' });
+db.case.hasMany(db.exercise, { foreignKey: 'CaseID' });
+db.exercise.hasMany(db.participation, { foreignKey: 'ExerciseID' });
 
-//groups relations
-db.groups.belongsTo(db.course, { through: 'CourseId' });
+db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
+
+db.student.hasMany(db.participation, { foreignKey: 'StudentID' });
 
 module.exports = db;

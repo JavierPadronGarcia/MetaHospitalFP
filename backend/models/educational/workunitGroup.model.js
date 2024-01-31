@@ -1,12 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
   const WorkUnitGroup = sequelize.define("workUnitGroup", {
-    GroupID: {
+    id: {
       type: Sequelize.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
+    },
+    GroupID: {
+      type: Sequelize.INTEGER
     },
     WorkUnitID: {
-      type: Sequelize.INTEGER,
-      primaryKey: true
+      type: Sequelize.INTEGER
     },
     visibility: {
       type: Sequelize.BOOLEAN,

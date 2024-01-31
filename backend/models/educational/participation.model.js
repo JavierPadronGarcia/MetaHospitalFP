@@ -5,11 +5,11 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    ExerciseId: {
+    ExerciseID: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    UserId: {
+    StudentID: {
       type: Sequelize.INTEGER,
       allowNull: false
     },

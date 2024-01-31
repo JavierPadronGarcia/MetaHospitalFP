@@ -1,17 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
-  const Item = sequelize.define("item", {
+  const ItemPlayerRole = sequelize.define('ItemPlayerRole', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    CaseId: {
+    ItemID: {
       type: Sequelize.INTEGER,
     },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
+    PlayerRoleID: {
+      type: Sequelize.INTEGER,
+    }
   })
-  return Item;
+  return ItemPlayerRole;
 }

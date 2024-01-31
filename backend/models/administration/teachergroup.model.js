@@ -1,11 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
-  const GroupEnrolement = sequelize.define("groupEnrolement", {
+  const TeacherGroup = sequelize.define("TeacherGroup", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    UserID: {
+    TeacherID: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
@@ -18,5 +18,5 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     }
   })
-  return GroupEnrolement;
+  return TeacherGroup;
 }

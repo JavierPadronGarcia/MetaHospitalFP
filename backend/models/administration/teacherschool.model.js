@@ -1,13 +1,14 @@
 module.exports = (sequelize, Sequelize) => {
-  const TeacherCourse = sequelize.define("TeacherCourse", {
-    UserID: {
+  const TeacherSchool = sequelize.define("TeacherSchool", {
+    TeacherID: {
       type: Sequelize.INTEGER,
       primaryKey: true,
     },
-    GroupID: {
+    SchoolID: {
       type: Sequelize.INTEGER,
       primaryKey: true,
     }
-  })
-  return TeacherCourse;
-}
+  });
+
+  return TeacherSchool;
+};
