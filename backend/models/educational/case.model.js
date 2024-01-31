@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
     WorkUnitID: {
       type: Sequelize.INTEGER,
     },
+    caseNumber: {
+      type: Sequelize.INTEGER
+    },
     name: {
       type: Sequelize.STRING,
       allowNull: false
