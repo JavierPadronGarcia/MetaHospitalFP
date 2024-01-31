@@ -62,23 +62,26 @@ app.use(function (req, res, next) {
 
 })
 
-require("./routes/user.routes")(app);
-require("./routes/group.routes")(app);
-require("./routes/teachercourse.routes")(app);
-require("./routes/groupenrolement.routes")(app);
-require("./routes/workunit.routes")(app);
-require("./routes/case.routes")(app);
-require("./routes/item.routes")(app);
-require("./routes/exercise.routes")(app);
-require("./routes/grade.routes")(app);
-require("./routes/color.routes")(app);
-require("./routes/workunitcolors.routes")(app);
-require("./routes/workunitgroup.routes")(app);
-require("./routes/studentschool.routes")(app);
-require("./routes/teacherschool.routes")(app);
-require("./routes/course.routes")(app);
-require("./routes/school.routes")(app);
-require("./routes/participation.routes")(app);
+require("./routes/roleManagement/user.routes")(app);
+require("./routes/administration/group.routes")(app);
+require("./routes/administration/teachercourse.routes")(app);
+require("./routes/administration/groupenrolement.routes")(app);
+require("./routes/educational/workunit.routes")(app);
+require("./routes/educational/case.routes")(app);
+require("./routes/educational/item.routes")(app);
+require("./routes/educational/exercise.routes")(app);
+require("./routes/educational/grade.routes")(app);
+require("./routes/educational/color.routes")(app);
+require("./routes/educational/workunitcolors.routes")(app);
+require("./routes/educational/workunitgroup.routes")(app);
+require("./routes/administration/studentschool.routes")(app);
+require("./routes/administration/teacherschool.routes")(app);
+require("./routes/administration/course.routes")(app);
+require("./routes/administration/school.routes")(app);
+require("./routes/educational/participation.routes")(app);
+
+require("./routes/roleManagement/role.routes")(app);
+require("./routes/roleManagement/application.routes")(app);
 
 let server = null;
 

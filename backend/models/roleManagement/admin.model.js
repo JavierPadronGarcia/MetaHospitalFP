@@ -3,7 +3,6 @@ module.exports = (sequelize, Sequelize) => {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
     },
     name: {
       type: Sequelize.STRING,
@@ -11,6 +10,10 @@ module.exports = (sequelize, Sequelize) => {
     age: {
       type: Sequelize.INTEGER
     },
+    SchoolID: {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    }
   })
   return Admin;
 }
