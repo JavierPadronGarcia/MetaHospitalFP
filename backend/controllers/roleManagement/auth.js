@@ -4,6 +4,9 @@ const bcrypt = require('bcryptjs');
 
 const db = require("../../models");
 const User = db.userAccounts;
+const UserRole = db.userRole;
+const Role = db.role;
+const TokenJWT = db.tokenJWT;
 
 exports.signin = (req, res) => {
   const user = req.body.username;
@@ -20,10 +23,25 @@ exports.signin = (req, res) => {
     const result = bcrypt.compareSync(pwd, data.password);
     if (!result) return res.status(401).send('Password not valid!');
 
-    const token = utils.generateToken(data);
+    getRole(data).then((role) => {
+      const userObj = utils.getCleanUser(data);
+      userObj.role = role.name;
 
-    const userObj = utils.getCleanUser(data);
-    return res.json({ user: userObj, access_token: token })
+      getToken(userObj).then(token => {
+        return res.json({ user: userObj, access_token: token })
+      }).catch(err => {
+        res.status(500).send({
+          error: true,
+          message: 'Error creating a new token for the user, details: ' + err.message
+        })
+      });
+
+    }).catch(err => {
+      return res.status(500).send({
+        error: true,
+        message: 'Error getting the role of the user, details: ' + err.message
+      })
+    });
   }).catch(err => {
     res.status(500).send({
       message:
@@ -49,9 +67,26 @@ exports.codeSignin = (req, res) => {
         message: "User not found"
       });
     }
-    const token = utils.generateToken(user);
-    const userObj = utils.getCleanUser(user);
-    return res.json({ user: userObj, access_token: token })
+
+    getRole(user).then(role => {
+      const userObj = utils.getCleanUser(user);
+      userObj.role = role.name;
+
+      getToken(userObj).then(token => {
+        return res.json({ user: userObj, access_token: token })
+      }).catch(err => {
+        res.status(500).send({
+          error: true,
+          message: 'Error creating a new token for the user, details: ' + err.message
+        })
+      });
+
+    }).catch(err => {
+      return res.status(500).send({
+        error: true,
+        message: 'Error getting the role of the user, details: ' + err.message
+      })
+    })
   })
 }
 
@@ -96,4 +131,48 @@ exports.getRole = (req, res) => {
     error: true,
     message: "User not found"
   })
+}
+
+
+async function getRole(user) {
+  const response = await Role.findOne({
+    include: {
+      model: UserRole,
+      where: {
+        UserID: user.id
+      }
+    }
+  })
+  return response;
+}
+
+async function getToken(user) {
+  try {
+    let tokenInfo = await TokenJWT.findOne({ where: { UserID: user.id } });
+
+    if (!tokenInfo) { // no token found
+      tokenInfo = utils.generateToken(user);
+      await TokenJWT.create({
+        UserID: user.id,
+        token: tokenInfo.token,
+        expireDate: tokenInfo.expireDate
+      });
+    } else if (tokenInfo.expireDate < Date.now()  //token expired or expires in less than two hours
+      || (tokenInfo.expireDate - Date.now() < 2 * 60 * 60 * 1000)) {
+      const tokenId = tokenInfo.id;
+      tokenInfo = utils.generateToken(user);
+
+      await TokenJWT.update({
+        UserID: user.id,
+        token: tokenInfo.token,
+        expireDate: tokenInfo.expireDate
+      }, {
+        where: { id: tokenId }
+      });
+    }
+
+    return tokenInfo.token;
+  } catch (err) {
+    throw err;
+  }
 }

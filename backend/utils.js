@@ -10,9 +10,13 @@ function generateToken(user) {
     role: user.role
   }
 
-  return jwt.sign(u, process.env.JWT_SECRET, {
+  const token = jwt.sign(u, process.env.JWT_SECRET, {
     expiresIn: 60 * 60 * 24  //expires in 24 hours
-  })
+  });
+
+  const expireDate = new Date(new Date().getTime() + (60 * 60 * 1000 * 24));
+
+  return { token: token, expireDate: expireDate };
 }
 
 function getCleanUser(user) {

@@ -28,3 +28,9 @@ exports.create = (req, res) => {
     })
   });
 }
+
+exports.getAll = (req, res) => {
+  Admin.findAll().then(data => {
+    return res.send(data);
+  })
+}

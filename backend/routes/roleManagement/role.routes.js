@@ -5,7 +5,7 @@ module.exports = app => {
   var router = require("express").Router();
 
   // create a role
-  router.post("/", auth.isAuthenticated, Role.create);
+  router.post("/", Role.create);
 
   // delete a role
   router.delete("/:id", auth.isAuthenticated, Role.delete);

@@ -7,16 +7,15 @@ module.exports = (sequelize, Sequelize) => {
     },
     username: {
       type: Sequelize.STRING,
+      unique: true
     },
     password: {
       type: Sequelize.STRING,
     },
-    email: {
-      type: Sequelize.STRING
-    },
     code: {
       type: Sequelize.STRING,
       allowNull: true,
+      unique: true
     },
     codeExpirationDate: {
       type: Sequelize.DATE,

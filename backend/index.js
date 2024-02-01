@@ -82,6 +82,7 @@ require("./routes/educational/participation.routes")(app);
 
 require("./routes/roleManagement/role.routes")(app);
 require("./routes/roleManagement/application.routes")(app);
+require("./routes/roleManagement/admin.routes")(app);
 
 let server = null;
 

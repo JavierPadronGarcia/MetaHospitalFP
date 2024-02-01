@@ -5,7 +5,7 @@ module.exports = app => {
   var router = require("express").Router();
 
   //create a new application
-  router.post("/", auth.isAuthenticated, applications.create);
+  router.post("/", applications.create);
 
-  app.use('/api/applications', auth.isAuthenticated, router);
+  app.use('/api/applications', router);
 };

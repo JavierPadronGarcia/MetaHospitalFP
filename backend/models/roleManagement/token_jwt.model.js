@@ -9,10 +9,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
     },
     token: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
     },
     expireDate: {
-      type: Sequelize.STRING,
+      type: Sequelize.DATE,
     }
   })
   return Token_jwt

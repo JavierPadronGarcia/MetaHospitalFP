@@ -20,13 +20,13 @@ module.exports = app => {
   // // Update the image in a user
   // router.put("/image", upload.single('file'), auth.isAuthenticated, users.updateWithImage);
 
-  // Update a User with id
-  router.put("/:id", auth.isAuthenticated, users.update);
-
   // Generate uuid and assign to the user with the id
   router.put("/assignCode", auth.isAuthenticated, users.assignCode);
 
   router.put("/unassignCode", auth.isAuthenticated, users.unAssignCode);
+
+  // Update a User with id
+  router.put("/:id", auth.isAuthenticated, users.update);
 
   // // Assign a user to be Director
   // router.put("/assignDirector/:id", auth.isAuthenticated, users.assignDirector);
@@ -38,9 +38,6 @@ module.exports = app => {
   router.post('/signin', auth.signin);
 
   router.post('/signinCode', auth.codeSignin);
-
-  //get the role of the user authenticated
-  router.post("/my-role", auth.isAuthenticated, auth.getRole);
 
   app.use('/api/users', router);
 }

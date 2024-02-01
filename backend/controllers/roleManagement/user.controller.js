@@ -31,7 +31,7 @@ exports.create = (req, res) => {
       const userObj = utils.getCleanUser(data);
       Role.findOne({ where: { name: req.body.role } }).then(role => {
         if (role) {
-          userObj.role = role;
+          userObj.role = role.name;
           return res.json({ user: userObj, access_token: token });
         }
         return res.status(404).send({
@@ -57,22 +57,27 @@ exports.create = (req, res) => {
             const userObj = utils.getCleanUser(data);
             userObj.role = role.name;
             return res.json({ user: userObj, access_token: token })
+          }).catch(err => {
+            return res.status(500).send({
+              error: true,
+              message: 'There was an error creating the relation of the roles'
+            })
+          });
+        } else {
+          return res.status(404).send({
+            error: true,
+            mesasge: 'The role was not found'
           });
         }
-
-        return res.status(404).send({
-          error: true,
-          mesasge: 'The role was not found'
-        });
       });
     }).catch(err => {
-      res.status(500).send({
+      return res.status(500).send({
         message:
           err.message || "Some error occurred while creating the User."
       })
     })
   }).catch(err => {
-    res.status(500).send({
+    return res.status(500).send({
       message:
         err.message || "Error retrieving existing users with that username"
     })
@@ -131,7 +136,8 @@ exports.update = (req, res) => {
       username: req.body.username || data.username,
       password: data.password,
       code: data.code,
-      codeExpirationDate: data.codeExpirationDate
+      codeExpirationDate: data.codeExpirationDate,
+      filename: data.filename
     }
 
     User.update(user, { where: { id: id } }).then(response => {
@@ -257,6 +263,21 @@ exports.unAssignCode = async (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
+  User.findByPk(id).then(user => {
+    if (user.filename != '') {
+      const imagePath = path.join(__dirname, '../public/images', user.filename);
+      fs.unlink(imagePath, err => {
+        if (err) {
+          return res.status(500).send({ message: "There was an error deleting the image" })
+        }
+      })
+    }
+  }).catch(err => {
+    return res.status(500).send({
+      message: err.message || "Could not find the user to delete"
+    });
+  })
+
   User.destroy({ where: { id: id } }).then(num => {
     if (num === 1) {
       return res.send({
@@ -289,41 +310,41 @@ exports.delete = (req, res) => {
 //   });
 // })
 
-// exports.updateWithImage = (req, res) => {
-//   const userDecoded = utils.decodeToken(req.headers['authorization']);
-//   const previousImage = req.body.previousImage;
-//   const newUsername = req.body.newUsername;
+exports.updateWithImage = (req, res) => {
+  const userDecoded = utils.decodeToken(req.headers['authorization']);
+  const previousImage = req.body.previousImage;
+  const newUsername = req.body.newUsername;
 
-//   const updatedUser = {
-//     id: userDecoded.id,
-//     username: newUsername || userDecoded.username,
-//     password: userDecoded.password,
-//     role: userDecoded.role,
-//     filename: req.file ? req.file.filename : null
-//   }
+  const updatedUser = {
+    id: userDecoded.id,
+    username: newUsername || userDecoded.username,
+    password: userDecoded.password,
+    role: userDecoded.role,
+    filename: req.file ? req.file.filename : null
+  }
 
-//   if (previousImage !== '') {
-//     const previousImagePath = path.join(__dirname, '../public/images', previousImage);
+  if (previousImage !== '') {
+    const previousImagePath = path.join(__dirname, '../public/images', previousImage);
 
-//     fs.unlink(previousImagePath, err => {
-//       if (err) {
-//         return res.status(500).send({ message: "There was an error deleting the previous image" })
-//       }
-//     })
-//   }
+    fs.unlink(previousImagePath, err => {
+      if (err) {
+        return res.status(500).send({ message: "There was an error deleting the previous image" })
+      }
+    })
+  }
 
-//   User.update(updatedUser, { where: { id: updatedUser.id } }).then(num => {
-//     if (num == 1) {
-//       return res.send({
-//         message: "User was updated successfully."
-//       })
-//     }
-//     return res.status(500).send({
-//       message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
-//     })
-//   }).catch(err => {
-//     res.status(500).send({
-//       message: err.message || "Error updating User with id=" + id
-//     });
-//   })
-// }
+  User.update(updatedUser, { where: { id: updatedUser.id } }).then(num => {
+    if (num == 1) {
+      return res.send({
+        message: "User was updated successfully."
+      })
+    }
+    return res.status(500).send({
+      message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+    })
+  }).catch(err => {
+    res.status(500).send({
+      message: err.message || "Error updating User with id=" + id
+    });
+  })
+}
