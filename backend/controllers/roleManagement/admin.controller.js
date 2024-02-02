@@ -20,7 +20,7 @@ exports.create = (req, res) => {
   }
 
   Admin.create(newAdmin).then(data => {
-    return res.send(data);
+    return res.send('Admin created successfully');
   }).catch(err => {
     return res.status(500).send({
       error: true,

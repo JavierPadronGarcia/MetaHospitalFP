@@ -7,9 +7,12 @@ const utils = require("../../utils");
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path')
+const teacherController = require('./teacher.controller');
+const studentController = require('./student.controller');
+const adminController = require('./admin.controller');
 
 //Create and Save a new User
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
   if (!req.body.username || !req.body.password || !req.body.role) {
     return res.status(400).send({
@@ -22,66 +25,52 @@ exports.create = (req, res) => {
     password: req.body.password,
   }
 
-  User.findOne({ where: { username: user.username } }).then(data => {
-    if (data) {
-      const result = bcrypt.compareSync(user.password, data.password);
-      if (!result) return res.status(401).send('Password not valid!');
-      const token = utils.generateToken(data);
+  const data = await User.findOne({ where: { username: user.username } });
 
-      const userObj = utils.getCleanUser(data);
-      Role.findOne({ where: { name: req.body.role } }).then(role => {
-        if (role) {
-          userObj.role = role.name;
-          return res.json({ user: userObj, access_token: token });
-        }
-        return res.status(404).send({
-          error: true,
-          message: 'The role was not found'
-        });
-      });
+  // USER ALREADY EXISTS
+  if (data) {
+    return res.status(404).send({
+      error: true,
+      message: 'The user already exists'
+    });
+  }
+
+  user.password = bcrypt.hashSync(req.body.password);
+
+  const createdUser = await User.create(user);
+
+  const role = await Role.findOne({ where: { name: req.body.role } });
+
+  if (role) {
+    const userRole = {
+      UserID: createdUser.id,
+      AppID: 1,
+      RoleID: role.id
     }
+    await UserRole.create(userRole);
+    
+    const userObj = utils.getCleanUser(createdUser);
+    userObj.role = role.name;
 
-    user.password = bcrypt.hashSync(req.body.password);
+    req.body.userId = userObj.id;
 
-    User.create(user).then(data => {
-      Role.findOne({ where: { name: req.body.role } }).then(role => {
-
-        if (role) {
-          const userRole = {
-            UserID: data.id,
-            AppID: 1,
-            RoleID: role.id
-          }
-          UserRole.create(userRole).then(userRole => {
-            const token = utils.generateToken(data);
-            const userObj = utils.getCleanUser(data);
-            userObj.role = role.name;
-            return res.json({ user: userObj, access_token: token })
-          }).catch(err => {
-            return res.status(500).send({
-              error: true,
-              message: 'There was an error creating the relation of the roles'
-            })
-          });
-        } else {
-          return res.status(404).send({
-            error: true,
-            mesasge: 'The role was not found'
-          });
-        }
-      });
-    }).catch(err => {
-      return res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the User."
-      })
-    })
-  }).catch(err => {
-    return res.status(500).send({
-      message:
-        err.message || "Error retrieving existing users with that username"
-    })
-  })
+    switch (userObj.role) {
+      case 'admin':
+        await adminController.create(req, res);
+        break;
+      case 'teacher':
+        await teacherController.create(req, res);
+        break;
+      case 'student':
+        await studentController.create(req, res);
+        break;
+    }
+  } else {
+    return res.status(404).send({
+      error: true,
+      mesasge: 'The role was not found'
+    });
+  }
 }
 
 // exports.findAllDirectors = (req, res) => {
