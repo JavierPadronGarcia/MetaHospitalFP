@@ -1,8 +1,14 @@
 const userController = require('../controllers/user.controller');
+const messageController = require('../controllers/messages.controller');
 
 module.exports = webSocketServer => {
 
   const groupSockets = {};
+
+  const GET_ALL_MESSAGES = 'getAllMessages';
+  const CHAT_MESSAGE = 'chatMessage';
+  const CONECTED_USERS_COUNT = 'connectedUsersCount';
+  const GET_LAST_MESSAGES = 'getLastMessages';
 
   webSocketServer.on('connection', (ws, incoming_request) => {
     const url = new URLSearchParams(incoming_request.url);
@@ -19,25 +25,48 @@ module.exports = webSocketServer => {
 
     sendConnectedUsersCount(groupId);
 
-    userController.getUserById(userId).then(user => {
-      sendMessage(groupId, JSON.stringify({ type: 'userConnected', user }));
-    });
-
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message);
-      if (parsedMessage.type === 'chatMessage') {
+
+      if (parsedMessage.type === CHAT_MESSAGE) {
+        console.log(parsedMessage);
         userController.getUserById(parsedMessage.userId).then(user => {
-          sendMessage(groupId, JSON.stringify({ type: 'chatMessage', user: user, message: parsedMessage.message }));
+          messageController.create(groupId, user.id, user.username, parsedMessage.message).then(response => {
+
+            const message = {
+              type: CHAT_MESSAGE,
+              GroupID: groupId,
+              createdAt: response.createdAt,
+              updatedAt: response.updatedAt,
+              id: response.id,
+              username: user.username,
+              message: response.message,
+            }
+
+            sendMessage(groupId, JSON.stringify(message));
+          }).catch(err => {
+            console.log(err);
+          });
         });
       }
+
+      if (parsedMessage.type === GET_ALL_MESSAGES) {
+        messageController.getAllMessagesInGroup(groupId).then(response => {
+          userRef.ws.send(JSON.stringify({ type: GET_ALL_MESSAGES, messages: JSON.stringify(response) }));
+        });
+      }
+
+      if (parsedMessage.type === GET_LAST_MESSAGES) {
+        messageController.getLastMessagesInGroup(groupId, parsedMessage.lastId).then(response => {
+          userRef.ws.send(JSON.stringify({ type: GET_LAST_MESSAGES, messages: JSON.stringify(response) }));
+        })
+      }
+
     });
 
     ws.on('close', () => {
       groupSockets[groupId] = groupSockets[groupId].filter(user => user.ws !== ws);
       sendConnectedUsersCount(groupId);
-      userController.getUserById(userId).then(user => {
-        sendMessage(groupId, JSON.stringify({ type: 'userDisconnected', user }));
-      });
     });
   });
 
@@ -51,7 +80,7 @@ module.exports = webSocketServer => {
 
   function sendConnectedUsersCount(groupId) {
     const count = groupSockets[groupId] ? groupSockets[groupId].length : 0;
-    const message = JSON.stringify({ type: 'connectedUsersCount', count });
+    const message = JSON.stringify({ type: CONECTED_USERS_COUNT, count });
     sendMessage(groupId, message);
   }
 }

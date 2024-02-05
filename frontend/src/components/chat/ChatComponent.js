@@ -12,6 +12,11 @@ function ChatComponent() {
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [messageField, setMessageField] = useState('');
 
+  const CHAT_MESSAGE = 'chatMessage';
+  const CONNECTED_USERS_COUNT = 'connectedUsersCount';
+  const GET_ALL_MESSAGES = 'getAllMessages';
+  const GET_LAST_MESSAGE = 'getLastMessages';
+
   const ws = useRef();
 
   useEffect(() => {
@@ -19,23 +24,38 @@ function ChatComponent() {
     ws.current = new WebSocket(SERVER_URL);
 
     ws.current.onopen = () => {
-      console.log('Connection opened')
+
+      const messages = JSON.parse(localStorage.getItem('chatMessages'));
+
+      if (messages && messages.length !== 0) {
+        updateMessages(messages[messages.length - 1].id);
+        // setChatMessages(messages);
+      } else {
+        getAllMessages();
+      }
+
+      console.log('Connection opened');
     }
 
     ws.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      if (message.type === 'chatMessage') {
-        setChatMessages(prevMessages => [
-          ...prevMessages,
-          { user: message.user.username, text: message.message }
-        ]);
-      } else if (message.type === 'connectedUsersCount') {
-        setConnectedUsers(parseInt(message.count));
-      } else if (message.type === 'userConnected') {
-        console.log(`${message.user.username} se ha unido al chat`);
-      } else if (message.type === 'userDisconnected') {
-        console.log(`${message.user.username} se ha desconectado del chat`);
+
+      if (message.type === CHAT_MESSAGE) {
+        chatMessageRecieved(message);
       }
+
+      if (message.type === CONNECTED_USERS_COUNT) {
+        updateCountMessageReceived(message);
+      }
+
+      if (message.type === GET_ALL_MESSAGES) {
+        handleAllMessagesReceived(message);
+      }
+
+      if (message.type === GET_LAST_MESSAGE) {
+        handleLastMessagesReceived(message.messages);
+      }
+
     }
 
     return () => {
@@ -43,6 +63,48 @@ function ChatComponent() {
       ws.current.close();
     }
   }, [groupId, user.id]);
+
+  const chatMessageRecieved = (message) => {
+    const allMessages = JSON.parse(localStorage.getItem('chatMessages'));
+    const msg = {
+      id: message.id,
+      GroupID: message.GroupID,
+      userID: message.userID,
+      username: message.username,
+      message: message.message,
+      createdAt: message.createdAt,
+      updatedAt: message.updatedAt
+    }
+    allMessages.push(msg);
+    localStorage.setItem('chatMessages', JSON.stringify(allMessages));
+
+    setChatMessages(prevMessages => [
+      ...prevMessages,
+      message
+    ]);
+  }
+
+  const updateCountMessageReceived = (message) => {
+    setConnectedUsers(parseInt(message.count));
+  }
+
+  const handleAllMessagesReceived = (message) => {
+    localStorage.setItem('chatMessages', message.messages);
+    setChatMessages(JSON.parse(message.messages));
+  }
+
+  const handleLastMessagesReceived = (message) => {
+    const messages = JSON.parse(localStorage.getItem('chatMessages'));
+
+    message = JSON.parse(message);
+
+    message.forEach(data => {
+      messages.push(data);
+    });
+
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
+    setChatMessages(messages);
+  }
 
   const sendMessage = (text) => {
     const message = {
@@ -56,6 +118,25 @@ function ChatComponent() {
     setMessageField('');
   };
 
+  const getAllMessages = () => {
+    const message = {
+      type: 'getAllMessages',
+      groupId,
+      userId: user.id
+    }
+    ws.current.send(JSON.stringify(message));
+  }
+
+  const updateMessages = (lastId) => {
+    const message = {
+      type: GET_LAST_MESSAGE,
+      groupId,
+      userId: user.id,
+      lastId
+    }
+    ws.current.send(JSON.stringify(message));
+  }
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (messageField !== '') {
@@ -67,7 +148,7 @@ function ChatComponent() {
     <div className="chat-component">
       <h2>En línea: {connectedUsers}</h2>
       {chatMessages.map((message, index) => (
-        <div key={index}>{message.user}: {message.text}</div>
+        <div key={index}>{message.username}: {message.message}</div>
       ))}
       <form onSubmit={(e) => handleSendMessage(e)}>
         <Input placeholder="mensaje..." id="messageField" value={messageField} onChange={(e) => setMessageField(e.target.value)} />
