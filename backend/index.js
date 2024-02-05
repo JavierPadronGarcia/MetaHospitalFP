@@ -26,3 +26,5 @@ require('./websocket/index')(wss);
 server.listen(process.env.PORT, () => {
   console.log('Server is runing on: ' + process.env.PORT);
 });
+
+module.exports = server;
