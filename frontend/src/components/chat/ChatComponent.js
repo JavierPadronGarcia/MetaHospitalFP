@@ -29,7 +29,6 @@ function ChatComponent() {
 
       if (messages && messages.length !== 0) {
         updateMessages(messages[messages.length - 1].id);
-        // setChatMessages(messages);
       } else {
         getAllMessages();
       }

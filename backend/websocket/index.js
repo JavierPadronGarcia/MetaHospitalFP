@@ -39,6 +39,7 @@ module.exports = webSocketServer => {
               createdAt: response.createdAt,
               updatedAt: response.updatedAt,
               id: response.id,
+              userId: user.id,
               username: user.username,
               message: response.message,
             }
