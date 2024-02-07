@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const { exec } = require('child_process');
+
 const jwt = require('jsonwebtoken');
 const express = require("express");
 const cors = require("cors");
@@ -24,9 +26,20 @@ const db = require("./models");
 //normal use. Doesn't delete the database data
 // db.sequelize.sync();
 
-// //In development, it drops the database data
+//In development, it drops the database data
 db.sequelize.sync({ force: true }).then(() => {
   console.log('Drop and re-sync db.');
+  exec('sequelize db:seed:all', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error al ejecutar los seeders: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(`Seeders ejecutados correctamente: ${stdout}`);
+  });
 })
 
 app.use(function (req, res, next) {
