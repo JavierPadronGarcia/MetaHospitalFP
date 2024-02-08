@@ -31,7 +31,8 @@ db.studentSchool = require('./studentschool.model.js')(sequelize, Sequelize);
 db.school = require('./school.model.js')(sequelize, Sequelize);
 db.teacherSchool = require('./teacherschool.model.js')(sequelize, Sequelize);
 db.course = require('./course.model.js')(sequelize, Sequelize);
-db.participation = require('./participation.model.js')(sequelize, Sequelize)
+db.participation = require('./participation.model.js')(sequelize, Sequelize);
+db.activitySubscription = require('./activitiesSubscription.model.js')(sequelize, Sequelize);
 
 //user, student-school, teacher-school relations
 

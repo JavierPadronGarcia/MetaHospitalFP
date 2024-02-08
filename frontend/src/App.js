@@ -21,6 +21,7 @@ import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMain
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
 import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
+import NotificationTest from './pages/teacher-pages/notification-test-pages/NotificationTest';
 
 function App() {
 
@@ -38,6 +39,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+
+        <Route path="/hola" element={<NotificationTest />} />
 
         <Route element={<PrivateRoute onlyLogged={true} />}>
           <Route path="/myUser" element={<UserPage />} />
