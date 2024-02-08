@@ -91,6 +91,7 @@ db.exercise.belongsTo(db.case, { foreignKey: 'CaseID' });
 
 db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseId' });
 db.participation.belongsTo(db.users, { foreignKey: 'UserId' });
+db.users.hasMany(db.participation, {foreignKey: 'UserId'});
 
 //grade relations
 db.grade.belongsTo(db.item, { foreignKey: 'ItemID' });
@@ -98,5 +99,9 @@ db.grade.belongsTo(db.participation, { foreignKey: 'ParticipationID' });
 
 //groups relations
 db.groups.belongsTo(db.course, { through: 'CourseId' });
+
+//subscriptions relations
+db.users.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
+db.activitySubscription.belongsTo(db.users, {foreignKey: 'UserID'});
 
 module.exports = db;

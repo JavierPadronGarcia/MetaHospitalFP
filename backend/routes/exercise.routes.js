@@ -5,7 +5,7 @@ module.exports = app => {
   var router = require("express").Router();
 
   //create some exercises depends on the body
-  router.post("/addExercises", auth.isAuthenticated, exercises.createSomeExercises);
+  router.post("/addExercises", auth.isAuthenticated, exercises.createExerciseAndParticipations);
 
   //create a new exercise
   router.post("/", auth.isAuthenticated, exercises.create);

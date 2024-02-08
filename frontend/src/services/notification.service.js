@@ -1,7 +1,17 @@
 import axios from 'axios';
 
-// const API = "http://localhost:8080/api/subscriptions";
 const API = "http://localhost:12080/api/activitysubscriptions";
+
+function getOptions(token) {
+  let bearerAccess = 'Bearer ' + token;
+
+  let options = {
+    headers: {
+      'Authorization': bearerAccess,
+    }
+  }
+  return options;
+}
 
 function unregisterAllServiceWorkers() {
   navigator.serviceWorker.getRegistrations().then(function (registrations) {
@@ -21,7 +31,10 @@ async function subscribe(subscriptionName) {
       userVisibleOnly: true,
       applicationServerKey: process.env.REACT_APP_PUBLIC_KEY
     });
-    axios.post(`${API}/subscribe`, { subscriptionName: subscriptionName, subscription: subscription });
+    axios.post(`${API}/subscribe`,
+      { subscriptionName: subscriptionName, subscription: subscription },
+      getOptions(localStorage.getItem('token'))
+    );
   }
 }
 

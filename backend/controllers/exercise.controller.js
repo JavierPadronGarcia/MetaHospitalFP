@@ -1,10 +1,13 @@
 const db = require("../models");
+const webPush = require('web-push');
 const Exercise = db.exercise;
 const Case = db.case;
 const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
 const Group = db.groups;
 const User = db.users;
+const ActivitySubscription = db.activitySubscription;
+const Participation = db.participation;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -53,10 +56,66 @@ exports.createSomeExercises = (req, res) => {
       })
     });
   }
+}
+exports.createExerciseAndParticipations = async (req, res) => {
+  const { Students, assigned, finishDate, CaseID } = req.body;
 
-  Exercise.bulkCreate(creationExercises).then(data => {
-    return res.send(data)
+  if (!assigned || !finishDate || !CaseID || !Students || Students?.length === 0) {
+    return res.status(400).send({ error: true, message: 'Please, add at least one participation and exerciseData' })
+  }
+  const participations = [];
+  const newFinishDate = new Date(finishDate);
+  const splittedStudents = Students.split(',')
+
+  const newExercise = {
+    assigned: assigned,
+    CaseID: CaseID,
+    finishDate: (newFinishDate instanceof Date && !isNaN(newFinishDate)) ? newFinishDate : null
+  }
+  const createdExercise = await Exercise.create(newExercise);
+
+  splittedStudents.forEach(studentId => {
+    participations.push({
+      UserId: studentId,
+      ExerciseId: createdExercise.id
+    })
   })
+
+  const createdParticipations = await Participation.bulkCreate(participations);
+
+  const allSubscriptions = await ActivitySubscription.findAll({
+    include: [
+      {
+        model: User,
+        include: [
+          {
+            model: Participation,
+            where: { ExerciseId: 4 }
+          }
+        ]
+      }
+    ]
+  })
+
+  allSubscriptions.forEach(s => {
+    console.log(s)
+    const subscriptionRecipient = {
+      endpoint: s.endpoint,
+      expirationTime: s.expirationTime,
+      keys: JSON.parse(s.keys)
+    }
+    const title = `Se le ha asignado a un nuevo ejercicio`;
+    let description = 'Nuevo ejercicio';
+
+    if (assigned) {
+      description = `Fecha final: ${finishDate}`
+    } else {
+      description = 'Ejercicio no evaluado'
+    }
+
+    sendNotification(subscriptionRecipient, title, description);
+  })
+  return res.send(createdParticipations);
 }
 
 exports.findAll = (req, res) => {
@@ -298,5 +357,29 @@ exports.delete = async (req, res) => {
     return res.status(500).send({
       error: err.message || "Some error occurred while deleting the exercises"
     });
+  }
+}
+
+const sendNotification = async (subscriptionRecipient, title, description) => {
+  const options = {
+    vapidDetails: {
+      subject: 'mailto:myemail@example.com',
+      publicKey: process.env.PUBLIC_KEY,
+      privateKey: process.env.PRIVATE_KEY
+    }
+  };
+
+  try {
+    await webPush.sendNotification(
+      subscriptionRecipient,
+      JSON.stringify({
+        title,
+        description,
+        image: 'http://localhost:12080/images/logo144.png'
+      }),
+      options
+    );
+  } catch (err) {
+    throw (err);
   }
 }

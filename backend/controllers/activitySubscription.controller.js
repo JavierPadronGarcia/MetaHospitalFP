@@ -129,9 +129,6 @@ exports.deleteByEndpoint = (req, res) => {
   })
 }
 
-
-
-
 const sendNotification = async (subscriptionRecipient, title, description) => {
   const options = {
     vapidDetails: {

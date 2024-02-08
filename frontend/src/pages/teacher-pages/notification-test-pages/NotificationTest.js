@@ -20,7 +20,7 @@ function NotificationTest() {
     try {
       await subscribe(subscriptionName);
 
-      window.localStorage.setItem("subscription-name", subscriptionName);
+      localStorage.setItem("subscription-name", subscriptionName);
 
       setSubscribed(true);
       getAllSubscriptions().then((res) => {
@@ -35,7 +35,7 @@ function NotificationTest() {
     const subscriptionState = await checkIfAlreadySubscribed();
     setSubscribed(subscriptionState);
     if (subscriptionState) {
-      const aux = window.localStorage.getItem("subscription-name");
+      const aux = localStorage.getItem("subscription-name");
       setSubscriptionName(aux);
     }
   }
