@@ -22,28 +22,27 @@ self.addEventListener('fetch', event => {
     caches.match(event.request).then(response => {
       return response || fetch(event.request);
     })
+  )
+})
+
+self.addEventListener('push', async function (event) {
+  console.log("notifications will be displayed here");
+
+  const message = await event.data.json();
+  let { title, description, image } = message;
+  console.log({ message });
+
+  await event.waitUntil(
+    self.registration.showNotification(title, {
+      body: description,
+      icon: image,
+      actions: [
+        {
+          action: "some action",
+          title: title,
+          icon: ''
+        },
+      ],
+    })
   );
 });
-
-// const storedRequests = JSON.parse(localStorage.getItem('offlineMessages')) || [];
-
-// if (storedRequests.length !== 0) {
-//   storedRequests.forEach(async (message) => {
-//     try {
-//       const response = await fetch('', {
-//         method: 'POST',
-//         headers: {
-//           'Content-type': 'application/json',
-//         },
-//         body: JSON.stringify(message),
-//       });
-
-//       if (response.ok) {
-//         storedRequests.splice(storedRequests.indexOf(message), 1);
-//         localStorage.removeItem('offlineMessages');
-//       }
-//     } catch (err) {
-//       console.log('Error al enviar mensaje: ', err);
-//     }
-//   });
-// }

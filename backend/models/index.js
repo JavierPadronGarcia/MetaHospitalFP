@@ -33,7 +33,8 @@ db.teacherSchool = require('./teacherschool.model.js')(sequelize, Sequelize);
 db.course = require('./course.model.js')(sequelize, Sequelize);
 db.participation = require('./participation.model.js')(sequelize, Sequelize);
 
-db.messages = require('./messages.model.js')(sequelize, Sequelize);
+db.messages = require('./messages.model.js')(sequelize, Sequelize);;
+db.activitySubscription = require('./activitiesSubscription.model.js')(sequelize, Sequelize);
 
 //user, student-school, teacher-school relations
 
@@ -92,6 +93,7 @@ db.exercise.belongsTo(db.case, { foreignKey: 'CaseID' });
 
 db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseId' });
 db.participation.belongsTo(db.users, { foreignKey: 'UserId' });
+db.users.hasMany(db.participation, {foreignKey: 'UserId'});
 
 //grade relations
 db.grade.belongsTo(db.item, { foreignKey: 'ItemID' });
@@ -100,5 +102,9 @@ db.grade.belongsTo(db.participation, { foreignKey: 'ParticipationID' });
 //groups relations
 db.groups.belongsTo(db.course, { through: 'CourseId' });
 db.groups.hasMany(db.messages, { foreignKey: 'GroupID' });
+
+//subscriptions relations
+db.users.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
+db.activitySubscription.belongsTo(db.users, {foreignKey: 'UserID'});
 
 module.exports = db;
