@@ -318,3 +318,12 @@ exports.delete = (req, res) => {
     })
   })
 }
+
+exports.getUserById = async (userId) => {
+  try {
+    const user = await User.findOne({ where: { id: userId } });
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}

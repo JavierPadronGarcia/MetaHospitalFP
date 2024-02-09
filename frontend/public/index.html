@@ -26,6 +26,13 @@
             console.log('serviceWorker registration failed: ', err)
           }
         );
+        navigator.serviceWorker.ready.then((registration) => {
+          return registration.sync.register('syncData');
+        }).then(() => {
+          console.log('Sync registration successfull');
+        }).catch(() => {
+          console.log('Error in the sync registration');
+        });
       });
     }
   </script>
