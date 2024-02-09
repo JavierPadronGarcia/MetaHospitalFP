@@ -1,13 +1,14 @@
 require('dotenv').config();
-const { exec } = require('child_process');
-let WSServer = require('ws').Server;
+
 const jwt = require('jsonwebtoken');
 const express = require("express");
 const cors = require("cors");
 var path = require('path');
+const WebSocket = require('ws');
 
 const app = express();
 const port = process.env.PORT || 8080;
+const wsPort = process.env.WS_PORT;
 app.use(express.static(path.join(__dirname, 'public')));
 
 var corsOptions = {
@@ -25,20 +26,9 @@ const db = require("./models");
 //normal use. Doesn't delete the database data
 db.sequelize.sync();
 
-//In development, it drops the database data
+// //In development, it drops the database data
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log('Drop and re-sync db.');
-//   exec('sequelize db:seed:all', (error, stdout, stderr) => {
-//     if (error) {
-//       console.error(`Error al ejecutar los seeders: ${error.message}`);
-//       return;
-//     }
-//     if (stderr) {
-//       console.error(`stderr: ${stderr}`);
-//       return;
-//     }
-//     console.log(`Seeders ejecutados correctamente: ${stdout}`);
-//   });
 // })
 
 app.use(function (req, res, next) {
@@ -92,34 +82,5 @@ require("./routes/teacherschool.routes")(app);
 require("./routes/course.routes")(app);
 require("./routes/school.routes")(app);
 require("./routes/participation.routes")(app);
-require('./routes/activitySubscription.routes')(app);
 
-let server = null;
-let app = require('./http-server');
-
-if (process.env.HTTPS == "true") {
-  const https = require('https');
-  const fs = require('fs');
-  const options = {
-    key: fs.readFileSync('.cert/certificate.key'),
-    cert: fs.readFileSync('.cert/certificate.crt')
-  };
-  server = https.createServer(options);
-} else {
-  const http = require('http');
-  server = http.createServer();
-}
-
-let wss = new WSServer({
-  server: server
-})
-
-server.on('request', app);
-
-require('./websocket/index')(wss);
-
-server.listen(process.env.PORT, () => {
-  console.log('Server is runing on: ' + process.env.PORT);
-});
-
-module.exports = server;
+module.exports = app;

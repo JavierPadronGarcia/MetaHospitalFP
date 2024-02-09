@@ -1,5 +1,7 @@
 const backendEndpoint = process.env.REACT_APP_BACKEND_URL;
 
+export const webSocketEndpoint = process.env.REACT_APP_WS_URL;
+
 export const backendImageEndpoint = `${backendEndpoint}/images`;
 
 export const backendUsersEndpoint = `${backendEndpoint}/api/users`;

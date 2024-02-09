@@ -21,6 +21,7 @@ import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMain
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
 import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
+import ChatComponent from './components/chat/ChatComponent';
 import NotificationTest from './pages/teacher-pages/notification-test-pages/NotificationTest';
 
 function App() {
@@ -65,6 +66,8 @@ function App() {
           <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
           <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/add" element={<AddActivityPage />} />
         </Route>
+
+        <Route path="/chat/:groupId" element={<ChatComponent />} />
 
       </Routes>
     </BrowserRouter>
