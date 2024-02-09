@@ -91,7 +91,7 @@ exports.createExerciseAndParticipations = async (req, res) => {
         include: [
           {
             model: Participation,
-            where: { ExerciseId: 4 }
+            where: { ExerciseId: createdExercise.id }
           }
         ]
       }
@@ -104,7 +104,7 @@ exports.createExerciseAndParticipations = async (req, res) => {
       expirationTime: s.expirationTime,
       keys: JSON.parse(s.keys)
     }
-    const title = `Se le ha asignado a un nuevo ejercicio`;
+    const title = `Nuevo ejercicio para entregar`;
     let description = 'Nuevo ejercicio';
 
     if (assigned) {
