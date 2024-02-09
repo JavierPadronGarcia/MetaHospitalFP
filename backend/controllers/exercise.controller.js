@@ -1,5 +1,6 @@
 const db = require("../models");
 const webPush = require('web-push');
+const dayjs = require('dayjs');
 const Exercise = db.exercise;
 const Case = db.case;
 const WorkUnit = db.workUnit;
@@ -98,7 +99,6 @@ exports.createExerciseAndParticipations = async (req, res) => {
   })
 
   allSubscriptions.forEach(s => {
-    console.log(s)
     const subscriptionRecipient = {
       endpoint: s.endpoint,
       expirationTime: s.expirationTime,
@@ -108,7 +108,7 @@ exports.createExerciseAndParticipations = async (req, res) => {
     let description = 'Nuevo ejercicio';
 
     if (assigned) {
-      description = `Fecha final: ${finishDate}`
+      description = `Fecha final: ${dayjs(finishDate).format('DD/MM/YYYY')}`;
     } else {
       description = 'Ejercicio no evaluado'
     }
