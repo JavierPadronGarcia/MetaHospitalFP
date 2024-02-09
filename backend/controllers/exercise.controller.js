@@ -88,6 +88,7 @@ exports.createExerciseAndParticipations = async (req, res) => {
     include: [
       {
         model: User,
+        required: true,
         include: [
           {
             model: Participation,
@@ -104,14 +105,11 @@ exports.createExerciseAndParticipations = async (req, res) => {
       expirationTime: s.expirationTime,
       keys: JSON.parse(s.keys)
     }
-    const title = `Nuevo ejercicio para entregar`;
-    let description = 'Nuevo ejercicio';
+    const title = `Nuevo ejercicio`;
 
-    if (assigned) {
-      description = `Fecha final: ${dayjs(finishDate).format('DD/MM/YYYY')}`;
-    } else {
-      description = 'Ejercicio no evaluado'
-    }
+    let description = (assigned == 'true')
+      ? `Fecha final: ${dayjs(finishDate).format('DD/MM/YYYY')}`
+      : 'Ejercicio no evaluado';
 
     sendNotification(subscriptionRecipient, title, description);
   })
@@ -143,14 +141,14 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   const { groupId, workUnitId } = req.params;
   try {
     const result = await db.sequelize.query(`
-      SELECT c.id, c.name, ex.finishDate, ex.assigned, ex.CaseID
+      SELECT c.id, c.name, ex.finishDate, ex.assigned, ex.CaseID, ex.id as exerciseId
       FROM \`${Group.tableName}\` AS g
       JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id 
       JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
       JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
       JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
       WHERE g.id = ${groupId} and wku.id = ${workUnitId}
-      GROUP BY c.id, c.WorkUnitId, c.name, ex.assigned, ex.finishDate, ex.CaseID;
+      GROUP BY c.id, c.WorkUnitId, c.name, ex.assigned, ex.finishDate, ex.CaseID, ex.id;
     `, { type: db.Sequelize.QueryTypes.SELECT });
     return res.send(result);
   } catch (err) {
@@ -313,19 +311,8 @@ exports.delete = async (req, res) => {
     const { groupId, workUnitId, caseId, assigned, finishDate } = req.params;
     const idsToDelete = [];
     let formattedDate = null;
-    if (finishDate) {
 
-      const date = new Date(finishDate);
-
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hour = date.getHours().toString().padStart(2, '0');
-      const minute = date.getMinutes().toString().padStart(2, '0');
-      const second = date.getSeconds().toString().padStart(2, '0');
-
-      formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-    }
+    if (finishDate) formattedDate = dayjs(finishDate).format('YYYY-MM-DD HH:MM:SS');
 
     const result = await db.sequelize.query(`
       SELECT ex.id
