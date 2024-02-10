@@ -41,6 +41,8 @@ db.activitySubscription = require('./activitiesSubscription.model.js')(sequelize
 db.school.belongsToMany(db.users, { through: db.studentSchool });
 db.school.belongsToMany(db.users, { through: db.teacherSchool });
 
+
+
 db.teacherSchool.belongsTo(db.school);
 db.teacherSchool.belongsTo(db.users);
 
@@ -106,5 +108,8 @@ db.groups.hasMany(db.messages, { foreignKey: 'GroupID' });
 //subscriptions relations
 db.users.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
 db.activitySubscription.belongsTo(db.users, {foreignKey: 'UserID'});
+
+//course relations
+db.course.belongsTo(db.school, { throw: 'SchoolId'})
 
 module.exports = db;

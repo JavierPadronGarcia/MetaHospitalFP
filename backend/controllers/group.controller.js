@@ -8,6 +8,9 @@ const Op = db.Sequelize.Op;
 
 exports.createGroup = (req, res) => {
   const name = req.body.name;
+  const date =req.body.date;
+  const CourseId = req.body.CourseId;
+  
   const workUnitGroupCreation = [];
 
   if (!name) {
@@ -15,7 +18,7 @@ exports.createGroup = (req, res) => {
       error: "You must provide a name"
     });
   }
-  const newGroup = { name: name };
+  const newGroup = { name: name, date: date, CourseId: CourseId };
 
   Group.create(newGroup).then((group) => {
     //find all the work units to assign them to the new group
