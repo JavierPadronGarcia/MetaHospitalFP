@@ -37,9 +37,11 @@ async function getAllGroups() {
   }
 }
 
-async function addGroup(groupName) {
+async function addGroup(group) {
   const body = new URLSearchParams();
-  body.append("name", groupName);
+  body.append("name", group.name);
+  body.append("date", group.date);
+  body.append("CourseId", group.CourseId);
   let response = [];
   try {
     response = await axios.post(backendGroupsEndpoint,
@@ -55,6 +57,8 @@ async function addGroup(groupName) {
 async function updateGroup(updatedGroup) {
   const body = new URLSearchParams();
   body.append("name", updatedGroup.name);
+  body.append("date", updatedGroup.date);
+  body.append("CourseId", updatedGroup.CourseId);
 
   try {
     const response = await axios.put(`${backendGroupsEndpoint}/${updatedGroup.id}`,

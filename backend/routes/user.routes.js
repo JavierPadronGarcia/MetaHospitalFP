@@ -8,6 +8,10 @@ module.exports = app => {
   // Retrieve all users with role = director
   router.get("/directors", auth.isAuthenticated, users.findAllDirectors);
 
+  router.get('/students',auth.isAuthenticated, users.findAllStudents);
+
+  router.get('/teachers',auth.isAuthenticated, users.findAllTeachers)
+
   // Retrieve all Users
   router.get("/", auth.isAuthenticated, users.findAll);
 

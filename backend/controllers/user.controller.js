@@ -3,6 +3,7 @@ const User = db.users;
 const Op = db.Sequelize.Op;
 const utils = require("../utils");
 const bcrypt = require('bcryptjs');
+const { log } = require("console");
 const fs = require('fs');
 const path = require('path')
 
@@ -19,6 +20,7 @@ exports.create = (req, res) => {
     username: req.body.username,
     password: req.body.password,
     role: req.body.role,
+    name: req.body.name,
     filename: ''
   }
 
@@ -80,6 +82,29 @@ exports.findAll = (req, res) => {
   })
 }
 
+exports.findAllStudents = (req, res) => {
+  User.findAll({where: {role: 'student'}},{attributes: { exclude: ['password'] }}).then(data => {
+    res.send(data);
+    console.log('Sent data');
+  }).catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving users."
+    })
+  })
+}
+
+exports.findAllTeachers = (req, res) => {
+  User.findAll({where: {role: 'teacher'}},{attributes: { exclude: ['password'] }}).then(data => {
+    res.send(data);
+  }).catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving users."
+    })
+  })
+}
+
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
@@ -98,6 +123,7 @@ exports.update = (req, res) => {
     username: req.body.username || '',
     password: '',
     role: req.body.role || '',
+    name: req.body.name || '' ,
     filename: ''
   }
 
@@ -109,6 +135,7 @@ exports.update = (req, res) => {
 
     if (user.username == '') { user.username = data.username }
     if (user.role == '') { user.role = data.role }
+    if (user.name == '') { user.name = data.name }
 
     user.password = data.password;
     user.filename = data.filename;
@@ -144,6 +171,7 @@ exports.updateWithImage = (req, res) => {
     username: newUsername || userDecoded.username,
     password: userDecoded.password,
     role: userDecoded.role,
+    name : userDecoded.name,
     filename: req.file ? req.file.filename : null
   }
 
@@ -263,6 +291,7 @@ const updateNewDirector = (newDirector, res) => {
       username: director.username,
       password: director.password,
       role: director.role,
+      name:  director.name,
       isDirector: true,
       filename: director.filename,
       createdAt: director.createdAt,
@@ -296,26 +325,26 @@ exports.delete = (req, res) => {
         }
       })
     }
+
+    User.destroy({ where: { id: id } }).then(num => {
+      if (num === 1) {
+        return res.send({
+          message: "User was deleted successfully!"
+        })
+      }
+      return res.send({
+        message: `Cannot delete User with id=${id}. Maybe User was not found!`
+      })
+  
+    }).catch(err => {
+      return res.status(500).send({
+        message: "Could not delete User with id=" + id
+      })
+    })
   }).catch(err => {
     return res.status(500).send({
       message: err.message || "Could not find the user to delete"
     });
-  })
-
-  User.destroy({ where: { id: id } }).then(num => {
-    if (num === 1) {
-      return res.send({
-        message: "User was deleted successfully!"
-      })
-    }
-    return res.send({
-      message: `Cannot delete User with id=${id}. Maybe User was not found!`
-    })
-
-  }).catch(err => {
-    return res.status(500).send({
-      message: "Could not delete User with id=" + id
-    })
   })
 }
 
