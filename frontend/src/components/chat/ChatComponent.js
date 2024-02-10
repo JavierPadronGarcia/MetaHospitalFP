@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { decodeToken } from '../../utils/shared/globalFunctions';
 import { webSocketEndpoint } from "../../consts/backendEndpoints";
-import { Button, Input, message, notification } from "antd";
+import { Button, Input, message } from "antd";
 import { backendMessagesEndpoint } from "../../consts/backendEndpoints";
 
 function ChatComponent() {
