@@ -2,14 +2,16 @@ const db = require("../models");
 const Course = db.course;
 
 exports.create = (req, res) => {
-    if (!req.body.name||!req.body.acronyms) {
+
+    if (!req.body.name || !req.body.acronyms) {
         res.status(500).send({ error: "name is mandatory" });
         return;
     }
 
     const CourseData = {
         name: req.body.name,
-        acronyms: req.body.acronyms
+        acronyms: req.body.acronyms,
+        SchoolId: req.params.schoolId
     };
 
     Course.create(CourseData)
@@ -24,7 +26,11 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-    Course.findAll()
+    const schoolId = req.params.schoolId;
+
+    Course.findAll({
+        where: { SchoolId: schoolId },
+    })
         .then((allCourses) => {
             res.send(allCourses);
         })
