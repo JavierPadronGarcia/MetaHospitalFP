@@ -7,6 +7,10 @@ const urlsToCache = [
   '/assets/*'
 ];
 
+const offlineMessages = [];
+let token = '';
+let backendEndpoint = '';
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -25,12 +29,45 @@ self.addEventListener('fetch', event => {
   )
 })
 
-self.addEventListener('push', async function (event) {
-  console.log("notifications will be displayed here");
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'message-sync') {
+    fetch(backendEndpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ messages: offlineMessages })
+    }).then(response => {
+      if (response.ok) {
+
+        offlineMessages.splice(0, offlineMessages.length);
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({ type: 'sync-message', data: 'Actualizando chat' });
+          });
+        });
+      } else {
+        console.log('ERROR');
+      }
+    })
+  }
+})
+
+self.addEventListener('message', event => {
+  if (event.data.action === 'offlineMessage') {
+    const message = event.data.message;
+    if (!token) token = event.data.token;
+    if (!backendEndpoint) backendEndpoint = event.data.backendEndpoint;
+
+    offlineMessages.push(message);
+  }
+})
+
+self.addEventListener('push', async (event) => {
 
   const message = await event.data.json();
   let { title, description, image } = message;
-  console.log({ message });
 
   await event.waitUntil(
     self.registration.showNotification(title, {

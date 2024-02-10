@@ -21,3 +21,5 @@ export const backendWorkUnitsGroupsEndpoint = `${backendEndpoint}/api/workunitgr
 export const backendExercisesEndpoint = `${backendEndpoint}/api/exercises`;
 
 export const backendCasesEndpoint = `${backendEndpoint}/api/cases`;
+
+export const backendMessagesEndpoint = `${backendEndpoint}/api/messages`;
