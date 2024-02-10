@@ -18,7 +18,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/serviceWorker.js').then(
+        navigator.serviceWorker.register('/serviceWorker.js', { type: 'module' }).then(
           function (registration) {
             console.log('Service worker registered! with scope: ', registration.scope);
           },
@@ -26,13 +26,6 @@
             console.log('serviceWorker registration failed: ', err)
           }
         );
-        navigator.serviceWorker.ready.then((registration) => {
-          return registration.sync.register('syncData');
-        }).then(() => {
-          console.log('Sync registration successfull');
-        }).catch(() => {
-          console.log('Error in the sync registration');
-        });
       });
     }
   </script>

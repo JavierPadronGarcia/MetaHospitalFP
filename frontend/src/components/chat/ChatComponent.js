@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { decodeToken } from '../../utils/shared/globalFunctions';
 import { webSocketEndpoint } from "../../consts/backendEndpoints";
-import { Button, Input } from "antd";
+import { Button, Input, message } from "antd";
+import { backendMessagesEndpoint } from "../../consts/backendEndpoints";
 
 function ChatComponent() {
   const params = useParams();
   const groupId = params.groupId;
   const user = decodeToken();
   const [chatMessages, setChatMessages] = useState([]);
+  const [offlineChatMessages, setOfflineMessages] = useState([]);
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [messageField, setMessageField] = useState('');
 
@@ -33,7 +35,6 @@ function ChatComponent() {
         getAllMessages();
       }
 
-      console.log('Connection opened');
     }
 
     ws.current.onmessage = (event) => {
@@ -53,15 +54,34 @@ function ChatComponent() {
 
       if (message.type === GET_LAST_MESSAGE) {
         handleLastMessagesReceived(message.messages);
+
       }
 
     }
 
     return () => {
-      console.log("Cleaning up...");
       ws.current.close();
     }
   }, [groupId, user.id]);
+
+  useEffect(() => {
+
+    if (!navigator.onLine) {
+      const offlineMessages = JSON.parse(localStorage.getItem('offline-messages'));
+      setOfflineMessages(offlineMessages || []);
+    }
+
+    const handleMessageFromServiceWorker = (event) => {
+      if (event.data.type === 'sync-message') {
+        message.loading('Vuelves a tener conexión, actualizando mensajes...', 1);
+        const messages = JSON.parse(localStorage.getItem('chatMessages'));
+        updateMessages(messages[messages.length - 1].id);
+        setOfflineMessages([]);
+        localStorage.setItem('offlineMessages', JSON.stringify([]));
+      }
+    }
+    navigator.serviceWorker.addEventListener('message', handleMessageFromServiceWorker);
+  }, [])
 
   const chatMessageRecieved = (message) => {
     const allMessages = JSON.parse(localStorage.getItem('chatMessages'));
@@ -113,7 +133,11 @@ function ChatComponent() {
       message: text
     };
 
-    ws.current.send(JSON.stringify(message));
+    if (navigator.onLine) {
+      ws.current.send(JSON.stringify(message));
+    } else {
+      registerBackgroundSync(message);
+    }
     setMessageField('');
   };
 
@@ -124,6 +148,32 @@ function ChatComponent() {
       userId: user.id
     }
     ws.current.send(JSON.stringify(message));
+  }
+
+  const registerBackgroundSync = (message) => {
+    navigator.serviceWorker.ready.then(swRegistration => {
+      swRegistration.sync.register("message-sync");
+    }).catch(err => console.log(err))
+
+    navigator.serviceWorker.ready.then(swRegistration => {
+      const token = localStorage.getItem('token');
+      swRegistration.active.postMessage({
+        action: 'offlineMessage',
+        message: message,
+        token: token,
+        backendEndpoint: backendMessagesEndpoint
+      });
+    })
+
+    let offlineMessages = JSON.parse(localStorage.getItem('offlineMessages'));
+    if (!offlineMessages) offlineMessages = [];
+
+    message.username = 'TU';
+
+    offlineMessages.push(message);
+
+    localStorage.setItem('offlineMessages', JSON.stringify(offlineMessages));
+    setOfflineMessages(prevState => [...prevState, message]);
   }
 
   const updateMessages = (lastId) => {
@@ -147,7 +197,10 @@ function ChatComponent() {
     <div className="chat-component">
       <h2>En línea: {connectedUsers}</h2>
       {chatMessages.map((message, index) => (
-        <div key={index}>{message.username}: {message.message}</div>
+        <div key={index}>{(message.username == user.username) ? 'TU' : message.username}: {message.message}</div>
+      ))}
+      {offlineChatMessages.map((message, index) => (
+        <div key={index}>{(message.username)}: {message.message} <span>...OFFLINE...</span></div>
       ))}
       <form onSubmit={(e) => handleSendMessage(e)}>
         <Input placeholder="mensaje..." id="messageField" value={messageField} onChange={(e) => setMessageField(e.target.value)} />
