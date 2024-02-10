@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
+    date: {
+      type: Sequelize.STRING
+    }
   })
   return Group;
 }

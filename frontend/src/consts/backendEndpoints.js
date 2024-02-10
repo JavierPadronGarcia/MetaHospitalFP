@@ -8,6 +8,8 @@ export const backendTeacherGroupEndpoint = `${backendEndpoint}/api/teachercourse
 
 export const backendGroupsEndpoint = `${backendEndpoint}/api/groups`;
 
+export const backendCoursesEndpoint = `${backendEndpoint}/api/courses`;
+
 export const backendGroupEnrolementEndpoint = `${backendEndpoint}/api/groupenrolement`;
 
 export const backendWorkUnitsEndpoint = `${backendEndpoint}/api/workunit`;
@@ -19,3 +21,5 @@ export const backendWorkUnitsGroupsEndpoint = `${backendEndpoint}/api/workunitgr
 export const backendExercisesEndpoint = `${backendEndpoint}/api/exercises`;
 
 export const backendCasesEndpoint = `${backendEndpoint}/api/cases`;
+
+export const backendSchoolsEndpoint = `${backendEndpoint}/api/schools`;

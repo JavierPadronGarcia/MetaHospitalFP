@@ -1,0 +1,16 @@
+.Tag {
+    width: auto;
+    background-color: #69ACF4;
+    color: white;
+    border-radius: 30px;
+    padding: 20px;
+    margin: 10px;
+}
+
+.Tag p{
+    margin: 0;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+}

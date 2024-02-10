@@ -3,24 +3,24 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { useContext } from 'react';
 import { RolesContext } from './context/roles';
-import Login from './pages/login/Login';
+import Login from './pages/login copy/login'
 import PrivateRoute from './utils/PrivateRoute';
 import authService from './services/auth.service';
-import AdminControlPanel from './pages/admin-pages/admin-control-panel/AdminControlPanel';
-import Groups from './pages/admin-pages/groups/Groups';
-import UpdateGroup from './pages/admin-pages/update-group/UpdateGroup';
-import AddGroup from './pages/admin-pages/add-group/AddGroup';
-import AdminStudents from './pages/admin-pages/admin-students/AdminStudents';
-import AssignStudentPage from './pages/admin-pages/assign-student/AssignStudentPage';
-import AdminTeachers from './pages/admin-pages/admin-teachers/AdminTeachers';
+import UserAdmin from './pages/useradmin/useradmin';
+import GroupAdmin from './pages/groupsadmin/groupsadmin'
+import TeacherSchools from './pages/teacherschool/teacherschool'
 import AssignTeacherPage from './pages/admin-pages/assign-teacher/AssignTeacherPage';
 import AdminDirectorsPage from './pages/admin-pages/admin-directors/AdminDirectorsPage';
-import GroupDetails from './pages/admin-pages/group-details/GroupDetails';
 import UserPage from './pages/user-page/UserPage';
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
 import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
+import AdminHome from './pages/adminhome/adminhome';
+import SchoolsAdmin from './pages/schooladmin/schooladmin';
+import AdminSchool from './pages/adminschool/adminschool';
+import StudentSchools from './pages/studentschool/studentschool';
+import CoursesAdmin from './pages/coursesadmin/coursesadmin';
 
 function App() {
 
@@ -44,14 +44,14 @@ function App() {
         </Route>
 
         <Route path='/admin' element={<PrivateRoute permittedRole='admin' />}>
-          <Route path="control-panel" element={<AdminControlPanel />} />
-          <Route path="groups" element={<Groups />}></Route>
-          <Route path="groups/update/:name/:id" element={<UpdateGroup />} />
-          <Route path="groups/add-group" element={<AddGroup />} />
-          <Route path="groups/details/:id/:name" element={<GroupDetails />} />
-          <Route path="students" element={<AdminStudents />} />
-          <Route path="students/assign/:student" element={<AssignStudentPage />} />
-          <Route path="teachers" element={<AdminTeachers />} />
+          <Route path="control-panel" element={<AdminHome />} />
+          <Route path="users" element={<UserAdmin />}></Route>
+          <Route path="schools" element={<SchoolsAdmin />} />
+          <Route path="school" element={<AdminSchool />} />
+          <Route path="groups" element={<GroupAdmin />} />
+          <Route path="courses" element={<CoursesAdmin />} />
+          <Route path="students" element={<StudentSchools />} />
+          <Route path="teachers" element={<TeacherSchools />} />
           <Route path="teachers/assign/:teacher" element={<AssignTeacherPage />} />
           <Route path="directors" element={<AdminDirectorsPage />} />
         </Route>
