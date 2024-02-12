@@ -1,15 +1,4 @@
-const { faker } = require('@faker-js/faker');
-const supertest = require('supertest');
-const app = require('../index');
-const db = require('../models/index');
-const { response } = require('../http-server');
-const User = db.users;
-
-const api = supertest(app);
-
-beforeAll(async () => {
-  await db.sequelize.sync();
-});
+const { api, faker, db } = require('./testSetup');
 
 describe('USERS ENDPOINTS', () => {
 
@@ -98,5 +87,4 @@ describe('USERS ENDPOINTS', () => {
       }
     });
   });
-
 });
