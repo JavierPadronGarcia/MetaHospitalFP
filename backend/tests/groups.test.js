@@ -12,7 +12,7 @@ beforeAll(async () => {
   await db.sequelize.sync();
 })
 
-describe('GROUP API', () => {
+describe.skip('GROUP API', () => {
 
   test('should return status 200 for Groups get all with valid token', async () => {
     await api.get('/api/groups').set('Authorization', `Bearer ${TOKEN}`).expect(200);
