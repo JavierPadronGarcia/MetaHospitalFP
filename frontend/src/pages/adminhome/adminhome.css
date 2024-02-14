@@ -21,6 +21,11 @@
     overflow:auto
 }
 
+.list-titles {
+    margin: 0px;
+    padding-left: 10px;
+}
+
 
 @media (max-width: 767px) {
     .container-left {
