@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --verbose --silent --coverage",
+    "test": "cross-env NODE_ENV=test jest --verbose --silent",
     "start": "cross-env NODE_ENV=development node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "gen_vapid_keys": "web-push generate-vapid-keys [--json]"
@@ -22,10 +22,11 @@
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.2",
     "sequelize": "^6.33.0",
-    "ws": "^8.16.0",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3"
