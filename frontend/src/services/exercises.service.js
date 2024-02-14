@@ -28,7 +28,7 @@ async function getAllExercisesOfTheGroup(groupId, workUnitId) {
 
 async function getAllExercisesAssignedToStudent(groupId, workUnitId) {
   try {
-    const response = await axios.get(`${backendExercisesEndpoint}/exercisesAssignedToUser/${groupId}/${workUnitId}`,
+    const response = await axios.get(`${backendExercisesEndpoint}/exercisesAssignedToStudent/${groupId}/${workUnitId}`,
       getOptions(localStorage.getItem('token'))
     );
     return response.data;

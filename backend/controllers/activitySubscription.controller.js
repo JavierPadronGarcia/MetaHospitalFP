@@ -1,6 +1,5 @@
 const db = require('../models');
 const ActivitySubscription = db.activitySubscription;
-const Op = db.Sequelize.Op;
 
 const webPush = require('web-push');
 
@@ -23,26 +22,7 @@ exports.create = (req, res) => {
   }
 
   ActivitySubscription.create(newSubscription).then(async (data) => {
-    ActivitySubscription.findAll().then(subscriptionsInDB => {
-      for (let s of subscriptionsInDB) {
-        const subscriptionRecipient = {
-          endpoint: s.dataValues.endpoint,
-          expirationTime: s.dataValues.expirationTime,
-          keys: JSON.parse(s.dataValues.keys)
-        }
-
-        const title = `Nueva subscripcion`;
-        const description = `${data.subscriptionName} Esta ahora suscrito`;
-
-        sendNotification(subscriptionRecipient, title, description);
-      }
-      return res.send('Subscription')
-    }).catch(err => {
-      return res.status(500).send({
-        error: true,
-        message: err.message || "Error finding all subscriptions"
-      })
-    })
+    return res.send('User subscribed successfully');
   }).catch(err => {
     return res.status(500).send({
       error: true,
@@ -102,24 +82,7 @@ exports.deleteByEndpoint = (req, res) => {
         id: subsctiptionToDelete.id
       }
     }).then(() => {
-      ActivitySubscription.findAll().then(subscriptionsInDb => {
-        for (let s of subscriptionsInDb) {
-          const subscriptionRecipient = {
-            endpoint: s.dataValues.endpoint,
-            expirationTime: s.dataValues.expirationTime,
-            keys: JSON.parse(s.dataValues.keys)
-          }
-          const title = `Eliminada una subscripción a ${subsctiptionToDelete.subscriptionName}`
-          const description = "";
-          sendNotification(subscriptionRecipient, title, description);
-        }
-        res.send("Subscription deleted successfully");
-      }).catch(er => {
-        return res.status(500).send({
-          error: true,
-          message: err.message || "Error finding all subscriptions"
-        })
-      })
+      res.send("Subscription deleted successfully");
     }).catch(err => {
       return res.status(500).send({
         error: true,

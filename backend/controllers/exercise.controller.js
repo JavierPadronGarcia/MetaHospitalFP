@@ -158,12 +158,28 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   }
 }
 
-exports.findAllExercisesAssignedToUser = async (req, res) => {
+exports.findAllExercisesAssignedToStudent = async (req, res) => {
   const { groupId, workUnitId } = req.params;
-
-  const exercises = Participation.findAll({})
-
-
+  try {
+    const result = await db.sequelize.query(`
+      SELECT ex.id AS exerciseId, ex.assigned, ex.finishDate, c.id AS caseId, c.WorkUnitId AS workUnitId, c.name AS caseName 
+      FROM \`${Group.tableName}\` AS g
+      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
+      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
+      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
+      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
+      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
+      JOIN \`${User.tableName}\` AS u ON u.id = p.UserId
+      WHERE g.id = ${groupId}
+      AND wku.id = ${workUnitId}
+      AND u.id = ${req.user.id}
+    `, { type: db.Sequelize.QueryTypes.SELECT });
+    return res.send(result);
+  } catch (err) {
+    return res.status(500).send({
+      error: err.message || "Some error occurred while retrieving the exercises of the student"
+    });
+  }
 }
 
 exports.update = (req, res) => {

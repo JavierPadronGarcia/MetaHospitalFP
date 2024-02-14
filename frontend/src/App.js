@@ -48,6 +48,7 @@ function App() {
 
         <Route element={<PrivateRoute onlyLogged={true} />}>
           <Route path="/myUser" element={<UserProfilePage />} />
+          <Route path="/chat/:groupId" element={<ChatComponent />} />
         </Route>
 
         <Route path='/admin' element={<PrivateRoute permittedRole='admin' />}>
@@ -74,8 +75,6 @@ function App() {
           <Route path="home" element={<Studenthome />} />
           <Route path="workUnit" element={<StudentExercises />} />
         </Route>
-
-        <Route path="/chat/:groupId" element={<ChatComponent />} />
 
       </Routes>
     </BrowserRouter>

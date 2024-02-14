@@ -8,7 +8,7 @@ module.exports = app => {
   router.post("/addExercises", auth.isAuthenticated, exercises.createExerciseAndParticipations);
 
   //create a new exercise
-  router.post("/exercisesAssignedToUser/:groupId/:workUnitId", auth.isAuthenticated, exercises.findAllExercisesAssignedToUser);
+  router.post("/", auth.isAuthenticated, exercises.create);
 
   //retrieve all exercises in a workUnit assigned to a group
   router.get("/exercisesinagroup/:groupId/:workUnitId",
@@ -20,7 +20,9 @@ module.exports = app => {
     auth.isAuthenticated,
     exercises.getAllStudentsAssignedToExercise);
 
-  router.get('/students')
+  router.get('/exercisesAssignedToStudent/:groupId/:workUnitId',
+    auth.isAuthenticated,
+    exercises.findAllExercisesAssignedToStudent)
 
   //retrieve all exercises
   router.get("/", auth.isAuthenticated, exercises.findAll);

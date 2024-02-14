@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = "http://localhost:12080/api/activitysubscriptions";
+import { backendSubscriptionEndpoint } from '../consts/backendEndpoints';
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;
@@ -31,7 +31,7 @@ async function subscribe(subscriptionName) {
       userVisibleOnly: true,
       applicationServerKey: process.env.REACT_APP_PUBLIC_KEY
     });
-    axios.post(`${API}/subscribe`,
+    axios.post(`${backendSubscriptionEndpoint}/subscribe`,
       { subscriptionName: subscriptionName, subscription: subscription },
       getOptions(localStorage.getItem('token'))
     );
@@ -43,15 +43,15 @@ async function sendNotificationToSubscriptionName(subscriptionName, notification
     subscriptionName,
     notificationMessage
   }
-  return axios.post(`${API}/sendNotificationToSubscriptionName`, message);
+  return axios.post(`${backendSubscriptionEndpoint}/sendNotificationToSubscriptionName`, message);
 }
 
 async function getAllSubscriptions() {
-  return axios.get(`${API}`);
+  return axios.get(`${backendSubscriptionEndpoint}`);
 }
 
 async function checkIfAlreadySubscribed() {
-  const serviceWorkerReg = await navigator.serviceWorker.getRegistration('/sw.js');
+  const serviceWorkerReg = await navigator.serviceWorker.getRegistration('/serviceWorker.js');
   if (!serviceWorkerReg) return false;
 
   let subscription = await serviceWorkerReg.pushManager.getSubscription();
@@ -71,7 +71,7 @@ async function unregisterFromServiceWorker() {
 
   // I use the endpoint to delete a subscription. 
   // I use a non standard POST to delete the subscription in Backend
-  await axios.post(`${API}/deleteByEndpoint`, { endpoint: subscription.endpoint });
+  await axios.post(`${backendSubscriptionEndpoint}/deleteByEndpoint`, { endpoint: subscription.endpoint });
   await subscription.unsubscribe();
 }
 
