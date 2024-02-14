@@ -54,7 +54,8 @@ function App() {
           <Route path="users" element={<UserAdmin />}></Route>
           <Route path="schools" element={<SchoolsAdmin />} />
           <Route path="school" element={<AdminSchool />} />
-          <Route path="groups" element={<AdminCourse />} />
+          <Route path="groups" element={<GroupAdmin />} />
+          <Route path="group" element={<AdminCourse />} />
           <Route path="courses" element={<CoursesAdmin />} />
           <Route path="students" element={<StudentSchools />} />
           <Route path="teachers" element={<TeacherSchools />} />
