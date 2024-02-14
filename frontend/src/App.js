@@ -11,7 +11,6 @@ import GroupAdmin from './pages/groupsadmin/groupsadmin'
 import TeacherSchools from './pages/teacherschool/teacherschool'
 import AssignTeacherPage from './pages/admin-pages/assign-teacher/AssignTeacherPage';
 import AdminDirectorsPage from './pages/admin-pages/admin-directors/AdminDirectorsPage';
-import UserPage from './pages/user-page/UserPage';
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
@@ -23,6 +22,9 @@ import StudentSchools from './pages/studentschool/studentschool';
 import CoursesAdmin from './pages/coursesadmin/coursesadmin';
 import ChatComponent from './components/chat/ChatComponent';
 import NotificationTest from './pages/teacher-pages/notification-test-pages/NotificationTest';
+import UserProfilePage from './pages/profile/profile';
+import Studenthome from './pages/student-pages/studenthome/studenthome';
+import AdminCourse from './pages/admincourse/admincourse';
 
 function App() {
 
@@ -44,7 +46,7 @@ function App() {
         <Route path="/hola" element={<NotificationTest />} />
 
         <Route element={<PrivateRoute onlyLogged={true} />}>
-          <Route path="/myUser" element={<UserPage />} />
+          <Route path="/myUser" element={<UserProfilePage />} />
         </Route>
 
         <Route path='/admin' element={<PrivateRoute permittedRole='admin' />}>
@@ -52,7 +54,7 @@ function App() {
           <Route path="users" element={<UserAdmin />}></Route>
           <Route path="schools" element={<SchoolsAdmin />} />
           <Route path="school" element={<AdminSchool />} />
-          <Route path="groups" element={<GroupAdmin />} />
+          <Route path="groups" element={<AdminCourse />} />
           <Route path="courses" element={<CoursesAdmin />} />
           <Route path="students" element={<StudentSchools />} />
           <Route path="teachers" element={<TeacherSchools />} />
@@ -65,6 +67,10 @@ function App() {
           <Route path="main/group/:name/:id" element={<TeacherGroupPage />} />
           <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
           <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/add" element={<AddActivityPage />} />
+        </Route>
+
+        <Route path='/student' element={<PrivateRoute permittedRole='student' />}>
+          <Route path="home" element={<Studenthome />} />
         </Route>
 
         <Route path="/chat/:groupId" element={<ChatComponent />} />

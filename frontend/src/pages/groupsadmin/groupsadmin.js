@@ -8,6 +8,7 @@ import Consts from '../../components/consts/consts';
 import PopForm from '../../components/popform/popform';
 import Tag from '../../components/tag/tag';
 import { AutoComplete } from 'antd';
+import { Link } from 'react-router-dom';
 import CoursesService from '../../services/courses.service';
 
 function GroupsAdmin() {
@@ -60,9 +61,15 @@ function GroupsAdmin() {
 
     }, []);
 
+    const navigateGroups = (id,name) =>{
+        localStorage.setItem('groupsId', id);
+        localStorage.setItem('groupsName', name)
+        console.log(id);
+    }
+
     const renderGroupsRow = (Groups) => (
         <>
-            <td>{Groups.name}</td>
+            <td><Link onClick={() => navigateGroups(Groups.id, Groups.name)} to='/admin/school' >{Groups.name}</Link></td>
             <td>{Groups.date}</td>
         </>
     );

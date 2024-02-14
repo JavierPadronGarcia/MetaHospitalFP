@@ -1,0 +1,14 @@
+.student-home{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-home .container-scloll{
+    overflow: auto;
+}
+
+.student-home .tags {
+    padding: 20px;
+}
+
