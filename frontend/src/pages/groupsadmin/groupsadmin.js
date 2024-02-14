@@ -69,7 +69,7 @@ function GroupsAdmin() {
 
     const renderGroupsRow = (Groups) => (
         <>
-            <td><Link onClick={() => navigateGroups(Groups.id, Groups.name)} to='/admin/school' >{Groups.name}</Link></td>
+            <td><Link onClick={() => navigateGroups(Groups.id, Groups.name)} to='/admin/group' >{Groups.name}</Link></td>
             <td>{Groups.date}</td>
         </>
     );

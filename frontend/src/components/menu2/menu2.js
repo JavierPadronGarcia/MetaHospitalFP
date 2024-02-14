@@ -15,7 +15,7 @@ function Menu2() {
             return 'Estudiantes';
         } else if (pathname === '/admin/teachers') {
             return 'Profesores';
-        } else if (pathname === '/admin/groups') {
+        } else if (pathname === '/admin/groups' || pathname === '/admin/group') {
             return 'Grupos';
         } else if (pathname === '/admin/courses') {
             return 'Cursos';
