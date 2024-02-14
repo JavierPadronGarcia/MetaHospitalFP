@@ -24,7 +24,8 @@ import ChatComponent from './components/chat/ChatComponent';
 import NotificationTest from './pages/teacher-pages/notification-test-pages/NotificationTest';
 import UserProfilePage from './pages/profile/profile';
 import Studenthome from './pages/student-pages/studenthome/studenthome';
-import AdminCourse from './pages/admincourse/admincourse';
+import StudentExercises from './pages/student-pages/studentexercises/studentexercises';
+// import AdminCourse from './pages/admincourse/admincourse';
 
 function App() {
 
@@ -54,7 +55,7 @@ function App() {
           <Route path="users" element={<UserAdmin />}></Route>
           <Route path="schools" element={<SchoolsAdmin />} />
           <Route path="school" element={<AdminSchool />} />
-          <Route path="groups" element={<AdminCourse />} />
+          {/* <Route path="groups" element={<AdminCourse />} /> */}
           <Route path="courses" element={<CoursesAdmin />} />
           <Route path="students" element={<StudentSchools />} />
           <Route path="teachers" element={<TeacherSchools />} />
@@ -71,6 +72,7 @@ function App() {
 
         <Route path='/student' element={<PrivateRoute permittedRole='student' />}>
           <Route path="home" element={<Studenthome />} />
+          <Route path="workUnit" element={<StudentExercises />} />
         </Route>
 
         <Route path="/chat/:groupId" element={<ChatComponent />} />

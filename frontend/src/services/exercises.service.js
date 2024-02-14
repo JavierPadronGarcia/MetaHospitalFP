@@ -17,10 +17,21 @@ function getOptions(token) {
 
 async function getAllExercisesOfTheGroup(groupId, workUnitId) {
   try {
-    const response = axios.get(`${backendExercisesEndpoint}/exercisesinagroup/${groupId}/${workUnitId}`,
+    const response = await axios.get(`${backendExercisesEndpoint}/exercisesinagroup/${groupId}/${workUnitId}`,
       getOptions(localStorage.getItem('token'))
     );
-    return (await response).data;
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getAllExercisesAssignedToStudent(groupId, workUnitId) {
+  try {
+    const response = await axios.get(`${backendExercisesEndpoint}/exercisesAssignedToUser/${groupId}/${workUnitId}`,
+      getOptions(localStorage.getItem('token'))
+    );
+    return response.data;
   } catch (err) {
     throw err;
   }
@@ -93,5 +104,6 @@ export default {
   addExercises,
   updateExercises,
   deleteExercise,
-  getAllStudentsAssignedInActivity
+  getAllStudentsAssignedInActivity,
+  getAllExercisesAssignedToStudent
 }

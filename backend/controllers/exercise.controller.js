@@ -158,6 +158,14 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   }
 }
 
+exports.findAllExercisesAssignedToUser = async (req, res) => {
+  const { groupId, workUnitId } = req.params;
+
+  const exercises = Participation.findAll({})
+
+
+}
+
 exports.update = (req, res) => {
   const updatedExercise = {
     id: req.params.id,

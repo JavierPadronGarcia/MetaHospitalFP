@@ -1,41 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import Card from '../../../components/card/card';
 import Headers from '../../../components/headers/headers';
 import groupsService from '../../../services/groups.service';
 import Tag from '../../../components/tag/tag';
-import { jwtDecode } from 'jwt-decode';
 import './studenthome.css'
 import CardUnits from '../../../components/cardUnits/cardunits';
+import workUnitGroupsService from '../../../services/workUnitGroups.service';
+import { useNavigate } from 'react-router-dom';
 
 
 const Studenthome = () => {
-    const  [title, setTitle] = useState('');
+  const [title, setTitle] = useState('');
+  const [workUnits, setWorkUnits] = useState([]);
 
-    const getGroup = async  () =>{
-        try {
-            const token = localStorage.getItem('token');
-            const tokenDecoded = jwtDecode(token);
-            let response = await groupsService.getById(3);
-            console.log('response');
-        } catch (error) {
-           console.log("Error: ", error);
-        };
+  const getGroup = async () => {
+    try {
+      const userGroup = await groupsService.getUserGroup();
+      localStorage.setItem('studentGroup', JSON.stringify(userGroup));
+      setTitle(userGroup.name);
+      getWorkUnits(userGroup.id);
+    } catch (err) {
+      console.log("Error: ", err);
     };
+  };
 
-    useEffect(()=>{
-       getGroup();
-       console.log('se obtuvo');
-    }, []);
+  const getWorkUnits = async (groupId) => {
+    try {
+      const workUnits = await workUnitGroupsService.getAllWorkUnitsWithColorsByGroup(groupId);
+      setWorkUnits(workUnits);
+    } catch (err) {
+      console.log('Error: ' + err)
+    }
+  }
 
-    return (
-        <div  className="student-home">
-            <Headers title={title} groupId={3}/>
-            <div className='container-scloll'>
-                <Tag name="Unidades" className="tags"/>
-                <CardUnits title={'Unidad 1'}/>
-            </div>
-        </div>
-    );
+  useEffect(() => {
+    getGroup();
+  }, []);
+
+  return (
+    <div className="student-home">
+      <Headers title={title} groupId={3} />
+      <div className='container-scloll'>
+        <Tag name="Unidades" className="tags" />
+        {workUnits.map((workUnit, index) => {
+          if (workUnit.visibility)
+            return <CardUnits key={index}
+              title={workUnit.workUnit.name}
+              route={`/student/workUnit`}
+              workUnit={workUnit.workUnit}
+            />
+        })}
+      </div>
+    </div>
+  );
 }
 
 export default Studenthome;
