@@ -1,0 +1,18 @@
+.headers {
+    background-color: #3E94E7;
+    border-bottom-left-radius: 60px;
+    height: 13vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headers h1{
+    padding: 7%;
+    color: white;
+}
+
+.headers .dropdown{
+    padding: 3%;
+    color: white;
+}

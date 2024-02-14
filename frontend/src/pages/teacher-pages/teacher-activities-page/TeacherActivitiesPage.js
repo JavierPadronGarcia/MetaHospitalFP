@@ -21,6 +21,7 @@ function TeacherActivitiesPage() {
     exercisesService.getAllExercisesOfTheGroup(id, workUnitId).then(exercises => {
       setAssignedExercises(exercises.filter(exercise => exercise.assigned == true));
       setUnAssignedExercises(exercises.filter(exercise => exercise.assigned == false));
+      console.log(exercises)
     }).catch(err => {
       if (!err.response) {
         noConnectionError();

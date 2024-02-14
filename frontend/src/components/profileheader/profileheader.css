@@ -1,0 +1,34 @@
+.profile-header {
+    background-color: #3E94E7;
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
+    height: 13vh;
+}
+
+.avatar-container {
+    padding-top: 5vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-container .ant-avatar .anticon-user {
+    color: rgb(41, 41, 41);
+}
+
+.avatar-container .ant-avatar {
+    background-color: white;
+}
+
+.username {
+    color: rgb(41, 41, 41);
+    font-size: 2em;
+}
+
+.actions {
+    position: absolute;
+    color: white;
+    right: 6%;
+    top: 8vh;
+}
