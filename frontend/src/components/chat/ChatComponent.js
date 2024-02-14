@@ -20,6 +20,7 @@ function ChatComponent() {
   const GET_LAST_MESSAGE = 'getLastMessages';
 
   const ws = useRef();
+  console.log(webSocketEndpoint)
 
   useEffect(() => {
     const SERVER_URL = `${webSocketEndpoint}?&groupId=${groupId}&userId=${user.id}`;
