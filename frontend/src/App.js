@@ -33,10 +33,12 @@ function App() {
   const roles = useContext(RolesContext);
 
   if (logged) {
+    
     const token = localStorage.getItem('token');
     const tokenDecoded = jwtDecode(token);
     const role = tokenDecoded.role;
     roles.role = role;
+
   }
 
   return (
