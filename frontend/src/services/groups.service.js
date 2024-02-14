@@ -39,9 +39,19 @@ async function getAllGroups() {
 
 async function getGroup(id) {
   try {
-    const response = await axios.get(backendGroupsEndpoint+ '/' +id,
-    getOptions(localStorage.getItem("token"))
+    const response = await axios.get(backendGroupsEndpoint + '/' + id,
+      getOptions(localStorage.getItem("token"))
     );
+    const group = await response.data;
+    return group;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getUserGroup() {
+  try {
+    const response = await axios.get(backendGroupsEndpoint + '/userGroup', getOptions(localStorage.getItem("token")))
     const group = await response.data;
     return group;
   } catch (err) {
@@ -101,5 +111,6 @@ export default {
   updateGroup,
   deleteGroup,
   getAllGroupsWithoutCount,
-  getGroup
+  getGroup,
+  getUserGroup
 }

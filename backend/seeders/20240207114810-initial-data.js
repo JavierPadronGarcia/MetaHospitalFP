@@ -13,7 +13,7 @@ module.exports = {
     ], {});
 
     await queryInterface.bulkInsert('groups', [
-      { id: 1, name: '2ºDAM-T', date:'2024-2025', createdAt: new Date(), updatedAt: new Date() }
+      { id: 1, name: '2ºDAM-T', date:'2023-2024', createdAt: new Date(), updatedAt: new Date() }
     ], {})
 
     await queryInterface.bulkInsert('groupenrolements', [
