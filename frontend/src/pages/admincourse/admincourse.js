@@ -37,7 +37,7 @@ function AdminCourse() {
 
     const getTeachersInGroup = async () => {
         try {
-            const response = await teacherGroupService.getAllTeachersInAGroup(3);
+            const response = await teacherGroupService.getAllTeachersInAGroup(localStorage.getItem("groupsId"));
             const teacherlist = response.map(teacher => teacher.User);
             setTeachersInGroup(teacherlist);
         } catch (error) {
@@ -59,7 +59,7 @@ function AdminCourse() {
 
     const getStudentInGroup = async () => {
         try {
-            const response = await groupEnrolementService.getAllStudentsInAGroup(3);
+            const response = await groupEnrolementService.getAllStudentsInAGroup(localStorage.getItem("groupsId"));
             const studentslist = response.map(student => student.User);
             setStudentsInGroup(studentslist);
         } catch (error) {
