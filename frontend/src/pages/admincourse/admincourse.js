@@ -59,7 +59,7 @@ function AdminCourse() {
 
     const getStudentInGroup = async () => {
         try {
-            const response = await groupEnrolementService.getAllStudentsInAGroup(localStorage.getItem("groupsId"));
+            const response = await groupEnrolementService.getAllStudentsInAGroup( localStorage.getItem("groupsId") );
             const studentslist = response.map(student => student.User);
             setStudentsInGroup(studentslist);
         } catch (error) {
