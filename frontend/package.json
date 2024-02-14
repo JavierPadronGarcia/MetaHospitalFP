@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.11.0",
     "axios": "^1.6.0",
+    "dayjs": "^1.11.10",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,7 +21,7 @@
     "start-server": "node server/server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!axios).+\\.js$'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

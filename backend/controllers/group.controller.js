@@ -1,5 +1,7 @@
 const db = require("../models");
+const dayjs = require('dayjs');
 const Group = db.groups;
+const User = db.users;
 const WorkUnit = db.workUnit;
 const GroupEnrolement = db.groupEnrolement;
 const Teachercourse = db.teachercourse;
@@ -8,9 +10,9 @@ const Op = db.Sequelize.Op;
 
 exports.createGroup = (req, res) => {
   const name = req.body.name;
-  const date =req.body.date;
+  const date = req.body.date;
   const CourseId = req.body.CourseId;
-  
+
   const workUnitGroupCreation = [];
 
   if (!name) {
@@ -106,6 +108,43 @@ exports.findOne = (req, res) => {
         error: err
       })
     })
+}
+
+exports.findUserGroup = (req, res) => {
+  const userId = req.user.id;
+
+  const month = dayjs().month();
+  const year = dayjs().year();
+  let yearRange = '';
+
+  if (month >= 9) {
+    yearRange = `${year}-${year + 1}`;
+  } else {
+    yearRange = `${year - 1}-${year}`;
+  }
+
+  User.findOne({
+    where: { id: userId },
+    include: {
+      model: GroupEnrolement,
+      required: true,
+      include: {
+        model: Group,
+        where: {
+          date: yearRange
+        }
+      }
+    }
+  }).then(userWithGroup => {
+    if (userWithGroup) {
+      return res.send(userWithGroup.groupEnrolements[0].group);
+    } else {
+      return res.status(404).send({
+        error: true,
+        message: 'User do not have  a group in this range'
+      });
+    }
+  });
 }
 
 exports.update = (req, res) => {
