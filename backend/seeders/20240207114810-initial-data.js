@@ -39,10 +39,14 @@ module.exports = {
     }
     await queryInterface.bulkInsert('users', allusers, {});
 
+    await queryInterface.bulkInsert('schools', [
+      { id: 1, name: 'IES Los Gladiolos', createdAt: new Date(), updatedAt: new Date() },
+    ])
+
     await queryInterface.bulkInsert('courses', [
-      { id: 1, name: 'Técnicos Cuidados Auxiliares de Enfermería', acronyms: 'CAE', createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, name: 'Técnicos de emergencias sanitarias', acronyms: 'TES', createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, name: 'Técnicos de Imagen para el Diagnóstico', acronyms: 'IMD', createdAt: new Date(), updatedAt: new Date() },
+      { id: 1, name: 'Técnicos Cuidados Auxiliares de Enfermería', acronyms: 'CAE', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, name: 'Técnicos de emergencias sanitarias', acronyms: 'TES', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, name: 'Técnicos de Imagen para el Diagnóstico', acronyms: 'IMD', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
     ])
 
     await queryInterface.bulkInsert('groups', [
@@ -87,10 +91,6 @@ module.exports = {
       { UserID: 6, GroupID: 6, createdAt: new Date(), updatedAt: new Date() },
     ])
 
-    await queryInterface.bulkInsert('schools', [
-      { id: 1, name: 'IES Los Gladiolos', createdAt: new Date(), updatedAt: new Date() },
-    ])
-
     await queryInterface.bulkInsert('teacherschools', [
       { UserID: 2, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
       { UserID: 3, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
@@ -113,7 +113,7 @@ module.exports = {
     await queryInterface.bulkDelete('teachercourses', null, {});
     await queryInterface.bulkDelete('teacherschools', null, {});
     await queryInterface.bulkDelete('studentschools', null, {});
-    await queryInterface.bulkDelete('users', null, {});
+    await queryInterface.bulkDelete('Users', null, {});
     await queryInterface.bulkDelete('groups', null, {});
     await queryInterface.bulckDelete('courses', null, {});
     await queryInterface.bulckDelete('schools', null, {});
