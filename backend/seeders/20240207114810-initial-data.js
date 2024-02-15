@@ -37,13 +37,13 @@ module.exports = {
         { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'student', createdAt: new Date(), updatedAt: new Date() },
       )
     }
-    await queryInterface.bulkInsert('users', allusers, {});
+    await queryInterface.bulkInsert('Users', allusers, {});
 
-    await queryInterface.bulkInsert('schools', [
+    await queryInterface.bulkInsert('Schools', [
       { id: 1, name: 'IES Los Gladiolos', createdAt: new Date(), updatedAt: new Date() },
     ])
 
-    await queryInterface.bulkInsert('courses', [
+    await queryInterface.bulkInsert('Courses', [
       { id: 1, name: 'Técnicos Cuidados Auxiliares de Enfermería', acronyms: 'CAE', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
       { id: 2, name: 'Técnicos de emergencias sanitarias', acronyms: 'TES', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
       { id: 3, name: 'Técnicos de Imagen para el Diagnóstico', acronyms: 'IMD', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
@@ -66,7 +66,7 @@ module.exports = {
       );
     }
 
-    await queryInterface.bulkInsert('groupenrolements', [
+    await queryInterface.bulkInsert('groupEnrolements', [
       { id: 1, UserID: 7, GroupID: 1, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
       { id: 2, UserID: 8, GroupID: 1, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
       { id: 3, UserID: 9, GroupID: 2, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
@@ -79,7 +79,7 @@ module.exports = {
       { id: 10, UserID: 16, GroupID: 5, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
     ], {})
 
-    await queryInterface.bulkInsert('teachercourses', [
+    await queryInterface.bulkInsert('TeacherCourses', [
       { UserID: 2, GroupID: 1, createdAt: new Date(), updatedAt: new Date() },
       { UserID: 2, GroupID: 2, createdAt: new Date(), updatedAt: new Date() },
       { UserID: 3, GroupID: 2, createdAt: new Date(), updatedAt: new Date() },
@@ -91,7 +91,7 @@ module.exports = {
       { UserID: 6, GroupID: 6, createdAt: new Date(), updatedAt: new Date() },
     ])
 
-    await queryInterface.bulkInsert('teacherschools', [
+    await queryInterface.bulkInsert('TeacherSchools', [
       { UserID: 2, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
       { UserID: 3, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
       { UserID: 4, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
@@ -105,18 +105,18 @@ module.exports = {
       studentSchools.push({ UserID: i, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },)
     }
 
-    await queryInterface.bulkInsert('studentschools', studentSchools);
+    await queryInterface.bulkInsert('StudentSchools', studentSchools);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulckDelete('groupenrolements', null, {});
-    await queryInterface.bulkDelete('teachercourses', null, {});
+    await queryInterface.bulckDelete('groupEnrolements', null, {});
+    await queryInterface.bulkDelete('TeacherCourses', null, {});
     await queryInterface.bulkDelete('teacherschools', null, {});
-    await queryInterface.bulkDelete('studentschools', null, {});
+    await queryInterface.bulkDelete('TeacherSchools', null, {});
     await queryInterface.bulkDelete('Users', null, {});
     await queryInterface.bulkDelete('groups', null, {});
-    await queryInterface.bulckDelete('courses', null, {});
-    await queryInterface.bulckDelete('schools', null, {});
+    await queryInterface.bulckDelete('Courses', null, {});
+    await queryInterface.bulckDelete('Schools', null, {});
   }
 };
 
