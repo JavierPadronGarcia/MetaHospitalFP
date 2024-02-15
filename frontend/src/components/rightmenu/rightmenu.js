@@ -1,36 +1,38 @@
 import React from 'react';
 import './rightmenu.css';
-import Medicine from '../../imgs/Medicine.svg';
-import users from '../../imgs/users2.svg';
-import schools from '../../imgs/schools2.svg';
-import students from '../../imgs/students.svg';
-import teacher from '../../imgs/teachers2.svg';
-import courses from '../../imgs/courses2.svg';
 import { Button } from 'antd';
 import Consts from '../consts/consts';
 
-
-const Rightmenu = ({ renderImputs, cancel, mode, onSubmit,currentRoute }) => {
+const Rightmenu = ({ renderImputs, cancel, mode, onSubmit, currentRoute }) => {
 
   const selectIcon = () => {
-    if (currentRoute === '/admin/control-panel') {
-      return Medicine;
-    } else if (currentRoute === '/admin/users') {
-      return users;
-    }else if (currentRoute === '/admin/schools') {
-      return schools;
-    }else if (currentRoute === '/admin/school') {
-      return schools;
-    }else if (currentRoute === '/admin/students') {
-      return students;
-    }else if (currentRoute === '/admin/teachers') {
-      return teacher;
-    }else if (currentRoute === '/coursesadmin') {
-      return courses;
+    let icon = '';
+    switch (currentRoute) {
+      case '/admin/control-panel':
+        icon = '/assets/imgs/Medicine.svg';
+        break;
+      case '/admin/users':
+        icon = '/assets/imgs/users2.svg';
+        break;
+      case '/admin/schools':
+        icon = '/assets/imgs/schools2.svg';
+        break;
+      case '/admin/school':
+        icon = '/assets/imgs/schools2.svg';
+        break;
+      case '/admin/students':
+        icon = '/assets/imgs/students.svg';
+        break;
+      case '/admin/teachers':
+        icon = '/assets/imgs/teachers2.svg';
+        break;
+      case '/admin/courses':
+        icon = '/assets/imgs/courses2.svg';
+        break;
     }
-    return null;
+    return icon;
   };
-  
+
   const shouldRenderContent = renderImputs && onSubmit;
 
   return (

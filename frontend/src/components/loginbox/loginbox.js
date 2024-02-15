@@ -2,8 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import './loginbox.css';
 import { errorOnLogin, noConnectionError } from '../../utils/shared/errorHandler';
 import { Button, Input, message, notification } from 'antd';
-import Medicine from '../../imgs/Medicine.svg';
-import Logo from '../../imgs/Icon.png';
+
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/auth.service';
 import { RolesContext } from '../../context/roles';
@@ -88,11 +87,11 @@ function LoginBox() {
     <div className='login-content'>
       <div className='box'>
         <div className='box-rigt'>
-          <img src={Medicine} alt="medicine" />
+          <img src='/assets/imgs/Medicine.svg' alt="medicine" />
         </div>
         <div className='box-left'>
           <div className='logo'>
-            <img src={Logo} alt="My logo" />
+            <img src='/assets/imgs/Icon.png' alt="My logo" />
             <h1>MetaHospitalFp</h1>
           </div>
           <div className='imputs'>
