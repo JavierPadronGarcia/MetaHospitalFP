@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
 
-    await queryInterface.bulkInsert('workunits', [
+    await queryInterface.bulkInsert('workUnits', [
       { id: 1, name: 'UT6 Cardio', createdAt: new Date(), updatedAt: new Date() },
       { id: 2, name: 'UT7 Neumología', createdAt: new Date(), updatedAt: new Date() },
       { id: 3, name: 'UT10 Neonatología', createdAt: new Date(), updatedAt: new Date() },
@@ -19,7 +19,7 @@ module.exports = {
       { id: 6, primaryColor: '#F4E8698A', secondaryColor: '#DACC388A', text: '#000000', createdAt: new Date(), updatedAt: new Date() },
     ])
 
-    await queryInterface.bulkInsert('workunitcolors', [
+    await queryInterface.bulkInsert('workUnitColors', [
       { WorkUnitId: 1, ColorId: 1, visibility: 1, createdAt: new Date(), updatedAt: new Date() },
       { WorkUnitId: 1, ColorId: 2, visibility: 0, createdAt: new Date(), updatedAt: new Date() },
       { WorkUnitId: 2, ColorId: 3, visibility: 1, createdAt: new Date(), updatedAt: new Date() },
@@ -28,7 +28,7 @@ module.exports = {
       { WorkUnitId: 3, ColorId: 6, visibility: 0, createdAt: new Date(), updatedAt: new Date() },
     ])
 
-    await queryInterface.bulkInsert('workunitgroups', [
+    await queryInterface.bulkInsert('workUnitGroups', [
       { GroupID: 1, WorkUnitID: 1, visibility: 0, createdAt: new Date(), updatedAt: new Date() },
       { GroupID: 1, WorkUnitID: 2, visibility: 0, createdAt: new Date(), updatedAt: new Date() },
       { GroupID: 1, WorkUnitID: 3, visibility: 1, createdAt: new Date(), updatedAt: new Date() },
@@ -52,9 +52,9 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('workunitcolors', null, {});
-    await queryInterface.bulkDelete('workunitgroups', null, {});
-    await queryInterface.bulkDelete('workunits', null, {});
+    await queryInterface.bulkDelete('workUnitColors', null, {});
+    await queryInterface.bulkDelete('workUnitGroups', null, {});
+    await queryInterface.bulkDelete('workUnits', null, {});
     await queryInterface.bulkDelete('colors', null, {});
   }
 };
