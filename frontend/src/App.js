@@ -15,17 +15,16 @@ import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMain
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
 import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
-import AdminHome from './pages/adminhome/adminhome';
+import AdminHome from './pages/admin-pages/adminhome/adminhome';
 import SchoolsAdmin from './pages/schooladmin/schooladmin';
 import AdminSchool from './pages/adminschool/adminschool';
 import StudentSchools from './pages/studentschool/studentschool';
 import CoursesAdmin from './pages/coursesadmin/coursesadmin';
 import ChatComponent from './components/chat/ChatComponent';
-import NotificationTest from './pages/teacher-pages/notification-test-pages/NotificationTest';
 import UserProfilePage from './pages/profile/profile';
 import Studenthome from './pages/student-pages/studenthome/studenthome';
 import StudentExercises from './pages/student-pages/studentexercises/studentexercises';
-import AdminCourse from './pages/admincourse/admincourse';
+import AdminCourse from './pages/admin-pages/admincourse/admincourse';
 
 function App() {
 
@@ -33,7 +32,7 @@ function App() {
   const roles = useContext(RolesContext);
 
   if (logged) {
-    
+
     const token = localStorage.getItem('token');
     const tokenDecoded = jwtDecode(token);
     const role = tokenDecoded.role;
@@ -46,8 +45,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
 
-        <Route path="/hola" element={<NotificationTest />} />
-
         <Route element={<PrivateRoute onlyLogged={true} />}>
           <Route path="/myUser" element={<UserProfilePage />} />
           <Route path="/chat/:groupId" element={<ChatComponent />} />
@@ -55,7 +52,7 @@ function App() {
 
         <Route path='/admin' element={<PrivateRoute permittedRole='admin' />}>
           <Route path="control-panel" element={<AdminHome />} />
-          <Route path="users" element={<UserAdmin />}></Route>
+          <Route path="users" element={<UserAdmin />} />
           <Route path="schools" element={<SchoolsAdmin />} />
           <Route path="school" element={<AdminSchool />} />
           <Route path="groups" element={<GroupAdmin />} />

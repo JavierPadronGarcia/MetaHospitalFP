@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import courses from '../../imgs/courses.svg';
 import students from '../../imgs/students2.svg';
 import teachers from '../../imgs/teachers.svg';
-
+import groups from '../../imgs/schools.svg';
 
 function AdminSchool() {
     const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -34,8 +34,8 @@ function AdminSchool() {
                 <div className='squares'>
                     <Square icon={students} label="Estudiantes" route="/admin/students" />
                     <Square icon={teachers} label="Profesores" route="/admin/teachers" />
-                    <Square icon="user-icon.png" label="Grupos" route="/admin/groups" />
-                    <Square icon={courses} label="Cursos" route="/coursesadmin" />
+                    <Square icon={groups} label="Grupos" route="/admin/groups" />
+                    <Square icon={courses} label="Cursos" route="/admin/courses" />
                 </div>
             </div>
             {!isSmallScreen && <div className='container-right'>

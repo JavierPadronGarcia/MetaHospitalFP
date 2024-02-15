@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import BasicList from '../../components/basiclist/basiclist';
-import Rightmenu from '../../components/rightmenu/rightmenu';
+import BasicList from '../../../components/basiclist/basiclist';
+import Rightmenu from '../../../components/rightmenu/rightmenu';
 import { message, Select } from 'antd';
-import Consts from '../../components/consts/consts';
-import PopForm from '../../components/popform/popform';
-import Tag from '../../components/tag/tag';
+import Consts from '../../../components/consts/consts';
+import PopForm from '../../../components/popform/popform';
+import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
-import teacherGroupService from '../../services/teacherGroup.service';
-import groupEnrolementService from '../../services/groupEnrolement.service';
-import Menu2 from '../../components/menu2/menu2';
+import teacherGroupService from '../../../services/teacherGroup.service';
+import groupEnrolementService from '../../../services/groupEnrolement.service';
+import Menu2 from '../../../components/menu2/menu2';
 
 function AdminCourse() {
     const [teachers, setTeachers] = useState([]);

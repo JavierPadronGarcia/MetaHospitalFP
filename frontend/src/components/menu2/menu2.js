@@ -1,10 +1,11 @@
 import React from 'react';
 import './menu2.css';
 import logo from '../../imgs/Icon.png';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function Menu2() {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const getMenuActiveItem = () => {
         const { pathname } = location;
@@ -28,7 +29,7 @@ function Menu2() {
         <div className="menu">
             <nav>
                 <ul className="menuItems">
-                    <img src={logo} alt="logotype" className="logotype" />
+                    <img src={logo} alt="logotype" className="logotype" onClick={() => navigate('/admin/control-panel')} />
                     <li>
                         <Link
                             to="/admin/school"
