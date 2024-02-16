@@ -136,7 +136,7 @@ As explained in the previous section, we visually illustrate in the following di
 ### Class diagram
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/classDiagram.png" alt="class diagram" width="70%"/>
+  <img src="./readmeImages//DBdiagramMetaHospitalfp.png" alt="class diagram" width="70%"/>
 </div>
 
 Thanks to the class diagram, we can start identifying the different
@@ -175,9 +175,35 @@ Course evaluation involves three components: "Items," representing evaluation cr
 
 ### Relational model
 
-<div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/RelationalModel.png" alt="entity-relation diagram" width="50%">
-</div>
+| Tabla            | Atributos                                      |
+|------------------|------------------------------------------------|
+| UserAccounts     | **id**, Username, Password, Email              |
+| Token_jwt        | **id**, UserId*, token, ExpireDate             |
+| Role             | **id**, nombre, status                         |
+| Application      | **id**, app_name, status                       |
+| User_Role        | UserId*, AppId, RolId, StartDate, ExpireDate   |
+| Student          | **id**, UserName, Email, password              |
+| Teacher          | **id**, UserName, Email, password              |
+| Admin            | **id**, SchoolId*, UserName, Email, password   |
+| School           | **id**, School                                 |
+| StudentSchool    | StudentId*, SchoolId*                          |
+| TeacherSchool    | TeacherId*, SchoolId*                          |
+| Group            | **id**, SchoolId*, CourseId*, Date, name       |
+| Course           | **id**, name, acronyms                         |
+| StudentGroup     | StudentId*, GroupId*                           |
+| TeacherGroup     | TeacherId*, GroupId*                           |
+| Participation    | **id**, UserId*, ExerciseId*, FinalGrade, SubmittedAt, Role |
+| Exercise         | **id**, Assigned, FinishDate, CaseId*          |
+| WorkUnitGroup    | **id**, WorkUnitId*, GroupId*, Visibility      |
+| WorkUnit         | **id**, name                                   |
+| WorkUnitColor    | **id**, ColorId*, WorkUnitGroupID*, Visibility |
+| Color            | **id**, PrimaryColor, SecondaryColor, text     |
+| Case             | **id**, WorkUnitId*, CaseNumber, name          |
+| Item             | **id**, CaseId*, name                          |
+| ItemPlayerRole   | **id**, ItemId*, PlayerRoleId*                 |
+| PlayerRole       | **id**, name                                   |
+| Grade            | **id**, grade, ItemId*, ParticipationId*       |
+
 
 <p align="right">(<a href="#metahospitalfp">back to top</a>)</p>
 
