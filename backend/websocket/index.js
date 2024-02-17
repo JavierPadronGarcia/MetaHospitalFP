@@ -31,7 +31,7 @@ module.exports = webSocketServer => {
       if (parsedMessage.type === CHAT_MESSAGE) {
         console.log(parsedMessage);
         userController.getUserById(parsedMessage.userId).then(user => {
-          messageController.create(groupId, user.id, user.username, parsedMessage.message).then(response => {
+          messageController.create(groupId, user.id, user.name, parsedMessage.message).then(response => {
 
             const message = {
               type: CHAT_MESSAGE,
@@ -40,7 +40,7 @@ module.exports = webSocketServer => {
               updatedAt: response.updatedAt,
               id: response.id,
               userId: user.id,
-              username: user.username,
+              username: user.name,
               message: response.message,
             }
 
