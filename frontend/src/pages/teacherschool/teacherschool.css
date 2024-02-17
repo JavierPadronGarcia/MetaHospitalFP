@@ -1,0 +1,22 @@
+.teacherschool-page .container-right {
+  display: none;
+  min-width: 25%;
+}
+
+.teacherschool-page .container-right>.right_menu {
+  padding-inline: 2rem;
+}
+
+.teacherschool-page .container-right>.right_menu .inputs {
+  width: 100%;
+}
+
+@media screen and (min-width: 1180px) {
+  .teacherschool-page .container-right {
+    display: block;
+  }
+
+  .teacherschool-page .floating-button {
+    display: none;
+  }
+}

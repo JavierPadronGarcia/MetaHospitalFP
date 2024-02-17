@@ -1,0 +1,22 @@
+.groupsadmin-page .container-right {
+  display: none;
+  min-width: 25%;
+}
+
+.groupsadmin-page .container-right>.right_menu {
+  padding-inline: 2rem;
+}
+
+.groupsadmin-page .container-right>.right_menu .inputs {
+  width: 100%;
+}
+
+@media screen and (min-width: 1150px) {
+  .groupsadmin-page .container-right {
+    display: block;
+  }
+
+  .groupsadmin-page .floating-button {
+    display: none;
+  }
+}

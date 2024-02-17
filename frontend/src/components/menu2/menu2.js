@@ -25,10 +25,12 @@ function Menu2() {
   };
 
   return (
-    <div className="menu">
+    <div className="menu2">
       <nav>
-        <ul className="menuItems">
+        <div className='logotype-container'>
           <img src='/assets/imgs/Icon.png' alt="logotype" className="logotype" onClick={() => navigate('/admin/control-panel')} />
+        </div>
+        <ul className="menuItems">
           <li>
             <Link
               to="/admin/school"
