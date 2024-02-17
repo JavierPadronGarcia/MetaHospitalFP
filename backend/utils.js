@@ -6,6 +6,7 @@ function generateToken(user) {
   var u = {
     id: user.id,
     username: user.username,
+    name: user.name,
     password: user.password,
     role: user.role
   }
