@@ -1,0 +1,22 @@
+.studentschool-page .container-right {
+  display: none;
+  min-width: 25%;
+}
+
+.studentschool-page .container-right>.right_menu {
+  padding-inline: 2rem;
+}
+
+.studentschool-page .container-right>.right_menu .inputs {
+  width: 100%;
+}
+
+@media screen and (min-width: 1150px) {
+  .studentschool-page .container-right {
+    display: block;
+  }
+
+  .studentschool-page .floating-button {
+    display: none;
+  }
+}

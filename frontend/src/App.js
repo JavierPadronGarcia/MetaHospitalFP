@@ -9,8 +9,6 @@ import authService from './services/auth.service';
 import UserAdmin from './pages/useradmin/useradmin';
 import GroupAdmin from './pages/groupsadmin/groupsadmin'
 import TeacherSchools from './pages/teacherschool/teacherschool'
-import AssignTeacherPage from './pages/admin-pages/assign-teacher/AssignTeacherPage';
-import AdminDirectorsPage from './pages/admin-pages/admin-directors/AdminDirectorsPage';
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
@@ -60,8 +58,6 @@ function App() {
           <Route path="courses" element={<CoursesAdmin />} />
           <Route path="students" element={<StudentSchools />} />
           <Route path="teachers" element={<TeacherSchools />} />
-          <Route path="teachers/assign/:teacher" element={<AssignTeacherPage />} />
-          <Route path="directors" element={<AdminDirectorsPage />} />
         </Route>
 
         <Route path='/teacher' element={<PrivateRoute permittedRole='teacher' />}>

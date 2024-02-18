@@ -24,7 +24,7 @@ function LoginBox() {
   const handleLogin = (username, password) => {
     authService.login({ username: username, password: password }).then((user) => {
 
-      if (user.role == 'student') {
+      if (user.role === 'student') {
         subscriptionMiddleware(user);
       }
 

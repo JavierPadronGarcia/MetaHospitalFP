@@ -42,7 +42,7 @@ async function login(user) {
 }
 
 async function logout() {
-  localStorage.removeItem("token");
+  localStorage.clear();
   return;
 }
 

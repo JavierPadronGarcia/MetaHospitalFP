@@ -4,7 +4,7 @@ import { message, Popconfirm } from 'antd';
 import './basiclist.css';
 
 const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
-  
+
   const cancel = () => {
     message.error('has pulsado que no');
   };
@@ -15,7 +15,7 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
         <thead>
           <tr>
             {Headlines.map((headline, index) => (
-              <th key={index}>{headline}</th>
+              <th key={index} className='headlines'>{headline}</th>
             ))}
             <th>Acciones</th>
           </tr>
@@ -35,8 +35,8 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
                     okText="si"
                     cancelText="no"
                   >
-                    <DeleteOutlined/>
-                  </Popconfirm>          
+                    <DeleteOutlined />
+                  </Popconfirm>
                 </td>
               </tr>
             ))
