@@ -1,6 +1,5 @@
 .menu1 {
     display: flex;
-    width: auto;
     height: 100px;
     background: #f9f9f9;
     border-radius: 30px;
@@ -10,10 +9,16 @@
     user-select: none;
 }
 
+.menu1 nav {
+    display: flex;
+}
+
 .menu1 .menuItems {
     list-style: none;
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .menu1 .menuItems li {

@@ -15,13 +15,14 @@
 
 .container-left .squares {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   padding-block: 20px;
+  justify-content: center;
 }
 
 .container-left .square {
-  width: 200px;
+  width: 100px;
 }
 
 .list-titles {
@@ -29,10 +30,15 @@
   padding-left: 10px;
 }
 
+@media screen and (min-width: 500px) {
+  .container-left .square {
+    width: 150px;
+  }
+}
+
 @media screen and (min-width: 600px) {
-  .container-left .squares {
-    flex-direction: row;
-    justify-content: center;
+  .container-left .square {
+    width: 200px;
   }
 }
 
