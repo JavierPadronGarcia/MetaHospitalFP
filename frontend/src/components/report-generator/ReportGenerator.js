@@ -2,7 +2,7 @@ import jsreport from '@jsreport/browser-client';
 import { useEffect, useRef, useState } from 'react';
 import { Spin, Input, Button, Modal, Form, message } from 'antd';
 import emailService from '../../services/email.service';
-import { jsReportEnpoint } from '../../consts/backendEndpoints';
+import { jsReportEnpoint } from '../../constants/backendEndpoints';
 
 jsreport.serverUrl = jsReportEnpoint;
 
