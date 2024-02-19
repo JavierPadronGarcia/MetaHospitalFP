@@ -1,0 +1,27 @@
+# Node.js
+node_modules/
+
+# Editor
+.vscode/
+
+# Logs and local server files
+logs/*
+
+# Compiled templates and reports
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Dependency directories
+.jpm/
+
+# Build files
+build/
+
+# Environment variables
+.env

@@ -7,6 +7,8 @@ const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
 const Group = db.groups;
 const User = db.users;
+const Grade = db.grade;
+const Item = db.item;
 const ActivitySubscription = db.activitySubscription;
 const Participation = db.participation;
 const Op = db.Sequelize.Op;
@@ -178,6 +180,58 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
   } catch (err) {
     return res.status(500).send({
       error: err.message || "Some error occurred while retrieving the exercises of the student"
+    });
+  }
+}
+
+exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
+  try {
+    const { groupId, workUnitId, caseId, assigned, finishDate } = req.params;
+
+    const result = await db.sequelize.query(`
+      SELECT grd.id as gradeId, grd.grade as gradeValue, u.id as userId, u.username, u.name, i.id as itemId, i.name as itemName
+      FROM \`${Group.tableName}\` AS g
+      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
+      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
+      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
+      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
+      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
+      JOIN \`${User.tableName}\` AS u ON u.id = p.UserId
+      JOIN \`${Grade.tableName}\` AS grd ON grd.ParticipationID = p.id
+      JOIN \`${Item.tableName}\` AS i ON i.id = grd.ItemID
+      WHERE g.id = ${groupId}
+      AND wku.id = ${workUnitId}
+      AND ex.assigned = ${assigned}
+      AND ex.CaseID = ${caseId}
+      AND (date(ex.finishDate) like '${finishDate}' OR ex.finishDate IS NULL)
+    `, { type: db.Sequelize.QueryTypes.SELECT });
+
+    const formattedResult = {};
+
+    result.forEach(item => {
+      if (!formattedResult[item.userId]) {
+        formattedResult[item.userId] = {
+          userId: item.userId,
+          username: item.username,
+          name: item.name,
+          items: []
+        };
+      }
+
+      formattedResult[item.userId].items.push({
+        itemId: item.itemId,
+        itemName: item.itemName,
+        gradeValue: item.gradeValue
+      });
+    });
+
+    return res.send(Object.values(formattedResult));
+
+  } catch (err) {
+    console.log(err.message)
+
+    return res.status(500).send({
+      error: err.message || "Some error occurred while retreaving  the exercises"
     });
   }
 }
