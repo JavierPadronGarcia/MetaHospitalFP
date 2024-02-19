@@ -1,36 +1,59 @@
 .cardunits-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    width: 80%;
-    margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 80%;
+  margin: 0 auto;
+  user-select: none;
 }
 
 .cardunits {
-    background-color: #ffffff;
-    border-radius: 30px;
-    padding: 20px;
-    position: relative;
-    width: 90%;
-    display: flex;
+  background-color: #ffffff;
+  border-radius: 30px;
+  padding: 10px;
+  position: relative;
+  width: 90%;
+  display: flex;
+  cursor: pointer;
 }
 
-.scuare {
-    width: 70px;
-    height: auto;
-    background-color: #007bff;
-    margin-right: 20px;
-    border-radius: 20px;
+.cardunits-container .square {
+  width: 30px;
+  height: 30px;
+  background-color: #007bff;
+  margin-right: 20px;
+  border-radius: 20px;
 }
 
 .cardunits:hover,
 .cardunits.hovered {
-    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
 .content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardunits .content {
+  font-size: 1rem;
+  font-weight: bolder;
+}
+
+@media only screen and (min-width:640px) {
+  .cardunits {
+    padding: 20px;
+  }
+
+  .cardunits .content {
+    font-size: 1.5rem;
+    font-weight: bolder;
+  }
+
+  .cardunits-container .square {
+    width: 50px;
+    height: 50px;
+  }
 }

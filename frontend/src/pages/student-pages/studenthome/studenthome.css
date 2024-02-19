@@ -4,11 +4,10 @@
     flex-direction: column;
 }
 
-.student-home .container-scloll{
+.student-home .container-scroll{
     overflow: auto;
 }
 
 .student-home .tags {
     padding: 20px;
 }
-
