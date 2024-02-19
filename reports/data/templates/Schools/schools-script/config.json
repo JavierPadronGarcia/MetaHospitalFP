@@ -1,0 +1,16 @@
+{
+    "name": "schools-script",
+    "scope": "template",
+    "shortid": "gtCBdzR3W7",
+    "creationDate": {
+        "$$date": 1704832251301
+    },
+    "modificationDate": {
+        "$$date": 1708361925079
+    },
+    "_id": "5fnrhJe21pLceI61",
+    "$entitySet": "scripts",
+    "entitySet": "scripts",
+    "type": "entity",
+    "key": "5fnrhJe21pLceI61"
+}
