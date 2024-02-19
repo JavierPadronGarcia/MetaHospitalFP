@@ -20,6 +20,10 @@ module.exports = app => {
     auth.isAuthenticated,
     exercises.getAllStudentsAssignedToExercise);
 
+  router.get('/studentsAssignedToExerciseWithDetails/:groupId/:workUnitId/:caseId/:assigned/:finishDate',
+    auth.isAuthenticated,
+    exercises.getAllStudentsassignedToExerciseWithDetails);
+
   router.get('/exercisesAssignedToStudent/:groupId/:workUnitId',
     auth.isAuthenticated,
     exercises.findAllExercisesAssignedToStudent)

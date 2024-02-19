@@ -4,6 +4,7 @@ import Rightmenu from '../../../components/rightmenu/rightmenu';
 import Square from '../../../components/square/square';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
+import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 import './adminschool.css';
 
 function AdminSchool() {
@@ -20,6 +21,7 @@ function AdminSchool() {
           <Square icon='/assets/imgs/schools.svg' label="Grupos" route="/admin/groups" />
           <Square icon='/assets/imgs/courses.svg' label="Cursos" route="/admin/courses" />
         </div>
+        <FloatingMenu />
       </div>
       <div className='container-right'>
         <Rightmenu currentRoute={location.pathname} />

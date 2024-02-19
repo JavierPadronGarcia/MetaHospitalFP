@@ -2,6 +2,8 @@ const backendEndpoint = process.env.REACT_APP_BACKEND_URL;
 
 export const webSocketEndpoint = process.env.REACT_APP_WS_URL;
 
+export const jsReportEnpoint = process.env.REACT_APP_REPORT_URL;
+
 export const backendImageEndpoint = `${backendEndpoint}/images`;
 
 export const backendUsersEndpoint = `${backendEndpoint}/api/users`;
@@ -29,3 +31,5 @@ export const backendMessagesEndpoint = `${backendEndpoint}/api/messages`;
 export const backendSchoolsEndpoint = `${backendEndpoint}/api/schools`;
 
 export const backendSubscriptionEndpoint = `${backendEndpoint}/api/activitysubscriptions`;
+
+export const backendEmailEndpoint = `${backendEndpoint}/api/mailer`;
