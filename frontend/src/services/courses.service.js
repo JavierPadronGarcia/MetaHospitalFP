@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { backendCoursesEndpoint } from '../consts/backendEndpoints';
+import { backendCoursesEndpoint } from '../constants/backendEndpoints';
 
 export const getCourses = async () => {
     try {

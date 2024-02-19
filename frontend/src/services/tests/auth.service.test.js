@@ -83,8 +83,7 @@ describe('AuthService', () => {
     it.each([
       ['admin', '/admin/control-panel'],
       ['teacher', '/teacher/main'],
-      ['student', '/student-groups'],
-      ['director', '/director-panel'],
+      ['student', '/student/home'],
     ])('Should navigate to %s page', (role, expectedRoute) => {
       authService.navigateByRole(role, navigateMock);
       expect(navigateMock).toHaveBeenCalledWith(expectedRoute);

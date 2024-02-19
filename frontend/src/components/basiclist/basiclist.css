@@ -16,3 +16,7 @@ td {
     text-align: center;
     border-top: 2px solid;
 }
+
+.table-component .headlines{
+    user-select: none;
+}

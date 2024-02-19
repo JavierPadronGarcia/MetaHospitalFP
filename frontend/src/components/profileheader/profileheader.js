@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import authService from '../../services/auth.service';
 import usersService from '../../services/users.service';
 import { errorMessage, noConnectionError } from '../../utils/shared/errorHandler';
-import { backendImageEndpoint } from '../../consts/backendEndpoints';
+import { backendImageEndpoint } from '../../constants/backendEndpoints';
 import AuthCodeGenerator from '../auth-code-generator/AuthCodeGenerator'
 
 const ProfileHeader = () => {

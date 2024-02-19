@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { backendExercisesEndpoint } from '../consts/backendEndpoints';
+import { backendExercisesEndpoint } from '../constants/backendEndpoints';
 
 
 function getOptions(token) {

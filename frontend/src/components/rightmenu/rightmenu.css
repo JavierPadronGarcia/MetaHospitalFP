@@ -2,27 +2,29 @@
     background-color: #3E94E7;
     height: 100vh;
     border-radius: 30px 0px 0px 30px;
+    padding-inline: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    user-select: none;
 }
 
-.inputs{
+.inputs {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
-.inputs h1{
+.inputs h1 {
     color: white;
     text-align: center;
 }
 
-.inputs p{
+.inputs p {
     color: white;
 }
 
-.inputs Input{
+.inputs Input {
     width: 100%;
 }
 
@@ -33,18 +35,18 @@
     max-height: 283px;
 }
 
-.buttons{
+.buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.buttons Button{
+.buttons Button {
     margin-top: 5%;
     width: 30%;
 }
 
-.submit-button{
+.submit-button {
     color: #3E94E7;
     border-color: #3E94E7;
 }

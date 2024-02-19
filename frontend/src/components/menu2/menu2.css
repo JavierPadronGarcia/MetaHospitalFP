@@ -1,59 +1,88 @@
-.menu {
-    display: flex;
-    width: auto;
-    height: 129px;
-    background: #f9f9f9;
-    border-radius: 30px;
-    margin: 10px;
-    align-items: center;
+.menu2 {
+  display: flex;
+  width: auto;
+  height: 129px;
+  background: #f9f9f9;
+  border-radius: 30px;
+  margin: 10px;
+  align-items: center;
+  user-select: none;
 }
 
-.menuItems {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
+.menu2>nav {
+  display: flex;
+  margin-left: 1rem;
 }
 
-.menuItems li {
-    margin-right: 25px;
-    display: flex;
-    align-items: center;
+.menu2 .menuItems {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.menuItems a {
-    text-decoration: none;
-    color: #3D3D3D;
-    font-family: 'Roboto', sans-serif;
-    font-size: 24px;
-    font-weight: bold;
-    position: relative;
-    text-transform: uppercase;
+.menu2 .menuItems li {
+  margin-right: 25px;
+  display: flex;
+  align-items: center;
 }
 
-.menuItems a::before {
-    content: attr(data-item);
-    transition: width 0.5s ease-in-out;
-    color: #3E94E7;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 0;
-    overflow: hidden;
+.menu2 .menuItems a {
+  text-decoration: none;
+  color: #3D3D3D;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  position: relative;
+  text-transform: uppercase;
 }
 
-.menuItems a:hover::before {
-    width: 100%;
+.menu2 .menuItems a::before {
+  content: attr(data-item);
+  transition: width 0.5s ease-in-out;
+  color: #3E94E7;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 0;
+  overflow: hidden;
 }
 
-.logotype {
+.menu2 .menuItems a:hover::before {
+  width: 100%;
+}
+
+.menu2 .logotype {
+  width: 80px;
+  margin: 0.5rem;
+}
+
+.menu2 .menuItems a.active {
+  color: #3E94E7;
+}
+
+@media screen and (min-width: 600px) {
+  .menu2 .logotype {
     width: 99px;
-    margin-bottom: auto;
     margin-right: 25px;
+  }
 }
 
-.menuItems a.active {
-    color: #3E94E7;
+@media screen and (min-width: 800px) {
+  .menu2 .menuItems a {
+    font-size: 20px;
+  }
+
+  .menu2 .menuItems {
+    flex-wrap: nowrap;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .menu2 .menuItems a {
+    font-size: 24px;
+  }
 }

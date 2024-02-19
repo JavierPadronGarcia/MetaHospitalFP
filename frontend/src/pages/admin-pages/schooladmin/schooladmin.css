@@ -1,0 +1,13 @@
+.schooladmin-page .container-right {
+  display: none;
+}
+
+@media screen and (min-width: 860px) {
+  .schooladmin-page .floating-button {
+    display: none;
+  }
+
+  .schooladmin-page .container-right {
+    display: block;
+  }
+}

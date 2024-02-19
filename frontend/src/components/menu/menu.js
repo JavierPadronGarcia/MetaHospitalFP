@@ -23,10 +23,12 @@ function Menu() {
   };
 
   return (
-    <div className="menu">
+    <div className="menu1">
       <nav>
-        <ul className="menuItems">
+        <div className='logo'>
           <img src='/assets/imgs/Icon.png' alt="logotype" className="logotype" onClick={() => navigate('/admin/control-panel')} />
+        </div>
+        <ul className="menuItems">
           <li>
             <Link
               to="/admin/control-panel"

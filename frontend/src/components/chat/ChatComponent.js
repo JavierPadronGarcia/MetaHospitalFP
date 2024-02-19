@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { decodeToken } from '../../utils/shared/globalFunctions';
-import { webSocketEndpoint } from "../../consts/backendEndpoints";
+import { webSocketEndpoint, backendMessagesEndpoint } from "../../constants/backendEndpoints";
 import { Button, Input, message } from "antd";
-import { backendMessagesEndpoint } from "../../consts/backendEndpoints";
+import './ChatComponent.css';
+import Headers from "../headers/headers";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 function ChatComponent() {
   const params = useParams();
@@ -14,13 +16,15 @@ function ChatComponent() {
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [messageField, setMessageField] = useState('');
 
+  const group = JSON.parse(localStorage.getItem('studentGroup'));
+
   const CHAT_MESSAGE = 'chatMessage';
   const CONNECTED_USERS_COUNT = 'connectedUsersCount';
   const GET_ALL_MESSAGES = 'getAllMessages';
   const GET_LAST_MESSAGE = 'getLastMessages';
 
   const ws = useRef();
-  console.log(webSocketEndpoint)
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const SERVER_URL = `${webSocketEndpoint}?&groupId=${groupId}&userId=${user.id}`;
@@ -55,7 +59,6 @@ function ChatComponent() {
 
       if (message.type === GET_LAST_MESSAGE) {
         handleLastMessagesReceived(message.messages);
-
       }
 
     }
@@ -83,6 +86,17 @@ function ChatComponent() {
     }
     navigator.serviceWorker.addEventListener('message', handleMessageFromServiceWorker);
   }, [])
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages, offlineChatMessages]);
+
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const chatMessageRecieved = (message) => {
     const allMessages = JSON.parse(localStorage.getItem('chatMessages'));
@@ -169,8 +183,6 @@ function ChatComponent() {
     let offlineMessages = JSON.parse(localStorage.getItem('offlineMessages'));
     if (!offlineMessages) offlineMessages = [];
 
-    message.username = 'TU';
-
     offlineMessages.push(message);
 
     localStorage.setItem('offlineMessages', JSON.stringify(offlineMessages));
@@ -195,19 +207,44 @@ function ChatComponent() {
   };
 
   return (
-    <div className="chat-component">
-      <h2>En línea: {connectedUsers}</h2>
-      {chatMessages.map((message, index) => (
-        <div key={index}>{(message.username == user.username) ? 'TU' : message.username}: {message.message}</div>
-      ))}
-      {offlineChatMessages.map((message, index) => (
-        <div key={index}>{(message.username)}: {message.message} <span>...OFFLINE...</span></div>
-      ))}
-      <form onSubmit={(e) => handleSendMessage(e)}>
-        <Input placeholder="mensaje..." id="messageField" value={messageField} onChange={(e) => setMessageField(e.target.value)} />
-        <Button htmlType="submit" onClick={handleSendMessage} disabled={messageField === ''}>Enviar Mensaje de Prueba</Button>
-      </form>
-    </div>
+    <>
+      <Headers title={`${group.name} - Chat de grupo`} groupId={groupId} />
+      <div className="chat-component">
+        <div className="connected-users">En línea: {connectedUsers}</div>
+        <div className="messages">
+          {chatMessages.map((message, index) => {
+            if (message.username === user.name) {
+              return (
+                <div key={index} className="personal-message">
+                  <div className="text">{message.message}</div>
+                </div>
+              )
+            }
+            return (
+              <div key={index} className="normal-message">
+                <div className="user-name">{message.username}</div>
+                <div className="text">{message.message}</div>
+              </div>
+            )
+          })}
+          {offlineChatMessages.map((message, index) => (
+            <div key={index}>{(message.username)}: {message.message} <span>...OFFLINE...</span></div>
+          ))}
+          <div ref={messagesEndRef}></div>
+        </div>
+        <form onSubmit={(e) => handleSendMessage(e)} className="message-form">
+          <Input placeholder="mensaje..." id="messageField" value={messageField} onChange={(e) => setMessageField(e.target.value)} />
+          <Button
+            id="buttonField"
+            htmlType="submit"
+            shape="circle"
+            onClick={handleSendMessage}
+            disabled={messageField === ''}
+            icon={<CaretRightOutlined />}
+          />
+        </form>
+      </div>
+    </>
   );
 }
 
