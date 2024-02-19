@@ -1,0 +1,34 @@
+{
+    "name": "schools-main",
+    "engine": "handlebars",
+    "recipe": "chrome-pdf",
+    "shortid": "trM9BOHUP",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "4cm",
+        "marginRight": "1.5cm",
+        "marginBottom": "1.5cm",
+        "marginLeft": "1.5cm"
+    },
+    "creationDate": {
+        "$$date": 1704928753602
+    },
+    "modificationDate": {
+        "$$date": 1705271980462
+    },
+    "_id": "4tPLo725MtVwlaiy",
+    "$entitySet": "templates",
+    "scripts": [
+        {
+            "shortid": "gtCBdzR3W7"
+        }
+    ],
+    "pdfOperations": [
+        {
+            "type": "merge",
+            "mergeWholeDocument": true,
+            "templateShortid": "yaO6lXiqH",
+            "enabled": true
+        }
+    ]
+}

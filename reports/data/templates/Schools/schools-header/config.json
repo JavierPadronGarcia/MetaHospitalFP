@@ -1,0 +1,20 @@
+{
+    "name": "schools-header",
+    "engine": "handlebars",
+    "recipe": "chrome-pdf",
+    "shortid": "yaO6lXiqH",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "1.5cm",
+        "marginRight": "1.5cm",
+        "marginLeft": "1.cm"
+    },
+    "creationDate": {
+        "$$date": 1704989602747
+    },
+    "modificationDate": {
+        "$$date": 1704991229350
+    },
+    "_id": "V2GWVUTjwD1ESQFm",
+    "$entitySet": "templates"
+}
