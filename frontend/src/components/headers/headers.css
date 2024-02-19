@@ -6,10 +6,11 @@
   align-items: center;
   justify-content: space-between;
   user-select: none;
+  color: white;
 }
 
 .headers h1 {
-  color: white;
+  font-size: 1.5rem;
   margin-left: 7%;
 }
 
@@ -19,21 +20,31 @@
   gap: 1.5rem;
   align-items: center;
   justify-content: flex-end;
-  margin-right: 7%;
+  margin-right: 5%;
   cursor: pointer;
-  color: white;
   font-family: 'Roboto', sans-serif;
-  font-size: 10px;
+  font-size: 17px;
   font-weight: bold;
   text-transform: uppercase;
 }
 
+.headers .menu-list>li:hover {
+  color: rgb(198, 255, 190);
+  transition: all ease-in-out 0.2s;
+}
+
 .headers .dropdown {
   padding: 3%;
-  color: white;
+  margin-right: 1.5rem;
 }
 
 @media screen and (min-width: 500px) {
+  .headers h1 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (min-width: 830px) {
   .headers .dropdown {
     display: none;
   }
@@ -41,17 +52,18 @@
   .headers .menu-list {
     display: flex;
   }
-}
 
-
-@media screen and (min-width: 600px) {
-  .headers .menu-list {
-    font-size: 15px;
+  .student-exercises .headers .menu-list {
+    font-size: 12px;
   }
 }
 
-@media screen and (min-width: 680px) {
+@media screen and (min-width: 950px) {
   .headers .menu-list {
+    font-size: 20px;
+  }
+
+  .student-exercises .headers .menu-list {
     font-size: 20px;
   }
 }

@@ -24,10 +24,17 @@ const Headers = ({ title, color, groupId }) => {
       case 'chat':
         navigate('/chat/' + groupId);
         break;
+      case 'home':
+        navigate('/student/home');
+        break;
     }
   };
 
   const items = [
+    {
+      label: 'Inicio',
+      key: 'home',
+    },
     {
       label: 'Perfil',
       key: 'profile',
