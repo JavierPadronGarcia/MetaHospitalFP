@@ -1,7 +1,7 @@
 import React from 'react';
 import './rightmenu.css';
 import { Button } from 'antd';
-import Consts from '../consts/consts';
+import { Consts } from '../../constants/modes';
 
 const Rightmenu = ({ renderImputs, cancel, mode, onSubmit, currentRoute }) => {
 

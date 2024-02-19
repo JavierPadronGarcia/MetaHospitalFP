@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendGroupsEndpoint } from '../consts/backendEndpoints';
+import { backendGroupsEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;

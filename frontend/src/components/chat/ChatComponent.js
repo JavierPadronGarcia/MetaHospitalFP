@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { decodeToken } from '../../utils/shared/globalFunctions';
-import { webSocketEndpoint } from "../../consts/backendEndpoints";
+import { webSocketEndpoint, backendMessagesEndpoint } from "../../constants/backendEndpoints";
 import { Button, Input, message } from "antd";
-import { backendMessagesEndpoint } from "../../consts/backendEndpoints";
 import './ChatComponent.css';
 import Headers from "../headers/headers";
 import { CaretRightOutlined } from "@ant-design/icons";

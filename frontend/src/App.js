@@ -1,28 +1,32 @@
-import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { useContext } from 'react';
 import { RolesContext } from './context/roles';
-import Login from './pages/login copy/login'
 import PrivateRoute from './utils/PrivateRoute';
+
+import Login from './pages/login/login';
+
 import authService from './services/auth.service';
-import UserAdmin from './pages/useradmin/useradmin';
-import GroupAdmin from './pages/groupsadmin/groupsadmin'
-import TeacherSchools from './pages/teacherschool/teacherschool'
+import UserAdmin from './pages/admin-pages/useradmin/useradmin';
+import GroupAdmin from './pages/admin-pages/groupsadmin/groupsadmin';
+import TeacherSchools from './pages/admin-pages/teacherschool/teacherschool';
+import AdminHome from './pages/admin-pages/adminhome/adminhome';
+import SchoolsAdmin from './pages/admin-pages/schooladmin/schooladmin';
+import AdminSchool from './pages/admin-pages/adminschool/adminschool';
+import StudentSchools from './pages/admin-pages/studentschool/studentschool';
+import CoursesAdmin from './pages/admin-pages/coursesadmin/coursesadmin';
+import AdminCourse from './pages/admin-pages/admincourse/admincourse';
+
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
 import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
-import AdminHome from './pages/admin-pages/adminhome/adminhome';
-import SchoolsAdmin from './pages/schooladmin/schooladmin';
-import AdminSchool from './pages/adminschool/adminschool';
-import StudentSchools from './pages/studentschool/studentschool';
-import CoursesAdmin from './pages/coursesadmin/coursesadmin';
-import ChatComponent from './components/chat/ChatComponent';
-import UserProfilePage from './pages/profile/profile';
+
 import Studenthome from './pages/student-pages/studenthome/studenthome';
 import StudentExercises from './pages/student-pages/studentexercises/studentexercises';
-import AdminCourse from './pages/admin-pages/admincourse/admincourse';
+
+import ChatComponent from './components/chat/ChatComponent';
+import UserProfilePage from './pages/profile/profile';
 
 function App() {
 

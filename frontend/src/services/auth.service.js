@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendUsersEndpoint } from '../consts/backendEndpoints';
+import { backendUsersEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(user) {
   let base64UserAndPassword = window.btoa(user.username + ":" + user.password);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BasicList from '../../../components/basiclist/basiclist';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
 import { message, Select } from 'antd';
-import Consts from '../../../components/consts/consts';
+import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';

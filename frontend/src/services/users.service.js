@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendUsersEndpoint } from '../consts/backendEndpoints';
+import { backendUsersEndpoint } from '../constants/backendEndpoints';
 
 const encodeCredentials = (email, password) => {
   return btoa(`${email}:${password}`);
