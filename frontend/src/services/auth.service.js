@@ -36,7 +36,6 @@ async function login(user) {
       return response.data.user;
     }
   } catch (error) {
-    console.log('Error', error);
     throw error;
   }
 }
@@ -75,9 +74,6 @@ const navigateByRole = (role, navigate) => {
       break;
     case 'student':
       navigate('/student/home');
-      break;
-    case 'director':
-      navigate('/director-panel');
       break;
   }
 }
