@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { RolesContext } from './context/roles';
 import PrivateRoute from './utils/PrivateRoute';
 
-import Login from './pages/login/login';
+import Login from './pages/login/Login';
 
 import authService from './services/auth.service';
 import UserAdmin from './pages/admin-pages/useradmin/useradmin';
