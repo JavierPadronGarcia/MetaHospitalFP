@@ -1,49 +1,82 @@
-import React, {  useContext } from 'react';
-import { Menu, Dropdown } from 'antd';
+import React, { useContext } from 'react';
+import { Dropdown } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { RolesContext } from '../../context/roles';
 import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import './headers.css';
 
-
 const Headers = ({ title, color, groupId }) => {
-    const RoleContext = useContext(RolesContext);
-    const navigate = useNavigate();
+  const RoleContext = useContext(RolesContext);
+  const navigate = useNavigate();
 
-    const handleMenuClick = (e) => {
-        if (e.key === 'profile') {
-            navigate('/myUser');
-            console.log('Redireccionar a la página de perfil');
-        } else if (e.key === 'logout') {
-            RoleContext.setRole('');
-            authService.logout().then(() => {
-                navigate('/');
-            });
-        } else if (e.key === 'chat') {
-            navigate('/chat/'+ groupId);
-        }
-    };
+  const handleMenuClick = (e) => {
+    switch (e.key) {
+      case 'profile':
+        navigate('/myUser');
+        break;
+      case 'logout':
+        RoleContext.setRole('');
+        authService.logout().then(() => {
+          navigate('/');
+        });
+        break;
+      case 'chat':
+        navigate('/chat/' + groupId);
+        break;
+      case 'home':
+        navigate('/student/home');
+        break;
+    }
+  };
 
-    const menu = (
-        <Menu onClick={handleMenuClick}>
-            <Menu.Item key="profile">Perfil</Menu.Item>
-            <Menu.Item key="logout">Cerrar Sesión</Menu.Item>
-            <Menu.Item key="chat">Chat de grupo</Menu.Item>
-        </Menu>
-    );
+  const items = [
+    {
+      label: 'Inicio',
+      key: 'home',
+    },
+    {
+      label: 'Perfil',
+      key: 'profile',
+    },
+    {
+      label: 'Chat de grupo',
+      key: 'chat',
+    },
+    {
+      label: 'Cerrar Sesión',
+      key: 'logout',
+    },
+  ];
 
-    return (
-        <div className='headers' style={{ backgroundColor: color }}>
-            <h1>{title}</h1>
-            <Dropdown className='dropdown' overlay={menu} placement="bottomRight">
-                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                    <MenuOutlined style={{ fontSize: '24px'}} />
-                </a>
-            </Dropdown>
+  const showMenuList = () => (
+    items.map((item, index) => (
+      <li
+        key={index}
+        onClick={() => handleMenuClick({ key: item.key })}
+      >
+        {item.label}
+      </li>
+    ))
+  )
+
+  return (
+    <div className='headers' style={{ backgroundColor: color }}>
+      <h1>{title}</h1>
+      <ul className='menu-list'>
+        {showMenuList()}
+      </ul>
+      <Dropdown
+        className='dropdown'
+        menu={{ items, onClick: handleMenuClick }}
+        placement="bottom"
+      >
+        <div className="ant-dropdown-link">
+          <MenuOutlined style={{ fontSize: '24px' }} />
         </div>
-    );
+      </Dropdown>
+    </div>
+  );
 }
 
 export default Headers;
-

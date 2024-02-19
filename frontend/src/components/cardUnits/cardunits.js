@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './cardunits.css';
 import { useNavigate } from 'react-router-dom';
 
 const CardUnits = ({ title, color, route, workUnit }) => {
-  const [isHovered, setIsHovered] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,13 +13,11 @@ const CardUnits = ({ title, color, route, workUnit }) => {
 
   return (
     <div className="cardunits-container" onClick={handleNavigate}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className='cardunits'>
-        <div className="scuare" style={{ backgroundColor: color }}></div>
+        <div className="square" style={{ backgroundColor: color }}></div>
         <div className="content">
-          <h2>{title}</h2>
+          <div>{title}</div>
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@ const StudentExercises = () => {
   )
 
   return (
-    <div className="student-home">
+    <div className="student-home student-exercises">
       <Headers title={title} groupId={studentGroup.id} />
       <div className='container-scloll'>
 

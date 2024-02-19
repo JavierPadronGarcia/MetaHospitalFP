@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Headers from '../../../components/headers/headers';
 import groupsService from '../../../services/groups.service';
 import Tag from '../../../components/tag/tag';
-import './studenthome.css'
 import CardUnits from '../../../components/cardUnits/cardunits';
 import workUnitGroupsService from '../../../services/workUnitGroups.service';
+import './studenthome.css';
 
 const Studenthome = () => {
   const [title, setTitle] = useState('');
@@ -39,7 +39,7 @@ const Studenthome = () => {
   return (
     <div className="student-home">
       <Headers title={title} groupId={groupId} />
-      <div className='container-scloll'>
+      <div className='container-scroll'>
         <Tag name="Unidades" className="tags" />
         {workUnits.map((workUnit, index) => {
           if (workUnit.visibility)
