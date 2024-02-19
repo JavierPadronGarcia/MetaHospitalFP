@@ -90,14 +90,7 @@ async function sendReportByEmail(email) {
 
 async function sendEmail(formData) {
     try {
-        const result = await EmailService.sendEmail({
-            to: formData.get('to'),
-            subject: formData.get('subject'),
-            text: formData.get('text'),
-            file: formData.get('pdf'),
-        });
-
-        console.log(result);
+        await EmailService.sendEmail(formData);
     } catch (error) {
         console.error('Error sending email:', error.message);
     }
