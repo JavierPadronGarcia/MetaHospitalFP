@@ -1,6 +1,9 @@
 import React from 'react';
 import './menu.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Dropdown, Space } from 'antd';
+import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import authService from '../../services/auth.service';
 
 function Menu() {
 
@@ -21,6 +24,35 @@ function Menu() {
 
     return 'Inicio';
   };
+
+  const handleMoreOptionsClick = (e) => {
+    switch (e.key) {
+      case 'profile':
+        navigate('/myUser');
+        break;
+      case 'logout':
+        authService.logout();
+        navigate('/');
+        break;
+    }
+  }
+
+  const items = [
+    {
+      label: <div>Mi perfil</div>,
+      icon: <UserOutlined />,
+      key: 'profile',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <div>Cerrar sesión</div>,
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      danger: true,
+    },
+  ];
 
   return (
     <div className="menu1">
@@ -58,6 +90,22 @@ function Menu() {
           </li>
         </ul>
       </nav>
+      <div className='more-options-container'>
+        <Dropdown
+          menu={{
+            items,
+            onClick: handleMoreOptionsClick
+          }}
+          trigger={['click']}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              Más opciones
+              <DownOutlined />
+            </Space>
+          </a>
+        </Dropdown>
+      </div>
     </div>
   );
 }
