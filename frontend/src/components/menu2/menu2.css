@@ -7,6 +7,7 @@
   margin: 10px;
   align-items: center;
   user-select: none;
+  justify-content: space-between;
 }
 
 .menu2>nav {
@@ -16,7 +17,7 @@
 
 .menu2 .menuItems {
   list-style: none;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
@@ -64,6 +65,30 @@
   color: #3E94E7;
 }
 
+.menu2 .more-options-container {
+  margin-right: 2rem;
+}
+
+.menu2 .more-options-container .setting-display {
+  display: none;
+}
+
+.menu2 .more-options-container .setting-icon {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.6rem;
+}
+
+.menu2 .more-options-container .more-options-content {
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu2 .more-options-dropdown {
+  display: none;
+}
+
 @media screen and (min-width: 600px) {
   .menu2 .logotype {
     width: 99px;
@@ -73,15 +98,27 @@
 
 @media screen and (min-width: 800px) {
   .menu2 .menuItems a {
-    font-size: 20px;
+    font-size: 15px;
   }
 
   .menu2 .menuItems {
     flex-wrap: nowrap;
   }
+
+  .menu2 .more-options-dropdown {
+    display: block;
+  }
+
+  .menu2 .more-options-dropdown-small-screen {
+    display: none;
+  }
+
+  .menu2 .menuItems {
+    display: flex;
+  }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 1020px) {
   .menu2 .menuItems a {
     font-size: 24px;
   }

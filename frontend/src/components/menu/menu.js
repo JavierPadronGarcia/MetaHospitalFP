@@ -2,7 +2,7 @@ import React from 'react';
 import './menu.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Dropdown, Space } from 'antd';
-import { DownOutlined, LogoutOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, LogoutOutlined, MenuOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
 import authService from '../../services/auth.service';
 
 function Menu() {
@@ -34,6 +34,15 @@ function Menu() {
         authService.logout();
         navigate('/');
         break;
+      case 'users':
+        navigate('/admin/users');
+        break;
+      case 'schools':
+        navigate('/admin/schools');
+        break;
+      default:
+        navigate('/admin/control-panel');
+        break;
     }
   }
 
@@ -55,6 +64,21 @@ function Menu() {
   ];
 
   const smallDropdownItems = [
+    {
+      label: <div>Inicio</div>,
+      key: 'home',
+    },
+    {
+      label: <div>Usuarios</div>,
+      key: 'users',
+    },
+    {
+      label: <div>Escuelas</div>,
+      key: 'schools',
+    },
+    {
+      type: 'divider',
+    },
     {
       label: <div>Mi perfil</div>,
       icon: <UserOutlined />,
@@ -138,9 +162,7 @@ function Menu() {
           trigger={['click']}
         >
           <div onClick={(e) => e.preventDefault()} className='more-options-content'>
-            <Button shape='circle' className='setting-icon'>
-              <SettingFilled />
-            </Button>
+            <MenuOutlined className='setting-icon' />
           </div>
         </Dropdown>
       </div>

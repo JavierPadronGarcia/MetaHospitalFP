@@ -18,12 +18,19 @@
     display: none;
 }
 
+.menu1 .more-options-container .setting-icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.6rem;
+}
 
 .menu1 .more-options-container .more-options-content {
     cursor: pointer;
+    justify-content: center;
+    align-items: center;
 }
 
-.more-options-dropdown {
+.menu1 .more-options-dropdown {
     display: none;
 }
 
@@ -96,11 +103,11 @@
         font-size: 24px;
     }
 
-    .more-options-dropdown {
+    .menu1 .more-options-dropdown {
         display: block;
     }
 
-    .more-options-dropdown-small-screen {
+    .menu1 .more-options-dropdown-small-screen {
         display: none;
     }
 }
