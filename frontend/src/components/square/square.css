@@ -18,9 +18,14 @@
     &:hover {
         transform: scale(1.1);
     }
+
+    &:hover img {
+        transform: scale(1.1);
+    }
 }
 
 .square img {
+    transition: transform 0.2s ease-in-out;
     width: 90%;
 }
 

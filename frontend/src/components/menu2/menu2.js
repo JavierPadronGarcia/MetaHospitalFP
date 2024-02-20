@@ -1,6 +1,9 @@
 import React from 'react';
 import './menu2.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { DownOutlined, LogoutOutlined, MenuOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
+import { Dropdown, Space, Button } from 'antd';
+import authService from '../../services/auth.service';
 
 function Menu2() {
   const location = useLocation();
@@ -23,6 +26,93 @@ function Menu2() {
 
     return 'Inicio';
   };
+
+  const handleMoreOptionsClick = (e) => {
+    switch (e.key) {
+      case 'profile':
+        navigate('/myUser');
+        break;
+      case 'logout':
+        authService.logout();
+        navigate('/');
+        break;
+      case 'students':
+        navigate('/admin/students');
+        break;
+      case 'teachers':
+        navigate('/admin/teachers');
+        break;
+      case 'groups':
+        navigate('/admin/groups');
+        break;
+      case 'courses':
+        navigate('/admin/courses');
+        break;
+      default:
+        navigate('/admin/school');
+        break;
+    }
+  }
+
+  const dropdownItems = [
+    {
+      label: <div>Mi perfil</div>,
+      icon: <UserOutlined />,
+      key: 'profile',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <div>Cerrar sesión</div>,
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      danger: true,
+    },
+  ];
+
+  const smallDropdownItems = [
+    {
+      label: <div>Inicio</div>,
+      key: 'home',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <div>Estudiantes</div>,
+      key: 'students',
+    },
+    {
+      label: <div>Profesores</div>,
+      key: 'teachers',
+    },
+    {
+      label: <div>Grupos</div>,
+      key: 'groups',
+    },
+    {
+      label: <div>Cursos</div>,
+      key: 'courses',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <div>Mi perfil</div>,
+      icon: <UserOutlined />,
+      key: 'profile',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <div>Cerrar sesión</div>,
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      danger: true,
+    },
+  ];
 
   return (
     <div className="menu2">
@@ -78,6 +168,35 @@ function Menu2() {
           </li>
         </ul>
       </nav>
+      <div className='more-options-container'>
+        <Dropdown
+          className='more-options-dropdown'
+          menu={{
+            items: dropdownItems,
+            onClick: handleMoreOptionsClick
+          }}
+          trigger={['click']}
+        >
+          <div onClick={(e) => e.preventDefault()} shape='circle' className='more-options-content'>
+            <Button shape='circle' className='setting-icon'>
+              <SettingFilled />
+            </Button>
+          </div>
+        </Dropdown>
+
+        <Dropdown
+          className='more-options-dropdown-small-screen'
+          menu={{
+            items: smallDropdownItems,
+            onClick: handleMoreOptionsClick
+          }}
+          trigger={['click']}
+        >
+          <div onClick={(e) => e.preventDefault()} className='more-options-content'>
+            <MenuOutlined className='setting-icon' />
+          </div>
+        </Dropdown>
+      </div>
     </div>
   );
 }
