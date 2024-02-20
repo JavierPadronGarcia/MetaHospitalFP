@@ -1,8 +1,8 @@
 import React from 'react';
 import './menu.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Dropdown, Space } from 'antd';
-import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Space } from 'antd';
+import { DownOutlined, LogoutOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
 import authService from '../../services/auth.service';
 
 function Menu() {
@@ -37,7 +37,24 @@ function Menu() {
     }
   }
 
-  const items = [
+  const dropdownItems = [
+    {
+      label: <div>Mi perfil</div>,
+      icon: <UserOutlined />,
+      key: 'profile',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <div>Cerrar sesión</div>,
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      danger: true,
+    },
+  ];
+
+  const smallDropdownItems = [
     {
       label: <div>Mi perfil</div>,
       icon: <UserOutlined />,
@@ -92,18 +109,39 @@ function Menu() {
       </nav>
       <div className='more-options-container'>
         <Dropdown
+          className='more-options-dropdown'
           menu={{
-            items,
+            items: dropdownItems,
             onClick: handleMoreOptionsClick
           }}
           trigger={['click']}
         >
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              Más opciones
-              <DownOutlined />
-            </Space>
-          </a>
+          <div onClick={(e) => e.preventDefault()} shape='circle' className='more-options-content'>
+            <div className='setting-display'>
+              <Space>
+                Más opciones
+                <DownOutlined />
+              </Space>
+            </div>
+            <Button shape='circle' className='setting-icon'>
+              <SettingFilled />
+            </Button>
+          </div>
+        </Dropdown>
+
+        <Dropdown
+          className='more-options-dropdown-small-screen'
+          menu={{
+            items: smallDropdownItems,
+            onClick: handleMoreOptionsClick
+          }}
+          trigger={['click']}
+        >
+          <div onClick={(e) => e.preventDefault()} className='more-options-content'>
+            <Button shape='circle' className='setting-icon'>
+              <SettingFilled />
+            </Button>
+          </div>
         </Dropdown>
       </div>
     </div>
