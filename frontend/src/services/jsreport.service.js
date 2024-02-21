@@ -59,7 +59,7 @@ async function downloadSchoolsReport() {
     }
 }
 
-async function sendReportByEmail(email) {
+async function sendReportByEmail(email, subject, body) {
     try {
         const formdata = new FormData();
 
@@ -70,7 +70,7 @@ async function sendReportByEmail(email) {
             },
             data: {
                 schoolId: parsedId,
-                token: localStorage.getItem('AccessToken'),
+                token: localStorage.getItem('token'),
             },
         });
 
@@ -78,8 +78,8 @@ async function sendReportByEmail(email) {
 
         formdata.append('pdf', blob, 'informe.pdf');
         formdata.append('to', email);
-        formdata.append('subject', 'Adjunto encontrarás el informe.');
-        formdata.append('text', 'Informe Escolar');
+        formdata.append('subject', subject);
+        formdata.append('text', body);
 
         await sendEmail(formdata);
     } catch (error) {

@@ -3,9 +3,12 @@ import { Button, Menu, Dropdown, message } from 'antd';
 import { DownloadOutlined, EyeOutlined, MailOutlined, SnippetsOutlined } from '@ant-design/icons';
 import './FloatingMenu.css';
 import jsreportService from '../../services/jsreport.service';
+import MailModal from '../mail-modal/MailModal';
 
 const FloatingMenu = () => {
   const [open, setOpen] = useState(false);
+  const [showSendEmail, setShowSendEmail] = useState(false);
+  const [clearFields, setClearFields] = useState(false);
 
   const handleMenuClick = async (e) => {
     if (e.key === "view") {
@@ -13,18 +16,27 @@ const FloatingMenu = () => {
     } else if (e.key === "download") {
       jsreportService.downloadSchoolsReport();
     } else if (e.key === "email") {
-      const userEmail = prompt('Ingrese su dirección de correo electrónico:');
-      if (userEmail) {
-        try {
-          await jsreportService.sendReportByEmail(userEmail);
-          message.success('Informe enviado por correo electrónico con éxito.');
-        } catch (error) {
-          message.error('Error al enviar el informe por correo electrónico.');
-        }
-      }
+      setShowSendEmail(true);
     }
     setOpen(false);
   };
+
+  const handleCancelSendEmail = () => {
+    setShowSendEmail(false);
+  }
+
+  const handleSendEmail = async (email, subject, body) => {
+    try {
+      message.loading('Enviando correo electrónico...', 0);
+      await jsreportService.sendReportByEmail(email, subject, body);
+      setClearFields(!clearFields);
+      message.destroy();
+      message.success('Informe enviado correctamente', 1);
+    } catch (error) {
+      message.destroy();
+      message.error('Error al enviar el informe por correo electrónico.');
+    }
+  }
 
   const menu = (
     <Menu onClick={handleMenuClick}>
@@ -41,9 +53,15 @@ const FloatingMenu = () => {
   );
 
   return (
-    <Dropdown overlay={menu} trigger={['click']} visible={open} onVisibleChange={setOpen}>
-      <Button className="floating-menu" shape="circle" icon={<SnippetsOutlined />} size="large" />
-    </Dropdown>
+    <>
+      <MailModal cancelEmail={handleCancelSendEmail} notifSendEmail={handleSendEmail} showFields={showSendEmail} clearFields={clearFields}
+        subject='Informe escolar'
+      />
+      <Dropdown overlay={menu} trigger={['click']} visible={open} onVisibleChange={setOpen}>
+        <Button className="floating-menu" shape="circle" icon={<SnippetsOutlined />} size="large" />
+      </Dropdown>
+    </>
+
   );
 };
 
