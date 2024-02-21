@@ -4,31 +4,85 @@ import { DownloadOutlined, EyeOutlined, MailOutlined, SnippetsOutlined } from '@
 import './FloatingMenu.css';
 import jsreportService from '../../services/jsreport.service';
 import MailModal from '../mail-modal/MailModal';
+import { useLocation } from 'react-router-dom';
 
 const FloatingMenu = () => {
   const [open, setOpen] = useState(false);
   const [showSendEmail, setShowSendEmail] = useState(false);
   const [clearFields, setClearFields] = useState(false);
+  const location = useLocation();
 
   const handleMenuClick = async (e) => {
     if (e.key === "view") {
-      jsreportService.SchoolsReportView();
+      handleViewReport();
     } else if (e.key === "download") {
-      jsreportService.downloadSchoolsReport();
+      handleDownloadReport();
     } else if (e.key === "email") {
       setShowSendEmail(true);
     }
     setOpen(false);
   };
 
+  const handleViewReport = () => {
+    const { pathname } = location;
+
+    switch (pathname) {
+      case '/admin/schools':
+        jsreportService.SchoolsReportView()
+        break;
+      case '/admin/school':
+        jsreportService.SchoolsReportView()
+        break;
+      case '/admin/users':
+        jsreportService.UsersReportView();
+        break;
+    }
+  }
+
+  const handleDownloadReport = () => {
+    const { pathname } = location;
+
+    switch (pathname) {
+      case '/admin/schools':
+        jsreportService.downloadSchoolsReport();
+        break;
+      case '/admin/school':
+        jsreportService.downloadSchoolsReport();
+        break;
+      case '/admin/users':
+        jsreportService.downloadUsersReport();
+        break;
+    }
+  }
+
   const handleCancelSendEmail = () => {
     setShowSendEmail(false);
   }
 
+  const getReportType = () => {
+    const { pathname } = location;
+    let reportType;
+    switch (pathname) {
+      case '/admin/schools':
+        reportType = 'schoolReport'
+        break;
+      case '/admin/schools':
+        reportType = 'schoolReport'
+        break;
+      case '/admin/users':
+        reportType = 'userReport'
+        break;
+    }
+    return reportType;
+  }
+
+
   const handleSendEmail = async (email, subject, body) => {
     try {
+      const reportType = getReportType();
+
       message.loading('Enviando correo electrónico...', 0);
-      await jsreportService.sendReportByEmail(email, subject, body);
+      await jsreportService.sendReportByEmail(email, subject, body, reportType);
       setClearFields(!clearFields);
       message.destroy();
       message.success('Informe enviado correctamente', 1);

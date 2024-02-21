@@ -63,8 +63,15 @@
             },
             options: {
                 animation: {
-                    duration: 0
-                }
+                        duration: 0
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
             }
         });
     </script>
