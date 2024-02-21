@@ -36,6 +36,9 @@ const FloatingMenu = () => {
       case '/admin/users':
         jsreportService.UsersReportView();
         break;
+      case '/admin/courses':
+        jsreportService.CoursesReportView();
+        break;
     }
   }
 
@@ -52,6 +55,9 @@ const FloatingMenu = () => {
       case '/admin/users':
         jsreportService.downloadUsersReport();
         break;
+      case '/admin/courses':
+        jsreportService.downloadCoursesReport();
+        break;
     }
   }
 
@@ -63,7 +69,7 @@ const FloatingMenu = () => {
     const { pathname } = location;
     let reportType;
     switch (pathname) {
-      case '/admin/schools':
+      case '/admin/school':
         reportType = 'schoolReport'
         break;
       case '/admin/schools':
@@ -72,10 +78,12 @@ const FloatingMenu = () => {
       case '/admin/users':
         reportType = 'userReport'
         break;
+      case '/admin/courses':
+        reportType = 'coursesReport'
+        break;
     }
     return reportType;
   }
-
 
   const handleSendEmail = async (email, subject, body) => {
     try {
