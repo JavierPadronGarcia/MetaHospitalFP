@@ -57,6 +57,34 @@ async function UsersReportView() {
   }
 }
 
+async function CoursesReportView() {
+  const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
+  try {
+    const report = await jsreport.render({
+      template: {
+        shortid: 'vUFY-_i-N',
+      },
+      data: {
+        schoolId: parsedId,
+        schoolName: localStorage.getItem('schoolName'),
+        token: localStorage.getItem('token'),
+      },
+    });
+    report.openInWindow({ title: 'Reporte de cursos' });
+
+    return report;
+  } catch (error) {
+
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
+    }
+  }
+}
+
+
 
 async function downloadSchoolsReport() {
   try {
@@ -110,6 +138,35 @@ async function downloadUsersReport() {
   }
 }
 
+async function downloadCoursesReport() {
+  const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
+  try {
+    const report = await jsreport.render({
+      template: {
+        shortid: 'vUFY-_i-N',
+      },
+      data: {
+        schoolId: parsedId,
+        schoolName: localStorage.getItem('schoolName'),
+        token: localStorage.getItem('token'),
+      },
+    });
+
+    const blob = await report.toBlob();
+    saveAs(blob, 'reporte_cursos.pdf');
+
+    return report;
+  } catch (error) {
+
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
+    }
+  }
+}
+
 async function sendReportByEmail(email, subject, body, reportType) {
   try {
     const formdata = new FormData();
@@ -125,6 +182,8 @@ async function sendReportByEmail(email, subject, body, reportType) {
       reportId = 'trM9BOHUP';
     } else if (reportType === 'userReport') {
       reportId = 'RRBdzWP4Q';
+    } else if (reportType === 'coursesReport') {
+      reportId = 'vUFY-_i-N';
     }
 
     const report = await jsreport.render({
@@ -166,6 +225,8 @@ const jsreportService = {
   SchoolsReportView,
   downloadSchoolsReport,
   sendReportByEmail,
+  CoursesReportView,
+  downloadCoursesReport
 };
 
 export default jsreportService;
