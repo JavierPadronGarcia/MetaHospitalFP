@@ -12,9 +12,11 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
   const [containerExpanded, setContainerExpanded] = useState(false);
   const [visibility, setVisibility] = useState(unitVisibility);
   const [colors, setColors] = useState(visibility ? workUnit.colors.visible : workUnit.colors.invisible);
+  const [currentPath, setCurrentPath] = useState('');
 
   useEffect(() => {
     setColors(visibility ? workUnit.colors.visible : workUnit.colors.invisible);
+    setCurrentPath(window.location.pathname);
   }, [visibility]);
 
   const iconEnter = () => (
@@ -42,7 +44,9 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
 
   const handleNavigateToWorkUnit = () => {
     sessionStorage.setItem('colors', JSON.stringify(colors));
-    navigate(`./unit/${workUnit.id}/${workUnit.name}`);
+    const newPath = currentPath.replace('/units', `/unit/${workUnit.id}/${workUnit.name}`);
+    console.log(newPath);
+    navigate(newPath);
   }
 
   const showFirsLine = () => (

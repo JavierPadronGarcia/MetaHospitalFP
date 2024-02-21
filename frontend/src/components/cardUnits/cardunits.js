@@ -2,7 +2,7 @@ import React from 'react';
 import './cardunits.css';
 import { useNavigate } from 'react-router-dom';
 
-const CardUnits = ({ title, color, route, workUnit }) => {
+const CardUnits = ({ title, color, route, workUnit, date }) => {
 
   const navigate = useNavigate();
 
@@ -12,12 +12,12 @@ const CardUnits = ({ title, color, route, workUnit }) => {
   }
 
   return (
-    <div className="cardunits-container" onClick={handleNavigate}
-    >
+    <div className="cardunits-container" onClick={handleNavigate}>
       <div className='cardunits'>
         <div className="square" style={{ backgroundColor: color }}></div>
         <div className="content">
           <div>{title}</div>
+          <div className='date'>{date}</div>
         </div>
       </div>
     </div>

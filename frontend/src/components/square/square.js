@@ -11,8 +11,14 @@ const Square = ({ icon, label, route }) => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && route) {
+      navigate(route);
+    }
+  };
+
   return (
-    <div className="square" onClick={handleClick}>
+    <div className="square" tabindex="0" onClick={handleClick} onKeyDown={handleKeyDown}>
       <img src={icon} alt={label} />
       <p>{label}</p>
     </div>

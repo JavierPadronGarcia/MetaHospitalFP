@@ -27,6 +27,8 @@ import StudentExercises from './pages/student-pages/studentexercises/studentexer
 
 import ChatComponent from './components/chat/ChatComponent';
 import UserProfilePage from './pages/profile/profile';
+import TeacherSelection from './pages/teacher-pages/teacher-selection/teacher-selection';
+import TeacherGroupStudents from './pages/teacher-pages/teacher-group-students/teacher-group-students';
 
 function App() {
 
@@ -66,7 +68,9 @@ function App() {
 
         <Route path='/teacher' element={<PrivateRoute permittedRole='teacher' />}>
           <Route path="main" element={<TeacherMainPage />} />
-          <Route path="main/group/:name/:id" element={<TeacherGroupPage />} />
+          <Route path="main/group/:name/:id" element={<TeacherSelection />} />
+          <Route path="main/group/:name/:id/units" element={<TeacherGroupPage />} />
+          <Route path="main/group/:name/:id/students" element={<TeacherGroupStudents />} />
           <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
           <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/add" element={<AddActivityPage />} />
         </Route>

@@ -31,15 +31,19 @@
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
-.content {
+.cardunits .content {
+  width: 90%;
+  font-size: 1rem;
+  font-weight: bolder;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
 }
 
-.cardunits .content {
+.cardunits .content .date{
   font-size: 1rem;
-  font-weight: bolder;
+  font-weight: lighter;
+  text-align: end;
 }
 
 @media only screen and (min-width:640px) {
