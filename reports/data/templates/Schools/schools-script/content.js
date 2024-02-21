@@ -93,7 +93,7 @@ async function prepareDataSource(schoolId, token) {
 
 async function beforeRender(req, res) {
     const schoolId = req.data.schoolId || null;
-    const token = req.data.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsIm5hbWUiOiJKb3JnZSBNZWzDqW5kZXogR29kb3kiLCJwYXNzd29yZCI6IiQyYSQxMCR4TUQ2dkx2eGRtS2ZWeEg1Z01MQ2p1UjdJa1BVY3Q0MGlMaVZPOHNwU2xJN0l0bDIxVC5oZSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwODM2MTkwOCwiZXhwIjoxNzA4NDQ4MzA4fQ.ArWtwn7MaE6q3cG8QxdEQv4J-OIvvPb_tuk6oFnXENk'; 
+    const token = req.data.token; 
     req.data.schools = await prepareDataSource(schoolId, token);
 }
 

@@ -9,6 +9,7 @@ import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './coursesadmin.css';
+import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 
 function CoursesAdmin() {
   const [Courses, setCourses] = useState([]);
@@ -112,6 +113,7 @@ function CoursesAdmin() {
         <Menu2 />
         <Tag name="Cursos" />
         <BasicList items={Courses} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <FloatingMenu />
         <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
       </div>
       <div className='container-right'>

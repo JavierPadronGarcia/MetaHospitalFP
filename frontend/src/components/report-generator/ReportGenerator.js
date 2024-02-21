@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Spin, Input, Button, Modal, Form, message } from 'antd';
 import emailService from '../../services/email.service';
 import { jsReportEnpoint } from '../../constants/backendEndpoints';
+import MailModal from '../mail-modal/MailModal';
 
 jsreport.serverUrl = jsReportEnpoint;
 
@@ -10,9 +11,6 @@ function ReportGenerator({ reportData }) {
   const pdfContainerRef = useRef();
   const [loading, setLoading] = useState(false);
   const [showEmailFields, setShowEmailFields] = useState(false);
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [emailSubject, setEmailSubject] = useState('Nuevo informe generado');
-  const [emailBody, setEmailBody] = useState('');
 
   const sendEmail = async (reportInfo) => {
     emailService.sendEmail(reportInfo).then(reponse => {
@@ -38,19 +36,7 @@ function ReportGenerator({ reportData }) {
     setLoading(false);
   };
 
-  const handleRecipientChange = (e) => {
-    setRecipientEmail(e.target.value);
-  };
-
-  const handleSubjectChange = (e) => {
-    setEmailSubject(e.target.value);
-  };
-
-  const handleBodyChange = (e) => {
-    setEmailBody(e.target.value);
-  };
-
-  const handleSendEmail = async () => {
+  const handleSendEmail = async (email, subject, body) => {
     const formData = new FormData();
 
     const report = await jsreport.render({
@@ -66,9 +52,9 @@ function ReportGenerator({ reportData }) {
     const blob = await report.toBlob();
 
     formData.append('pdf', blob, 'informe.pdf');
-    formData.append('to', recipientEmail);
-    formData.append('subject', emailSubject);
-    formData.append('text', emailBody);
+    formData.append('to', email);
+    formData.append('subject', subject);
+    formData.append('text', body);
 
     await sendEmail(formData);
     setShowEmailFields(false);
@@ -89,46 +75,13 @@ function ReportGenerator({ reportData }) {
   return (
     <div>
       <Button type="primary" onClick={showEmailModal}>Enviar por correo electrónico</Button>
-
-      <Modal
-        title="Enviar por correo electrónico"
-        open={showEmailFields}
-        onCancel={handleCancelEmail}
-        footer={[
-          <Button key="cancel" onClick={handleCancelEmail}>
-            Cancelar
-          </Button>,
-          <Button key="send" type="primary" onClick={handleSendEmail}>
-            Enviar
-          </Button>,
-        ]}
-      >
-        <Form layout="vertical">
-          <Form.Item label="Correo electrónico del destinatario">
-            <Input
-              placeholder="Ingrese el correo electrónico"
-              value={recipientEmail}
-              onChange={handleRecipientChange}
-            />
-          </Form.Item>
-
-          <Form.Item label="Asunto del correo electrónico">
-            <Input
-              placeholder="Ingrese el asunto del correo electrónico"
-              value={emailSubject}
-              onChange={handleSubjectChange}
-            />
-          </Form.Item>
-
-          <Form.Item label="Cuerpo del correo electrónico">
-            <Input.TextArea
-              placeholder="Ingrese el cuerpo del correo electrónico"
-              value={emailBody}
-              onChange={handleBodyChange}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <MailModal
+        handleCancelEmail={handleCancelEmail}
+        notifSendEmail={handleSendEmail}
+        cancelEmail={handleCancelEmail}
+        showFields={showEmailFields}
+        subject='Reporte de notas'
+      />
 
       {loading && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>

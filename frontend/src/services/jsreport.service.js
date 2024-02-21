@@ -6,101 +6,227 @@ import { jsReportEnpoint } from '../constants/backendEndpoints';
 jsreport.serverUrl = jsReportEnpoint;
 
 async function SchoolsReportView() {
-    try {
-        const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
-        const report = await jsreport.render({
-            template: {
-                shortid: 'trM9BOHUP',
-            },
-            data: {
-                schoolId: parsedId,
-                token: localStorage.getItem('AccessToken'),
-            },
-        });
+  try {
+    const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
+    const report = await jsreport.render({
+      template: {
+        shortid: 'trM9BOHUP',
+      },
+      data: {
+        schoolId: parsedId,
+        token: localStorage.getItem('token'),
+      },
+    });
 
-        report.openInWindow({ title: 'Reporte de escuelas' });
+    report.openInWindow({ title: 'Reporte de escuelas' });
 
-        return report;
-    } catch (error) {
+    return report;
+  } catch (error) {
 
-        if (error && error.response && error.response.data) {
-            console.error('Error al renderizar el informe:', error.response.data);
-        } else {
-            console.error('Error inesperado al renderizar el informe:', error);
-            throw error;
-        }
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
     }
+  }
 }
+
+async function UsersReportView() {
+  try {
+    const report = await jsreport.render({
+      template: {
+        shortid: 'RRBdzWP4Q',
+      },
+      data: {
+        token: localStorage.getItem('token'),
+      },
+    });
+
+    report.openInWindow({ title: 'Reporte usuarios de MetahospitalFP' });
+
+    return report;
+  } catch (error) {
+
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
+    }
+  }
+}
+
+async function CoursesReportView() {
+  const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
+  try {
+    const report = await jsreport.render({
+      template: {
+        shortid: 'vUFY-_i-N',
+      },
+      data: {
+        schoolId: parsedId,
+        schoolName: localStorage.getItem('schoolName'),
+        token: localStorage.getItem('token'),
+      },
+    });
+    report.openInWindow({ title: 'Reporte de cursos' });
+
+    return report;
+  } catch (error) {
+
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
+    }
+  }
+}
+
+
 
 async function downloadSchoolsReport() {
-    try {
-        const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
-        const report = await jsreport.render({
-            template: {
-                shortid: 'trM9BOHUP',
-            },
-            data: {
-                schoolId: parsedId,
-                token: localStorage.getItem('AccessToken'),
-            },
-        });
+  try {
+    const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
+    const report = await jsreport.render({
+      template: {
+        shortid: 'trM9BOHUP',
+      },
+      data: {
+        schoolId: parsedId,
+        token: localStorage.getItem('token'),
+      },
+    });
 
-        const blob = await report.toBlob();
+    const blob = await report.toBlob();
 
-        saveAs(blob, 'reporte_de_escuelas.pdf');
+    saveAs(blob, 'reporte_de_escuelas.pdf');
 
-    } catch (error) {
-        if (error && error.response && error.response.data) {
-            console.error('Error al renderizar el informe:', error.response.data);
-        } else {
-            console.error('Error inesperado al renderizar el informe:', error);
-            throw error;
-        }
+  } catch (error) {
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
     }
+  }
 }
 
-async function sendReportByEmail(email) {
-    try {
-        const formdata = new FormData();
+async function downloadUsersReport() {
+  try {
+    const report = await jsreport.render({
+      template: {
+        shortid: 'RRBdzWP4Q',
+      },
+      data: {
+        token: localStorage.getItem('token'),
+      },
+    });
 
-        const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
-        const report = await jsreport.render({
-            template: {
-                shortid: 'trM9BOHUP',
-            },
-            data: {
-                schoolId: parsedId,
-                token: localStorage.getItem('AccessToken'),
-            },
-        });
+    const blob = await report.toBlob();
 
-        const blob = await report.toBlob();
+    saveAs(blob, 'reporte_usuarios.pdf');
 
-        formdata.append('pdf', blob, 'informe.pdf');
-        formdata.append('to', email);
-        formdata.append('subject', 'Adjunto encontrarás el informe.');
-        formdata.append('text', 'Informe Escolar');
-
-        await sendEmail(formdata);
-    } catch (error) {
-        console.error('Error al renderizar el informe o enviar por correo electrónico:', error);
-        throw error;
+  } catch (error) {
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
     }
+  }
+}
+
+async function downloadCoursesReport() {
+  const parsedId = parseInt(localStorage.getItem('schoolId'), 10) || null;
+  try {
+    const report = await jsreport.render({
+      template: {
+        shortid: 'vUFY-_i-N',
+      },
+      data: {
+        schoolId: parsedId,
+        schoolName: localStorage.getItem('schoolName'),
+        token: localStorage.getItem('token'),
+      },
+    });
+
+    const blob = await report.toBlob();
+    saveAs(blob, 'reporte_cursos.pdf');
+
+    return report;
+  } catch (error) {
+
+    if (error && error.response && error.response.data) {
+      console.error('Error al renderizar el informe:', error.response.data);
+    } else {
+      console.error('Error inesperado al renderizar el informe:', error);
+      throw error;
+    }
+  }
+}
+
+async function sendReportByEmail(email, subject, body, reportType) {
+  try {
+    const formdata = new FormData();
+
+    let schoolId = localStorage.getItem('schoolId');
+    let parsedId = 0;
+
+    if (schoolId) parsedId = parseInt(schoolId, 10) || null;
+
+    let reportId = '';
+
+    if (reportType === 'schoolReport') {
+      reportId = 'trM9BOHUP';
+    } else if (reportType === 'userReport') {
+      reportId = 'RRBdzWP4Q';
+    } else if (reportType === 'coursesReport') {
+      reportId = 'vUFY-_i-N';
+    }
+
+    const report = await jsreport.render({
+      template: {
+        shortid: reportId,
+      },
+      data: {
+        schoolId: parsedId || null,
+        token: localStorage.getItem('token'),
+      },
+    });
+
+    const blob = await report.toBlob();
+
+    formdata.append('pdf', blob, 'informe.pdf');
+    formdata.append('to', email);
+    formdata.append('subject', subject);
+    formdata.append('text', body);
+
+    await sendEmail(formdata);
+  } catch (error) {
+    console.error('Error al renderizar el informe o enviar por correo electrónico:', error);
+    throw error;
+  }
 }
 
 async function sendEmail(formData) {
-    try {
-        await EmailService.sendEmail(formData);
-    } catch (error) {
-        console.error('Error sending email:', error.message);
-    }
+  try {
+    await EmailService.sendEmail(formData);
+  } catch (error) {
+    console.error('Error sending email:', error.message);
+  }
 }
 
 
 const jsreportService = {
-    SchoolsReportView,
-    downloadSchoolsReport,
-    sendReportByEmail,
+  downloadUsersReport,
+  UsersReportView,
+  SchoolsReportView,
+  downloadSchoolsReport,
+  sendReportByEmail,
+  CoursesReportView,
+  downloadCoursesReport
 };
 
 export default jsreportService;

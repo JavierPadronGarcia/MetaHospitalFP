@@ -3,28 +3,102 @@ import { Button, Menu, Dropdown, message } from 'antd';
 import { DownloadOutlined, EyeOutlined, MailOutlined, SnippetsOutlined } from '@ant-design/icons';
 import './FloatingMenu.css';
 import jsreportService from '../../services/jsreport.service';
+import MailModal from '../mail-modal/MailModal';
+import { useLocation } from 'react-router-dom';
 
 const FloatingMenu = () => {
   const [open, setOpen] = useState(false);
+  const [showSendEmail, setShowSendEmail] = useState(false);
+  const [clearFields, setClearFields] = useState(false);
+  const location = useLocation();
 
   const handleMenuClick = async (e) => {
     if (e.key === "view") {
-      jsreportService.SchoolsReportView();
+      handleViewReport();
     } else if (e.key === "download") {
-      jsreportService.downloadSchoolsReport();
+      handleDownloadReport();
     } else if (e.key === "email") {
-      const userEmail = prompt('Ingrese su dirección de correo electrónico:');
-      if (userEmail) {
-        try {
-          await jsreportService.sendReportByEmail(userEmail);
-          message.success('Informe enviado por correo electrónico con éxito.');
-        } catch (error) {
-          message.error('Error al enviar el informe por correo electrónico.');
-        }
-      }
+      setShowSendEmail(true);
     }
     setOpen(false);
   };
+
+  const handleViewReport = () => {
+    const { pathname } = location;
+
+    switch (pathname) {
+      case '/admin/schools':
+        jsreportService.SchoolsReportView()
+        break;
+      case '/admin/school':
+        jsreportService.SchoolsReportView()
+        break;
+      case '/admin/users':
+        jsreportService.UsersReportView();
+        break;
+      case '/admin/courses':
+        jsreportService.CoursesReportView();
+        break;
+    }
+  }
+
+  const handleDownloadReport = () => {
+    const { pathname } = location;
+
+    switch (pathname) {
+      case '/admin/schools':
+        jsreportService.downloadSchoolsReport();
+        break;
+      case '/admin/school':
+        jsreportService.downloadSchoolsReport();
+        break;
+      case '/admin/users':
+        jsreportService.downloadUsersReport();
+        break;
+      case '/admin/courses':
+        jsreportService.downloadCoursesReport();
+        break;
+    }
+  }
+
+  const handleCancelSendEmail = () => {
+    setShowSendEmail(false);
+  }
+
+  const getReportType = () => {
+    const { pathname } = location;
+    let reportType;
+    switch (pathname) {
+      case '/admin/school':
+        reportType = 'schoolReport'
+        break;
+      case '/admin/schools':
+        reportType = 'schoolReport'
+        break;
+      case '/admin/users':
+        reportType = 'userReport'
+        break;
+      case '/admin/courses':
+        reportType = 'coursesReport'
+        break;
+    }
+    return reportType;
+  }
+
+  const handleSendEmail = async (email, subject, body) => {
+    try {
+      const reportType = getReportType();
+
+      message.loading('Enviando correo electrónico...', 0);
+      await jsreportService.sendReportByEmail(email, subject, body, reportType);
+      setClearFields(!clearFields);
+      message.destroy();
+      message.success('Informe enviado correctamente', 1);
+    } catch (error) {
+      message.destroy();
+      message.error('Error al enviar el informe por correo electrónico.');
+    }
+  }
 
   const menu = (
     <Menu onClick={handleMenuClick}>
@@ -41,9 +115,15 @@ const FloatingMenu = () => {
   );
 
   return (
-    <Dropdown overlay={menu} trigger={['click']} visible={open} onVisibleChange={setOpen}>
-      <Button className="floating-menu" shape="circle" icon={<SnippetsOutlined />} size="large" />
-    </Dropdown>
+    <>
+      <MailModal cancelEmail={handleCancelSendEmail} notifSendEmail={handleSendEmail} showFields={showSendEmail} clearFields={clearFields}
+        subject='Informe escolar'
+      />
+      <Dropdown overlay={menu} trigger={['click']} visible={open} onVisibleChange={setOpen}>
+        <Button className="floating-menu" shape="circle" icon={<SnippetsOutlined />} size="large" />
+      </Dropdown>
+    </>
+
   );
 };
 

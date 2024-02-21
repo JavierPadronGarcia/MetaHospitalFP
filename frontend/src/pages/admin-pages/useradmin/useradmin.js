@@ -8,6 +8,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
+import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 import { useLocation } from 'react-router-dom';
 import './useradmin.css';
 
@@ -147,6 +148,7 @@ function UserAdmin() {
         <Menu />
         <Tag name="Usuarios" />
         <BasicList items={users} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <FloatingMenu />
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
       </div>
       <div className='container-right'>
