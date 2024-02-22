@@ -8,6 +8,14 @@
     overflow: auto;
 }
 
+.table-component .edit-normal {
+    display: none;
+}
+
+.table-component .edit-popform {
+    display: inline-flex;
+}
+
 .table-component table {
     width: 100%;
 }
@@ -17,6 +25,16 @@ td {
     border-top: 2px solid;
 }
 
-.table-component .headlines{
+.table-component .headlines {
     user-select: none;
+}
+
+@media screen and (min-width: 950px) {
+    .table-component .edit-normal {
+        display: inline-flex;
+    }
+
+    .table-component .edit-popform {
+        display: none;
+    }
 }

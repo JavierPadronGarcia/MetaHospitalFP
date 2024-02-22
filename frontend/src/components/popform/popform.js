@@ -7,7 +7,7 @@ const PopForm = ({ renderInputs, cancel, onSubmit, showModalAutomatically }) => 
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    if (showModalAutomatically) {
+    if (showModalAutomatically.editMode && showModalAutomatically.showPop) {
       setModalVisible(true);
     }
   }, [showModalAutomatically]);
