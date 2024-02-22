@@ -130,7 +130,7 @@ to see more details about the technologies used clic <a href='#technology-stack'
 As explained in the previous section, we visually illustrate in the following diagram all the actions that each of the roles can perform.
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/useCaseDiagram.png" alt="use case diagram" width="70%">
+  <img src="./readmeImages/UseCaseDiagramNew.png" alt="use case diagram" width="70%">
 </div>
 
 ### Class diagram
@@ -277,8 +277,7 @@ Los formularios están validados proporcionando sus respectivos mensajes al usua
 In this message the empty fields fill the border in red to show the user exactly where is the problem: 
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/loginNoDataInForm.png" alt="login error, no data in form" width="35%"/>
-  <img src="./readmeImages/usabilityAndAccesibility/loginNoDataInForm2.png" alt="login error, no data in form" width="35%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/loginNoDataInForm3.png" alt="login error, no data in form" width="35%"/>
 </div>
 
 - message when the user is not found:
