@@ -5,8 +5,8 @@ const Card = ({ title, content, highlightColor }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="card-container" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <div className={`card ${isHovered ? 'hovered' : ''}`}>
+    <div className="card-container" data-testid='card-container' onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+      <div className={`card ${isHovered ? 'hovered' : ''}`} data-testid='card'>
         <h2>{title}</h2>
         <p>{content}</p>
         {isHovered && <div className="highlight" style={{ backgroundColor: highlightColor }}></div>}

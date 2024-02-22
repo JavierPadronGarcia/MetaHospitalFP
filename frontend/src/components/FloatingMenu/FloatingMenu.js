@@ -100,26 +100,30 @@ const FloatingMenu = () => {
     }
   }
 
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="download" icon={<DownloadOutlined />}>
-        Descargar
-      </Menu.Item>
-      <Menu.Item key="view" icon={<EyeOutlined />}>
-        Ver
-      </Menu.Item>
-      <Menu.Item key="email" icon={<MailOutlined />}>
-        Enviar por email
-      </Menu.Item>
-    </Menu>
-  );
+  const dropdownItems = [
+    {
+      label: <div>Descargar</div>,
+      icon: <DownloadOutlined />,
+      key: 'download',
+    },
+    {
+      label: <div>Ver</div>,
+      icon: <EyeOutlined />,
+      key: 'view',
+    },
+    {
+      label: <div>Enviar por email</div>,
+      icon: <MailOutlined />,
+      key: 'email',
+    },
+  ];
 
   return (
     <>
       <MailModal cancelEmail={handleCancelSendEmail} notifSendEmail={handleSendEmail} showFields={showSendEmail} clearFields={clearFields}
         subject='Informe escolar'
       />
-      <Dropdown overlay={menu} trigger={['click']} visible={open} onVisibleChange={setOpen}>
+      <Dropdown menu={{ items: dropdownItems, onClick: handleMenuClick }} trigger={['click']} open={open} onOpenChange={setOpen}>
         <Button className="floating-menu" shape="circle" icon={<SnippetsOutlined />} size="large" />
       </Dropdown>
     </>
