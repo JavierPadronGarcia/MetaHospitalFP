@@ -20,6 +20,7 @@ function UserAdmin() {
   const [role, setRole] = useState('student');
   const Headlines = ['Imagen', 'Nombre', 'Email', 'Identificador'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
+  const [showPop, setShowPop] = useState(false);
   const location = useLocation();
 
   const optionRole = [
@@ -82,18 +83,23 @@ function UserAdmin() {
   const onDelete = async (id) => {
     try {
       await usersService.deleteUser(id);
-      console.log('Users deleted successfully');
+      message.success("Usuario eliminado correctamente");
       getUsers();
     } catch (error) {
-      console.error('Error delete user:', error);
-      message.error(error.message)
+      message.error('Error al eliminar al usuario')
     }
   }
 
-  const Edit = (id) => {
+  const Edit = (id, editType) => {
     const userToEdit = users.find(user => user.id === id);
 
     setId(id);
+
+    if (editType === 'popform') {
+      setShowPop(true);
+    } else {
+      setShowPop(false);
+    }
 
     setName(userToEdit.name);
     setEmail(userToEdit.username);
@@ -112,8 +118,9 @@ function UserAdmin() {
 
         await usersService.updateUserWithoutImage(email, Id, role, name);
 
-        console.log('Users updated successfully');
-        message.success('Users updated successfully')
+        message.success('Usuario actualizado correctamente');
+        cleanInputs();
+        setMode(Consts.ADD_MODE);
         getUsers();
       } else {
 
@@ -121,18 +128,23 @@ function UserAdmin() {
           name: name,
           role: role,
         };
-        console.log(role);
 
         await usersService.createNewUser(potUser, email);
 
-        console.log('New user created successfully');
-        message.success('New user created successfully')
+        cleanInputs();
+        message.success('Usuario creado correctamente');
         getUsers();
       }
     } catch (error) {
       console.error('Error updating/creating user:', error);
       message.error(error.message)
     }
+  }
+
+  const cleanInputs = () => {
+    setEmail('');
+    setName('');
+    setRole('student');
   }
 
   const Cancel = () => {
@@ -149,7 +161,7 @@ function UserAdmin() {
         <Tag name="Usuarios" />
         <BasicList items={users} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <FloatingMenu />
-        <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
+        <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderUserImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />

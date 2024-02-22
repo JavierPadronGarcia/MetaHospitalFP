@@ -11,16 +11,19 @@ import { AutoComplete } from 'antd';
 import { Link } from 'react-router-dom';
 import CoursesService from '../../../services/courses.service';
 import './groupsadmin.css';
+import dayjs from 'dayjs';
 
 function GroupsAdmin() {
   const [groups, setGroups] = useState([]);
   const [courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [yearRange, setYearRange] = useState('');
+  const [range, setRange] = useState([null, null]);
   const [Id, setId] = useState('');
   const Headlines = ['Nombre', 'Fecha'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
-  const [courseId, setCourseId] = useState('')
+  const [courseId, setCourseId] = useState('');
+  const [showPop, setShowPop] = useState(false);
 
   const { RangePicker } = DatePicker;
 
@@ -75,6 +78,7 @@ function GroupsAdmin() {
       <RangePicker
         picker="year"
         placeholder={['Start Year', 'End Year']}
+        value={range}
         onPanelChange={handlePanelChange}
       />
       <p>Curso</p>
@@ -91,20 +95,16 @@ function GroupsAdmin() {
   );
 
   const handlePanelChange = (value, mode) => {
+    console.log(range)
     if (Array.isArray(value) && value.length === 2) {
       const validDates = value.filter(date => date !== null && date !== undefined);
-
+      setRange(value);
       if (validDates.length === 2) {
         const [startYear, endYear] = validDates.map(date => date.year());
         setYearRange(`${startYear}-${endYear}`);
-        console.log('Modo actual:', mode);
-      } else {
-        console.error('No hay suficientes fechas válidas en el rango.');
-        message.error(message)
       }
     }
   };
-
 
   const onDelete = async (id) => {
     try {
@@ -117,16 +117,24 @@ function GroupsAdmin() {
     }
   };
 
-  const Edit = (id) => {
+  const Edit = (id, editType) => {
     const groupsToEdit = groups.find(groups => groups.id === id);
 
     setId(id);
 
+    if (editType === 'popform') {
+      setShowPop(true);
+    } else {
+      setShowPop(false);
+    }
+
     if (groupsToEdit.date) {
+      setYearRange(groupsToEdit.date);
       const [startYear, endYear] = groupsToEdit.date.split('-');
-      setYearRange(`${startYear}-${endYear}`);
+      setRange([dayjs(startYear), dayjs(endYear)]);
     } else {
       setYearRange('');
+      setRange([null, null]);
     }
 
     setName(groupsToEdit.name);
@@ -142,11 +150,9 @@ function GroupsAdmin() {
         groupsToEdit.date = yearRange;
         groupsToEdit.CourseId = courseId;
 
-        console.log(courseId)
-
         await GroupsService.updateGroup(Id, groupsToEdit);
 
-        console.log('Groups updated successfully');
+        message.success('Grupo actualizado correctamente');
         getGroups();
       } else {
         const Groups = {
@@ -157,17 +163,18 @@ function GroupsAdmin() {
 
         await GroupsService.addGroup(Groups);
         getGroups();
-        console.log('New Groups created successfully');
+        message.success('Grupo agregado correctamente');
       }
+      Cancel();
     } catch (error) {
-      console.error('Error updating/creating Groups:', error);
-      message.error(error.message)
+      message.success('No se ha podido agregar/actualizar el grupo');
     }
   };
 
   const Cancel = () => {
     setMode(Consts.ADD_MODE);
     setName('');
+    setRange([null, null]);
   };
 
   return (
@@ -176,7 +183,7 @@ function GroupsAdmin() {
         <Menu2 />
         <Tag name="Grupos" />
         <BasicList items={groups} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
-        <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
+        <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderGroupsImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} />

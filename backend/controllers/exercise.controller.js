@@ -165,13 +165,13 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
   try {
     const result = await db.sequelize.query(`
       SELECT ex.id AS exerciseId, ex.assigned, ex.finishDate, c.id AS caseId, c.WorkUnitId AS workUnitId, c.name AS caseName 
-      FROM db_metahospitalfp.groups AS g
-      JOIN workunitgroups AS wkug ON wkug.GroupID = g.id
-      JOIN workunits AS wku ON wku.id = wkug.WorkUnitID
-      JOIN cases AS c ON c.WorkUnitId = wku.id
-      JOIN exercises AS ex ON ex.CaseID = c.id
-      JOIN participations AS p ON p.ExerciseId = ex.id
-      JOIN users AS u ON u.id = p.UserId
+      FROM \`${Group.tableName}\` AS g
+      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
+      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
+      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
+      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
+      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
+      JOIN \`${User.tableName}\` AS u ON u.id = p.UserId
       WHERE g.id = ${groupId}
       AND wku.id = ${workUnitId}
       AND u.id = ${req.user.id}

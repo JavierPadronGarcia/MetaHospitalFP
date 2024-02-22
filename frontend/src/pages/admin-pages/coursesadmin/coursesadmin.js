@@ -18,6 +18,7 @@ function CoursesAdmin() {
   const [Id, setId] = useState('');
   const Headlines = ['Nombre', 'Acrónimo'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
+  const [showPop, setShowPop] = useState(false);
   const location = useLocation();
 
   const getCourses = async () => {
@@ -58,16 +59,22 @@ function CoursesAdmin() {
     try {
       await CoursesService.deleteCourse(id);
       getCourses();
-      console.log('courses deleted successfully');
+      message.error('Curso eliminado correctamente');
     } catch (error) {
-      message.error(error.message);
+      message.error('No se pudo eliminar el curso');
     }
   }
 
-  const Edit = (id) => {
+  const Edit = (id, editType) => {
     const coursesToEdit = Courses.find(courses => courses.id === id);
 
     setId(id);
+
+    if (editType === 'popform') {
+      setShowPop(true);
+    } else {
+      setShowPop(false);
+    }
 
     setName(coursesToEdit.name);
     setAcronyms(coursesToEdit.acronyms);
@@ -96,8 +103,9 @@ function CoursesAdmin() {
         getCourses();
         message.success('Curso creado correctamente');
       }
+      Cancel();
     } catch (error) {
-      message.error(error + ' error al crear curso');
+      message.error('Error al crear/actualizar el curso');
     }
   }
 
@@ -114,7 +122,7 @@ function CoursesAdmin() {
         <Tag name="Cursos" />
         <BasicList items={Courses} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <FloatingMenu />
-        <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
+        <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderCoursesImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />

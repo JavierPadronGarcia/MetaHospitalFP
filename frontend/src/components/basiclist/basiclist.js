@@ -22,7 +22,8 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
               <tr key={item.id}>
                 {renderRow(item)}
                 <td>
-                  {onEdit && <EditOutlined style={{ marginRight: 8 }} onClick={() => onEdit(item.id)} data-testid="update-button" />}
+                  {onEdit && <EditOutlined className='edit-normal' style={{ marginRight: 8 }} onClick={() => onEdit(item.id, 'normal')} />}
+                  {onEdit && <EditOutlined className='edit-popform' style={{ marginRight: 8 }} onClick={() => onEdit(item.id, 'popform')} />}
                   <Popconfirm
                     title="Eliminar"
                     description="¿Eetas seguro que quieres eliminar?"

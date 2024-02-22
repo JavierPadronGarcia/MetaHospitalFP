@@ -72,7 +72,7 @@ async function assignStudentToGroup(studentId, groupId) {
 
 async function unAssignStudentToGroup(studentId, groupId) {
   try {
-    const response = await axios.delete(backendGroupEnrolementEndpoint + '/' +studentId + '/' + groupId,
+    const response = await axios.delete(backendGroupEnrolementEndpoint + '/' + studentId + '/' + groupId,
       getOptions(localStorage.getItem('token'))
     );
 

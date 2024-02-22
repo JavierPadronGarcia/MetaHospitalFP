@@ -18,6 +18,7 @@ function SchoolsAdmin() {
   const [Id, setId] = useState('');
   const Headlines = ['Nombre'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
+  const [showPop, setShowPop] = useState(false);
   const location = useLocation();
 
   const getSchools = async () => {
@@ -26,8 +27,7 @@ function SchoolsAdmin() {
       const schoolList = response;
       setSchools(schoolList);
     } catch (error) {
-      console.error('Error fetching schools:', error);
-      message.error(error.message)
+      message.error('No se pudo obtener escuelas, intentalo de nuevo o prueba más tarde')
     }
   };
 
@@ -69,10 +69,16 @@ function SchoolsAdmin() {
     }
   }
 
-  const Edit = (id) => {
+  const Edit = (id, editType) => {
     const schoolToEdit = Schools.find(school => school.id === id);
 
     setId(id);
+
+    if (editType === 'popform') {
+      setShowPop(true);
+    } else {
+      setShowPop(false);
+    }
 
     setName(schoolToEdit.name);
     setMode(Consts.EDIT_MODE);
@@ -87,8 +93,7 @@ function SchoolsAdmin() {
 
         await SchoolsService.updateSchool(Id, schoolToEdit);
 
-        console.log('school updated successfully');
-        message.success('school updated successfully')
+        message.success('Escuela actualizada correctamente')
         getSchools();
       } else {
         const school = {
@@ -97,12 +102,12 @@ function SchoolsAdmin() {
 
         await SchoolsService.createNewSchool(school);
         getSchools();
-        console.log('New school created successfully');
-        message.success('New school created successfully')
+
+        message.success('Escuela agregada correctamente')
       }
+      Cancel();
     } catch (error) {
-      console.error('Error updating/creating school:', error);
-      message.error(error.message)
+      message.error('No se ha podido crear correctamente la nueva escuela')
     }
   }
 
@@ -118,7 +123,7 @@ function SchoolsAdmin() {
         <Tag name='Escuelas' />
         <BasicList items={Schools} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <FloatingMenu />
-        <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
+        <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />

@@ -176,3 +176,24 @@ exports.remove = (req, res) => {
     });
   });
 };
+
+exports.unAssignStudent = (req, res) => {
+  const { userId, groupId } = req.params;
+  GroupEnrolement.destroy({
+    where: { UserID: userId, groupId: groupId }
+  }).then(num => {
+    if (num == 1) {
+      return res.send({
+        message: "Group enrolement was deleted successfully!"
+      });
+    } else {
+      return res.send({
+        message: `Cannot delete Group enrolement`
+      });
+    }
+  }).catch(err => {
+    return res.status(500).send({
+      message: err.message || "Could not delete Group enrolement with id=" + id
+    });
+  });
+};

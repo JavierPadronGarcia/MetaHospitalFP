@@ -145,24 +145,23 @@ function AdminCourse() {
     );
   };
 
-  const onDelete = async (id) => {
+  const onDelete = async (id, deleteType) => {
     try {
-      if (selectedStudent) {
+      if (deleteType === 'student') {
         await groupEnrolementService.unAssignStudentToGroup(id, localStorage.getItem("groupsId"));
-
-        getTeachers();
-        getTeachersInGroup();
+        message.success('Estudiante eliminado correctamente');
+        getStudents();
+        getStudentInGroup();
 
       } else {
         await teacherGroupService.unAssignTeacherToGroup(id, localStorage.getItem("groupsId"));
 
+        message.success('Profesor eliminado correctamente');
         getTeachers();
         getTeachersInGroup();
-
       }
     } catch (error) {
-      console.error('Error delete school:', error);
-      message.error(error.message);
+      message.error('No se pudo eliminar al usuario del grupo');
     }
   }
 
@@ -185,7 +184,6 @@ function AdminCourse() {
         message.success('Profesor asignado correctamente');
       }
     } catch (error) {
-      console.error('Error assigning user:', error);
       message.error('No se pudo asignar al usuario')
     } finally {
       setSelectedTeacher(null);
@@ -203,10 +201,10 @@ function AdminCourse() {
         <Menu2></Menu2>
         <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
         <h2 className='list-titles'>Profesores</h2>
-        <BasicList items={teachersInGroup} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} ></BasicList>
+        <BasicList items={teachersInGroup} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
         <h2 className='list-titles'>Estudiantes</h2>
-        <BasicList items={studentsInGroup} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={onDelete} ></BasicList>
-        <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={mode === Consts.EDIT_MODE} />
+        <BasicList items={studentsInGroup} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} ></BasicList>
+        <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
