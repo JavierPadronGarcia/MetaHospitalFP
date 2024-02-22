@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import exercisesService from '../../../services/exercises.service';
 import { errorMessage, noConnectionError } from '../../../utils/shared/errorHandler';
 import { Modal, Popover, message } from 'antd';
+import Headers from '../../../components/headers/headers';
 function TeacherActivitiesPage() {
 
   const { name, id, workUnitId, workUnitName } = useParams();
@@ -87,11 +88,10 @@ function TeacherActivitiesPage() {
 
   return (
     <div className='teacher-activities-page'>
-      <Header pageName={name} />
+      <Headers title={name} />
       <div className='teacher-activities-page-main'>
         <div style={{ background: colors.primaryColor }} className='activity-section'>
           <header>
-            <GoBack link={`/teacher/main/group/${name}/${id}`} alt='volver a todas las unidades' />
             <span className='workUnitName' style={{ color: colors.text }}>{workUnitName}</span>
             <Add
               link={`./add`}
@@ -121,7 +121,6 @@ function TeacherActivitiesPage() {
           </main>
         </div>
       </div>
-      <Toolbar />
     </div>
   );
 }
