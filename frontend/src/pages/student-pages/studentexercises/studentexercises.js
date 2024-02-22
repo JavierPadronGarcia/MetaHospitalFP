@@ -15,11 +15,10 @@ const StudentExercises = () => {
 
   const getAllExercises = async () => {
     try {
-      const allExercises = await exercisesService.getAllExercisesAssignedToStudent(workUnit.id, studentGroup.id);
+      const allExercises = await exercisesService.getAllExercisesAssignedToStudent(studentGroup.id, workUnit.id);
       console.log(allExercises)
       setAssignedExercises(allExercises.filter((e) => e.assigned === 1));
       setUnAssignedExercises(allExercises.filter((e) => e.assigned === 0));
-      console.log(allExercises.filter((e) => e.assigned === 0))
     } catch (err) {
       message.error('Error al obtener ejercicios');
     }
