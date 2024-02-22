@@ -31,7 +31,7 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
                     okText="si"
                     cancelText="no"
                   >
-                    <DeleteOutlined />
+                    <DeleteOutlined data-testid="delete-button" />
                   </Popconfirm>
                 </td>
               </tr>

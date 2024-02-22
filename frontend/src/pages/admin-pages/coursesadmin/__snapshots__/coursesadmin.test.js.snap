@@ -1,0 +1,533 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CoursesAdmin component renders correctly: finalState 1`] = `
+<div>
+  <div
+    class="container coursesadmin-page"
+  >
+    <div
+      class="container-left"
+    >
+      <div
+        class="menu2"
+      >
+        <nav>
+          <div
+            class="logotype-container"
+          >
+            <img
+              alt="logotype"
+              class="logotype"
+              src="/assets/imgs/Icon.png"
+            />
+          </div>
+          <ul
+            class="menuItems"
+          >
+            <li>
+              <a
+                class="active"
+                data-item="Inicio"
+                href="/admin/school"
+              >
+                Inicio
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Estudiantes"
+                href="/admin/students"
+              >
+                Estudiantes
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Profesores"
+                href="/admin/teachers"
+              >
+                Profesores
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Grupos"
+                href="/admin/groups"
+              >
+                Grupos
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Cursos"
+                href="/admin/courses"
+              >
+                Cursos
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div
+          class="more-options-container"
+        >
+          <div
+            class="ant-dropdown-trigger more-options-content more-options-dropdown"
+            shape="circle"
+          >
+            <button
+              class="ant-btn css-dev-only-do-not-override-2i2tap ant-btn-circle ant-btn-default setting-icon"
+              type="button"
+            >
+              <span
+                aria-label="setting"
+                class="anticon anticon-setting"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="setting"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M512.5 390.6c-29.9 0-57.9 11.6-79.1 32.8-21.1 21.2-32.8 49.2-32.8 79.1 0 29.9 11.7 57.9 32.8 79.1 21.2 21.1 49.2 32.8 79.1 32.8 29.9 0 57.9-11.7 79.1-32.8 21.1-21.2 32.8-49.2 32.8-79.1 0-29.9-11.7-57.9-32.8-79.1a110.96 110.96 0 00-79.1-32.8zm412.3 235.5l-65.4-55.9c3.1-19 4.7-38.4 4.7-57.7s-1.6-38.8-4.7-57.7l65.4-55.9a32.03 32.03 0 009.3-35.2l-.9-2.6a442.5 442.5 0 00-79.6-137.7l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.2 28.9c-30-24.6-63.4-44-99.6-57.5l-15.7-84.9a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52-9.4-106.8-9.4-158.8 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.3a353.44 353.44 0 00-98.9 57.3l-81.8-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a445.93 445.93 0 00-79.6 137.7l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.2 56.5c-3.1 18.8-4.6 38-4.6 57 0 19.2 1.5 38.4 4.6 57l-66 56.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.3 44.8 96.8 79.6 137.7l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.8-29.1c29.8 24.5 63 43.9 98.9 57.3l15.8 85.3a32.05 32.05 0 0025.8 25.7l2.7.5a448.27 448.27 0 00158.8 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-84.9c36.2-13.6 69.6-32.9 99.6-57.5l81.2 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.5-87.4 79.6-137.7l.9-2.6c4.3-12.4.6-26.3-9.5-35zm-412.3 52.2c-97.1 0-175.8-78.7-175.8-175.8s78.7-175.8 175.8-175.8 175.8 78.7 175.8 175.8-78.7 175.8-175.8 175.8z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div
+            class="ant-dropdown-trigger more-options-content more-options-dropdown-small-screen"
+          >
+            <span
+              aria-label="menu"
+              class="anticon anticon-menu setting-icon"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="menu"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M904 160H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0 624H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0-312H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Tag"
+      >
+        <p>
+          Cursos
+        </p>
+      </div>
+      <div
+        class="table-component"
+      >
+        <table>
+          <thead>
+            <tr>
+              <th
+                class="headlines"
+              >
+                Nombre
+              </th>
+              <th
+                class="headlines"
+              >
+                Acrónimo
+              </th>
+              <th>
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                colspan="3"
+              >
+                No hay elementos para mostrar
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        data-testid="floating-menu"
+      />
+      <div>
+        <div
+          style="position: fixed; bottom: 20px; right: 20px;"
+        >
+          <div
+            class=""
+          >
+            <button
+              class="ant-btn css-dev-only-do-not-override-2i2tap ant-btn-circle ant-btn-primary ant-btn-lg ant-btn-icon-only floating-button"
+              type="button"
+            >
+              <span
+                class="ant-btn-icon"
+              >
+                <span
+                  aria-label="plus"
+                  class="anticon anticon-plus"
+                  role="img"
+                >
+                  <svg
+                    aria-hidden="true"
+                    data-icon="plus"
+                    fill="currentColor"
+                    focusable="false"
+                    height="1em"
+                    viewBox="64 64 896 896"
+                    width="1em"
+                  >
+                    <path
+                      d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"
+                    />
+                    <path
+                      d="M192 474h672q8 0 8 8v60q0 8-8 8H160q-8 0-8-8v-60q0-8 8-8z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container-right"
+    >
+      <div
+        class="right_menu"
+      >
+        <div
+          class="inputs"
+        >
+          <h1>
+            Añadir
+          </h1>
+          <p>
+            Nombre
+          </p>
+          <input
+            class="ant-input css-dev-only-do-not-override-2i2tap"
+            placeholder="Nombre"
+            type="text"
+            value="Nuevo Curso"
+          />
+          <p>
+            Acrónimo
+          </p>
+          <input
+            class="ant-input css-dev-only-do-not-override-2i2tap"
+            placeholder="Acrónimo"
+            type="text"
+            value="NC"
+          />
+          <div
+            class="buttons"
+          >
+            <button
+              class="ant-btn css-dev-only-do-not-override-2i2tap ant-btn-default submit-button"
+              type="button"
+            >
+              <span>
+                Enviar
+              </span>
+            </button>
+          </div>
+        </div>
+        <img
+          alt="decoration"
+          class="photo"
+          src=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CoursesAdmin component renders correctly: initialState 1`] = `
+<div>
+  <div
+    class="container coursesadmin-page"
+  >
+    <div
+      class="container-left"
+    >
+      <div
+        class="menu2"
+      >
+        <nav>
+          <div
+            class="logotype-container"
+          >
+            <img
+              alt="logotype"
+              class="logotype"
+              src="/assets/imgs/Icon.png"
+            />
+          </div>
+          <ul
+            class="menuItems"
+          >
+            <li>
+              <a
+                class="active"
+                data-item="Inicio"
+                href="/admin/school"
+              >
+                Inicio
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Estudiantes"
+                href="/admin/students"
+              >
+                Estudiantes
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Profesores"
+                href="/admin/teachers"
+              >
+                Profesores
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Grupos"
+                href="/admin/groups"
+              >
+                Grupos
+              </a>
+            </li>
+            <li>
+              <a
+                class=""
+                data-item="Cursos"
+                href="/admin/courses"
+              >
+                Cursos
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div
+          class="more-options-container"
+        >
+          <div
+            class="ant-dropdown-trigger more-options-content more-options-dropdown"
+            shape="circle"
+          >
+            <button
+              class="ant-btn css-dev-only-do-not-override-2i2tap ant-btn-circle ant-btn-default setting-icon"
+              type="button"
+            >
+              <span
+                aria-label="setting"
+                class="anticon anticon-setting"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="setting"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M512.5 390.6c-29.9 0-57.9 11.6-79.1 32.8-21.1 21.2-32.8 49.2-32.8 79.1 0 29.9 11.7 57.9 32.8 79.1 21.2 21.1 49.2 32.8 79.1 32.8 29.9 0 57.9-11.7 79.1-32.8 21.1-21.2 32.8-49.2 32.8-79.1 0-29.9-11.7-57.9-32.8-79.1a110.96 110.96 0 00-79.1-32.8zm412.3 235.5l-65.4-55.9c3.1-19 4.7-38.4 4.7-57.7s-1.6-38.8-4.7-57.7l65.4-55.9a32.03 32.03 0 009.3-35.2l-.9-2.6a442.5 442.5 0 00-79.6-137.7l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.2 28.9c-30-24.6-63.4-44-99.6-57.5l-15.7-84.9a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52-9.4-106.8-9.4-158.8 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.3a353.44 353.44 0 00-98.9 57.3l-81.8-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a445.93 445.93 0 00-79.6 137.7l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.2 56.5c-3.1 18.8-4.6 38-4.6 57 0 19.2 1.5 38.4 4.6 57l-66 56.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.3 44.8 96.8 79.6 137.7l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.8-29.1c29.8 24.5 63 43.9 98.9 57.3l15.8 85.3a32.05 32.05 0 0025.8 25.7l2.7.5a448.27 448.27 0 00158.8 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-84.9c36.2-13.6 69.6-32.9 99.6-57.5l81.2 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.5-87.4 79.6-137.7l.9-2.6c4.3-12.4.6-26.3-9.5-35zm-412.3 52.2c-97.1 0-175.8-78.7-175.8-175.8s78.7-175.8 175.8-175.8 175.8 78.7 175.8 175.8-78.7 175.8-175.8 175.8z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div
+            class="ant-dropdown-trigger more-options-content more-options-dropdown-small-screen"
+          >
+            <span
+              aria-label="menu"
+              class="anticon anticon-menu setting-icon"
+              role="img"
+            >
+              <svg
+                aria-hidden="true"
+                data-icon="menu"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M904 160H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0 624H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0-312H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Tag"
+      >
+        <p>
+          Cursos
+        </p>
+      </div>
+      <div
+        class="table-component"
+      >
+        <table>
+          <thead>
+            <tr>
+              <th
+                class="headlines"
+              >
+                Nombre
+              </th>
+              <th
+                class="headlines"
+              >
+                Acrónimo
+              </th>
+              <th>
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                colspan="3"
+              >
+                No hay elementos para mostrar
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        data-testid="floating-menu"
+      />
+      <div>
+        <div
+          style="position: fixed; bottom: 20px; right: 20px;"
+        >
+          <div
+            class=""
+          >
+            <button
+              class="ant-btn css-dev-only-do-not-override-2i2tap ant-btn-circle ant-btn-primary ant-btn-lg ant-btn-icon-only floating-button"
+              type="button"
+            >
+              <span
+                class="ant-btn-icon"
+              >
+                <span
+                  aria-label="plus"
+                  class="anticon anticon-plus"
+                  role="img"
+                >
+                  <svg
+                    aria-hidden="true"
+                    data-icon="plus"
+                    fill="currentColor"
+                    focusable="false"
+                    height="1em"
+                    viewBox="64 64 896 896"
+                    width="1em"
+                  >
+                    <path
+                      d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"
+                    />
+                    <path
+                      d="M192 474h672q8 0 8 8v60q0 8-8 8H160q-8 0-8-8v-60q0-8 8-8z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container-right"
+    >
+      <div
+        class="right_menu"
+      >
+        <div
+          class="inputs"
+        >
+          <h1>
+            Añadir
+          </h1>
+          <p>
+            Nombre
+          </p>
+          <input
+            class="ant-input css-dev-only-do-not-override-2i2tap"
+            placeholder="Nombre"
+            type="text"
+            value=""
+          />
+          <p>
+            Acrónimo
+          </p>
+          <input
+            class="ant-input css-dev-only-do-not-override-2i2tap"
+            placeholder="Acrónimo"
+            type="text"
+            value=""
+          />
+          <div
+            class="buttons"
+          >
+            <button
+              class="ant-btn css-dev-only-do-not-override-2i2tap ant-btn-default submit-button"
+              type="button"
+            >
+              <span>
+                Enviar
+              </span>
+            </button>
+          </div>
+        </div>
+        <img
+          alt="decoration"
+          class="photo"
+          src=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
