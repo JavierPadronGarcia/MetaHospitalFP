@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render, act } from '@testing-library/react';
 import FloatingMenu from './FloatingMenu';
 
 jest.mock('react-router-dom', () => ({
@@ -21,9 +21,14 @@ jest.mock('../../services/jsreport.service', () => ({
 
 describe('FloatingMenu component', () => {
   it('renders correctly', () => {
-    const { getByText } = render(<FloatingMenu />);
+    const { getByText, container } = render(<FloatingMenu />);
+
+    const dropdownButton = container.querySelector('.floating-menu');
+    act(() => {
+      fireEvent.click(dropdownButton);
+    });
     expect(getByText('Ver')).toBeInTheDocument();
     expect(getByText('Enviar por email')).toBeInTheDocument();
+    expect(getByText('Descargar')).toBeInTheDocument();
   });
-
 });
