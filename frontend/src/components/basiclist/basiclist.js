@@ -1,13 +1,9 @@
 import React from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { message, Popconfirm } from 'antd';
+import { Popconfirm } from 'antd';
 import './basiclist.css';
 
 const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
-
-  const cancel = () => {
-    message.error('has pulsado que no');
-  };
 
   return (
     <div className='table-component'>
@@ -32,7 +28,6 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit }) => {
                     title="Eliminar"
                     description="¿Eetas seguro que quieres eliminar?"
                     onConfirm={() => onDelete(item.id)}
-                    onCancel={cancel}
                     okText="si"
                     cancelText="no"
                   >

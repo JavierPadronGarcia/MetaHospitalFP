@@ -28,5 +28,8 @@ module.exports = app => {
   //delete
   router.delete("/:id", auth.isAuthenticated, groupEnrolement.remove);
 
+  //delete
+  router.delete("/:userId/:groupId", auth.isAuthenticated, groupEnrolement.unAssignStudent);
+
   app.use('/api/groupenrolement', router);
 }

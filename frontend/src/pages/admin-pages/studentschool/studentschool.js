@@ -28,8 +28,7 @@ function StudentSchools() {
       const studentList = response.map(student => student.User);
       setStudents(studentList);
     } catch (error) {
-      console.error('Error fetching students:', error);
-      message.error(error.message)
+      message.error('No se pudo obtener a los usuarios de la escuela')
     }
   };
 
@@ -38,8 +37,7 @@ function StudentSchools() {
       const response = await usersService.getStudents();
       setUsers(response);
     } catch (error) {
-      console.error('Error fetching users:', error);
-      message.error(error.message)
+      message.error('No se pudo obtener usuarios')
     }
   };
 
@@ -92,15 +90,11 @@ function StudentSchools() {
   const onDelete = (id) => {
     try {
       getStudents();
-
       StudentSchoolsService.deleteStudentFromSchool(localStorage.getItem('schoolId'), id);
-
+      message.error('Estudiante eliminado correctamente');
       getStudents();
-
-      console.log('student deleted successfully');
     } catch (error) {
-      console.error('Error delete student:', error);
-      message.error(error.message)
+      message.error('No se ha podido eliminar al estudiante');
     }
   };
 
@@ -117,14 +111,17 @@ function StudentSchools() {
       };
 
       await StudentSchoolsService.createNewStudent(localStorage.getItem('schoolId'), student);
-
+      message.success('Estudiante agregado correctamente');
+      cancel();
       getStudents();
-      console.log('New student created successfully');
     } catch (error) {
-      console.error('Error updating/creating student:', error);
-      message.error(error.message)
+      message.error('No se ha podido agregar al usuario, intentalo de nuevo');
     }
   };
+
+  const cancel = () => {
+    setName('');
+  }
 
   return (
     <div className='container studentschool-page'>
@@ -132,7 +129,7 @@ function StudentSchools() {
         <Menu2 />
         <Tag name="Estudiantes" />
         <BasicList items={students} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} />
-        <PopForm renderInputs={renderSchoolImputs} onSubmit={onSubmit} />
+        <PopForm renderInputs={renderSchoolImputs} cancel={cancel} onSubmit={onSubmit} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderSchoolImputs} onSubmit={onSubmit} currentRoute={location.pathname} />
