@@ -41,16 +41,18 @@ const ProfileHeader = () => {
     getUserInfo();
   }, []);
 
-  const handleUpdateUser = async (file) => {
+  const handleUpdateUser = async (options) => {
     const prevFilename = user.filename === '' ? null : user.filename;
-    console.log(file);
-    console.log(prevFilename);
+    const { file } = options;
+    const imageBlob = file.originFileObj;
+    const response = await fetch(URL.createObjectURL(imageBlob));
+    const blob = await response.blob();
 
-    message.loading('Actualizando...');
-
+    message.loading('Actualizando...', 0);
     try {
-      if (file) {
-        await usersService.updateUserWithImage(null, file, prevFilename);
+      if (blob) {
+        await usersService.updateUserWithImage(null, blob, prevFilename);
+        message.destroy();
         message.success('Imagen actualizada correctamente');
       }
 
@@ -80,8 +82,7 @@ const ProfileHeader = () => {
       <div className="avatar-container">
         <Upload
           showUploadList={false}
-          customRequest={handleUpdateUser}
-          beforeUpload={(file) => { return true; }}
+          onChange={handleUpdateUser}
         >
           {userImage ? (
             <Avatar
