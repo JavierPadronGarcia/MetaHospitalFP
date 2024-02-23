@@ -3,7 +3,7 @@ import BasicList from '../../../components/basiclist/basiclist';
 import usersService from '../../../services/users.service';
 import Menu from '../../../components/menu/menu';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
-import { Input, Select, Avatar, message } from 'antd';
+import { Input, Select, Avatar, message, notification } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
@@ -11,6 +11,7 @@ import Tag from '../../../components/tag/tag';
 import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 import { useLocation } from 'react-router-dom';
 import './useradmin.css';
+import { noConnectionError } from '../../../utils/shared/errorHandler';
 
 function UserAdmin() {
   const [users, setUsers] = useState([]);
@@ -109,6 +110,11 @@ function UserAdmin() {
 
   const onSubmit = async () => {
     try {
+
+      if (!name || !role || !email) {
+        throw new Error('Rellena todos los campos');
+      }
+
       if (mode === Consts.EDIT_MODE) {
         const userToEdit = users.find(user => user.id === Id);
 
@@ -136,8 +142,14 @@ function UserAdmin() {
         getUsers();
       }
     } catch (error) {
-      console.error('Error updating/creating user:', error);
-      message.error(error.message)
+
+      if (error.message === 'Network Error') {
+        noConnectionError();
+      } else if (error.message === 'Rellena todos los campos') {
+        message.error(error.message);
+      } else {
+        message.error('No se ha podido crear/actualizar el usuario');
+      }
     }
   }
 
