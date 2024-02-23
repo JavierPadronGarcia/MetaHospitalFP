@@ -175,7 +175,7 @@ Course evaluation involves three components: "Items," representing evaluation cr
 
 ### Relational model
 
-| Tabla            | Atributos                                      |
+| Table            | Attributes                                      |
 |------------------|------------------------------------------------|
 | UserAccounts     | **id**, Username, Password, Email              |
 | Token_jwt        | **id**, UserId*, token, ExpireDate             |
@@ -281,15 +281,14 @@ In this message the empty fields fill the border in red to show the user exactly
 </div>
 
 - message when the user is not found:
-
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/loginNoUserFound.png" alt="login error, no user found" width="40%"/>
+  <img src="readmeImages/usabilityAndAccesibility/NoUserFoundOnLogin.png" alt="login error, no user found" width="40%"/>
 </div>
 
 - message when there is no connection to the server:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/loginNoConnectionToServer.png" alt="login error, no connection to server" width="40%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/NoConnectionOnLogin.png" alt="login error, no connection to server" width="40%"/>
 </div>
 
 The last two images has error control, the first the error is generated in the backend an is catched in the frontend to show the message and the last one is generated when the user try to get informacion from the backend and there is no response:
@@ -304,7 +303,7 @@ The last two images has error control, the first the error is generated in the b
 After that, when the user is correctly logged it shows a success message like this:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/loginSuccessfull.png" alt="image of the code where the error message is shown" width="50%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/loginSuccess.png" alt="image of the code where the error message is shown" width="50%"/>
 </div>
 
 ##
@@ -312,17 +311,17 @@ After that, when the user is correctly logged it shows a success message like th
 Another aspect is the interfaces, which are simple and uncluttered, in addition to being intuitive with pleasant colors and good contrast between text, buttons, and the background. Here, we present several images of interfaces for different types of users:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/adminInterfaceAspect.png" alt="admin interface" width="45%"/>
-  <img src="./readmeImages/usabilityAndAccesibility/adminGroupsInterface.png" alt="admin interface" width="50%"/>
-  <img src="./readmeImages/usabilityAndAccesibility/teacherMainInterface.png" alt="teacher interface" width="50%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/interface1Big.png" alt="admin interface" width="45%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/interface2Big.png" alt="admin interface" width="50%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/interface3Big.png" alt="teacher interface" width="50%"/>
 </div>
 
 The interfaces are also responsive, allowing them to adapt to various devices, including mobile phones:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/adminInterfaceAspectMobile.png" alt="admin interface" width="30%"/>
-  <img src="./readmeImages/usabilityAndAccesibility/adminGroupsInterfaceMobile.png" alt="admin interface" width="30%"/>
-  <img src="./readmeImages/usabilityAndAccesibility/teacherMainInterfaceMobile.png" alt="teacher interface" width="30%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/interface2Small.png" alt="admin interface" width="30%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/interface1Small.png" alt="admin interface" width="30%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/interface3Small.png" alt="teacher interface" width="30%"/>
 </div>
 
 ##
@@ -330,17 +329,14 @@ The interfaces are also responsive, allowing them to adapt to various devices, i
 Furthermore, for options that can significantly impact data, a confirmation message is displayed to allow the user to cancel the action:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/eliminationQuestion.png" alt="elimination confirmation message" width="80%"/>
-  <img src="./readmeImages/usabilityAndAccesibility/logoutQuestion.png" alt="logout confirmation message" width="50%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/deleteNotification1.png" alt="elimination confirmation message" width="60%"/>
 </div>
 
 ##
 
 The colors stand out in such a way that the user can correctly identify the actions that can be performed, such as more eye-catching buttons for more important actions.
 
-![Colors image](readmeImages/usabilityAndAccesibility/colors.png)
-
-![Colors image 2](readmeImages/usabilityAndAccesibility/colors2.png)
+![Colors image](readmeImages/usabilityAndAccesibility/colors1.png)
 
 ## 
 
@@ -352,18 +348,14 @@ The icons accurately convey the actions they represent, enabling users to identi
 
 This can be seen in this two images, the first image show that for each row will execute three actions, show more info, edit and delete, identified by "i", a pencil and the trash can in the same order.
 
-![Colors image](readmeImages/usabilityAndAccesibility/colors.png)
-
-An in the second image we can see the settigns button on the left side and the enter button on the right side of the orange square
-
-![Colors image 2](readmeImages/usabilityAndAccesibility/colors2.png)
+![Colors image](readmeImages/usabilityAndAccesibility/colors1.png)
 
 ##
 
 On the mobile interface, there are interactive elements that visually enhance the presentation of information, specifically regarding the students and faculty of a group.
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/details.png" alt="teacher interface" width="50%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/infoRepr.png" alt="interface" width="90%"/>
 </div>
 
 And finnally, there are no lengthy chunks of text, ensuring that the interface remains quick and concise at all times. This can be seen in all the application, there are no long texts
@@ -385,14 +377,10 @@ This is because the interfaces have a good contrast, all the images and icons ha
 In addition, the users can use the tab key to move through the application, they don't necessary need to use the mouse, here is an image of the function:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/focusDemostration.png" alt="an item beign focused when tab key is used" width="40%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/focus1.png" alt="an item beign focused when tab key is used" width="90%"/>
 </div>
 
-And when you tap the enter key it executes the action, in this case it goes to the groups page:
-
-<div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/focusDemostration2.png" alt="an item beign focused when tab key is used" width="90%"/>
-</div>
+And when you tap the enter key it executes the action.
 
 Here is the code for this interactions: 
 
@@ -408,7 +396,7 @@ tabIndex is added to be focusable and onKeyDown to listen to the enter key, when
 Finally, all the pages have restricted access exept the login page, when the user is logged in takes a token with the user information including the role of the user, this role is used to navigate to the user page and can't  change to a page that is not allowed to go, this is implementet with private routes, here is an image of all the pages and their roles allowed:
 
 <div style="text-align: center; height: fit-content; margin: 20px 0">
-  <img src="./readmeImages/usabilityAndAccesibility/privateRoutes.png" alt="code of the private routes" width="70%"/>
+  <img src="./readmeImages/usabilityAndAccesibility/prvtroutes.png" alt="code of the private routes" width="70%"/>
 </div>
 
 <p align="right">(<a href="#metahospitalfp">back to top</a>)</p>
@@ -426,7 +414,13 @@ Finally, all the pages have restricted access exept the login page, when the use
   4. Teacher <br />
     4.1 Create activities and assign them to students.<br/>
     4.2 Assign exercises and set deadlines.<br/>
-    4.3 Change the visibility of the workUnits in the group
+    4.3 Change the visibility of the workUnits in the group.
+    4.4 See the marks of the students in their groups.<br/>
+  
+  5. Student <br />
+    5.4 See the visible work units in his/her group.<br/>
+    5.5 Enter to the work unit and see the assigned activities.<br/>
+    5.6 See the marks of the activities.<br/>
 
 <p align="right">(<a href="#metahospitalfp">back to top</a>)</p>
 
@@ -479,18 +473,44 @@ You will have the folder like this:
 In the .env you need to put the following lines, this are an example,
 
  ```sh
-  JWT_SECRET= #a difficult password for the JWT token
+  JWT_SECRET=Your jwt secret
 
   MYSQL_DATABASE=db_metahospitalfp
   MYSQL_TEST_DATABASE=db_metahospitalfp_test
-  MYSQL_USER= #your mysql user, usually is root
-  MYSQL_PASSWORD= #your mysql password
-  MYSQL_ROOT_PASSWORD= #the mysql root password
+  MYSQL_USER=your mysql user
+  MYSQL_PASSWORD=your mysql password
+  MYSQL_ROOT_PASSWORD=the root password of your database
+
+  PUBLIC_KEY=<your-vapid-public-key> to implement notifications
+  PRIVATE_KEY=<your-vapid-private-key> to implement notifications
 
   DB_HOST=localhost
 
+  PORT=12080
+
+  HTTPS=false
+
   NODE_ENV=development
 ```
+
+In the frontend folder you will see other .env.example, do the same as in the backend, put the information in .env
+
+ ```sh
+  REACT_APP_BACKEND_URL=http://localhost:12080
+  REACT_APP_WS_URL=ws://localhost:12080
+  REACT_APP_REPORT_URL=http://localhost:5488
+  REACT_APP_PUBLIC_KEY=<your-vapid-public-key>
+  PORT=12081
+```
+
+To get the vapid keys execute this command:
+
+ ```sh
+  npm run gen_vapid_keys
+```
+
+you will get the public and private keys, and insert it into the .env's
+
 Once you have all the data here, you will need to create the mysql database:
 
 Open mysql workbench and login to your account.
@@ -551,7 +571,7 @@ Clic on apply and you have finished the set up of the proyect.
 
 ## Organization
 
-I have organized my work following the Scrum methodology, breaking down tasks into the smallest possible issues to maintain a high level of organization. This approach enables me to track and understand my weekly progress effectively.
+We have organized my work following the Scrum methodology, breaking down tasks into the smallest possible issues to maintain a high level of organization. This approach enables me to track and understand my weekly progress effectively.
 
 ## Technology Stack:
 
