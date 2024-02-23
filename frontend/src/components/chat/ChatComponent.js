@@ -39,7 +39,6 @@ function ChatComponent() {
       } else {
         getAllMessages();
       }
-
     }
 
     ws.current.onmessage = (event) => {
@@ -79,7 +78,7 @@ function ChatComponent() {
       if (event.data.type === 'sync-message') {
         message.loading('Vuelves a tener conexión, actualizando mensajes...', 1);
         const messages = JSON.parse(localStorage.getItem('chatMessages'));
-        updateMessages(messages[messages.length - 1].id);
+        ws.current.send(JSON.stringify({ type: 'sync-messages', lastId: messages[messages.length - 1].id }));
         setOfflineMessages([]);
         localStorage.setItem('offlineMessages', JSON.stringify([]));
       }
@@ -228,7 +227,9 @@ function ChatComponent() {
             )
           })}
           {offlineChatMessages.map((message, index) => (
-            <div key={index}>{(message.username)}: {message.message} <span>...OFFLINE...</span></div>
+            <div key={index} className="personal-message">
+              <div className="text">{message.message}</div>
+            </div>
           ))}
           <div ref={messagesEndRef}></div>
         </div>

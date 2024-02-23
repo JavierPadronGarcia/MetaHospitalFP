@@ -9,6 +9,7 @@ module.exports = webSocketServer => {
   const CHAT_MESSAGE = 'chatMessage';
   const CONECTED_USERS_COUNT = 'connectedUsersCount';
   const GET_LAST_MESSAGES = 'getLastMessages';
+  const SYNC_MESSAGES = 'sync-messages';
 
   webSocketServer.on('connection', (ws, incoming_request) => {
     const url = new URLSearchParams(incoming_request.url);
@@ -27,7 +28,9 @@ module.exports = webSocketServer => {
 
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message);
-
+      console.log('---------------------------------------------------------------')
+      console.log(parsedMessage)
+      console.log('---------------------------------------------------------------')
       if (parsedMessage.type === CHAT_MESSAGE) {
         console.log(parsedMessage);
         userController.getUserById(parsedMessage.userId).then(user => {
@@ -60,6 +63,12 @@ module.exports = webSocketServer => {
       if (parsedMessage.type === GET_LAST_MESSAGES) {
         messageController.getLastMessagesInGroup(groupId, parsedMessage.lastId).then(response => {
           userRef.ws.send(JSON.stringify({ type: GET_LAST_MESSAGES, messages: JSON.stringify(response) }));
+        })
+      }
+
+      if (parsedMessage.type === SYNC_MESSAGES) {
+        messageController.getLastMessagesInGroup(groupId, parsedMessage.lastId).then(response => {
+          sendMessage(userRef.groupId, JSON.stringify({ type: GET_LAST_MESSAGES, messages: JSON.stringify(response) }));
         })
       }
 

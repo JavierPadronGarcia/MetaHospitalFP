@@ -30,7 +30,7 @@ exports.createMany = (req, res) => {
     }
 
     message.userID = req.user.id;
-    message.username = req.user.username;
+    message.username = req.user.name;
 
   });
 
