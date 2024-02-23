@@ -10,6 +10,7 @@ import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './coursesadmin.css';
 import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
+import { noConnectionError } from '../../../utils/shared/errorHandler';
 
 function CoursesAdmin() {
   const [Courses, setCourses] = useState([]);
@@ -83,6 +84,11 @@ function CoursesAdmin() {
 
   const onSubmit = async () => {
     try {
+
+      if (!name || !acronyms) {
+        throw new Error('No fields filled');
+      }
+
       if (mode === Consts.EDIT_MODE) {
         const coursesToEdit = Courses.find(courses => courses.id === Id);
 
@@ -105,7 +111,13 @@ function CoursesAdmin() {
       }
       Cancel();
     } catch (error) {
-      message.error('Error al crear/actualizar el curso');
+      if (error.message === 'No fields filled') {
+        message.error('Rellena todos los campos');
+      } else if (error.message === 'Network Error') {
+        noConnectionError();
+      } else {
+        message.error('Error al crear/actualizar el curso');
+      }
     }
   }
 

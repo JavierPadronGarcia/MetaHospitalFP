@@ -11,6 +11,7 @@ import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 import './schooladmin.css';
+import { noConnectionError } from '../../../utils/shared/errorHandler';
 
 function SchoolsAdmin() {
   const [Schools, setSchools] = useState([]);
@@ -86,6 +87,11 @@ function SchoolsAdmin() {
 
   const onSubmit = async () => {
     try {
+
+      if (!name) {
+        throw new Error('No name');
+      }
+
       if (mode === Consts.EDIT_MODE) {
         const schoolToEdit = Schools.find(school => school.id === Id);
 
@@ -107,7 +113,13 @@ function SchoolsAdmin() {
       }
       Cancel();
     } catch (error) {
-      message.error('No se ha podido crear correctamente la nueva escuela')
+      if (error.message === 'No name') {
+        message.error(error.message);
+      } else if (error.message === 'Network Error') {
+        noConnectionError();
+      } else {
+        message.error('No se ha podido crear correctamente la nueva escuela')
+      }
     }
   }
 

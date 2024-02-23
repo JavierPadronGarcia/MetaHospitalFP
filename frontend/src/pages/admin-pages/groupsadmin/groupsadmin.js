@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import CoursesService from '../../../services/courses.service';
 import './groupsadmin.css';
 import dayjs from 'dayjs';
+import { noConnectionError } from '../../../utils/shared/errorHandler';
 
 function GroupsAdmin() {
   const [groups, setGroups] = useState([]);
@@ -143,6 +144,11 @@ function GroupsAdmin() {
 
   const onSubmit = async () => {
     try {
+
+      if (!name || !yearRange || !courseId) {
+        throw new Error('No fields filled');
+      }
+
       if (mode === Consts.EDIT_MODE) {
         const groupsToEdit = groups.find(groups => groups.id === Id);
 
@@ -167,7 +173,13 @@ function GroupsAdmin() {
       }
       Cancel();
     } catch (error) {
-      message.success('No se ha podido agregar/actualizar el grupo');
+      if (error.message === 'No fields filled') {
+        message.error('Rellena todos los campos');
+      } else if (error.message === 'Network Error') {
+        noConnectionError();
+      } else {
+        message.error('No se ha podido agregar/actualizar el grupo');
+      }
     }
   };
 
