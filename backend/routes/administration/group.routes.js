@@ -10,6 +10,8 @@ module.exports = app => {
   //retrieve all groups with the count of the teachers and students assigned
   router.get("/withCounts", auth.isAuthenticated, groups.findAllWithCounts);
 
+  router.get("/userGroup", auth.isAuthenticated, groups.findUserGroup);
+
   //retrieve all groups
   router.get("/", auth.isAuthenticated, groups.findAll);
 

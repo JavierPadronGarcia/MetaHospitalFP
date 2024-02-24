@@ -1,5 +1,9 @@
 import axios from "axios";
-import { backendUsersEndpoint } from '../consts/backendEndpoints';
+import { backendUsersEndpoint } from '../constants/backendEndpoints';
+
+const encodeCredentials = (email, password) => {
+  return btoa(`${email}:${password}`);
+};
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;
@@ -50,6 +54,70 @@ async function getUserById(id) {
   }
 }
 
+async function getUsers() {
+  try {
+    const response = await axios.get(backendUsersEndpoint,
+      getOptions(localStorage.getItem('token'))
+    );
+    const user = response.data;
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getStudents() {
+  try {
+    const response = await axios.get(backendUsersEndpoint + '/students',
+      getOptions(localStorage.getItem('token'))
+    );
+    const user = response.data;
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getTeachers() {
+  try {
+    const response = await axios.get(backendUsersEndpoint + '/teachers',
+      getOptions(localStorage.getItem('token'))
+    );
+    const user = response.data;
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
+
+
+async function deleteUser(id) {
+  try {
+    const response = await axios.delete(backendUsersEndpoint + '/' + id,
+      getOptions(localStorage.getItem('token'))
+    );
+    const user = response.data;
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export const createNewUser = async (potUser, email) => {
+  try {
+    const password = 'metahospital';
+    const response = await axios.post(backendUsersEndpoint, potUser, {
+      headers: {
+        Authorization: `Basic ${encodeCredentials(email, password)}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
 async function assignDirector(prevDirectorId, newDirectorId) {
   try {
     const body = new URLSearchParams();
@@ -95,12 +163,17 @@ async function updateUserWithImage(newUsername, newImage, prevImageName) {
 }
 
 
-async function updateUserWithoutImage(newUsername, userId) {
+async function updateUserWithoutImage(newUsername, userId, newUserRole, newName) {
   try {
+    if (!newUserRole) { newUserRole = '' }
+    if (!newName) { newName = '' }
+
     const token = localStorage.getItem('token');
 
     const body = new URLSearchParams();
     body.append('username', newUsername);
+    body.append('role', newUserRole);
+    body.append('name', newName);
 
     const response = await axios.put(`${backendUsersEndpoint}/noimage/${userId}`,
       body,
@@ -140,5 +213,10 @@ export default {
   updateUserWithImage,
   updateUserWithoutImage,
   assignCode,
-  unAssignCode
+  unAssignCode,
+  getUsers,
+  deleteUser,
+  createNewUser,
+  getStudents,
+  getTeachers
 }

@@ -1,0 +1,52 @@
+.right_menu {
+    background-color: #3E94E7;
+    height: 100vh;
+    border-radius: 30px 0px 0px 30px;
+    padding-inline: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.inputs {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.inputs h1 {
+    color: white;
+    text-align: center;
+}
+
+.inputs p {
+    color: white;
+}
+
+.inputs Input {
+    width: 100%;
+}
+
+.photo {
+    height: auto;
+    width: 100%;
+    margin-top: auto;
+    max-height: 283px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttons Button {
+    margin-top: 5%;
+    width: 30%;
+}
+
+.submit-button {
+    color: #3E94E7;
+    border-color: #3E94E7;
+}

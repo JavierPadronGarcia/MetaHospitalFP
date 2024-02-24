@@ -4,9 +4,9 @@ module.exports = (app) => {
 
     var router = require("express").Router();
 
-    router.post("/", auth.isAuthenticated, Course.create);
+    router.post("/:schoolId", auth.isAuthenticated, Course.create);
 
-    router.get("/", auth.isAuthenticated, Course.findAll);
+    router.get("/:schoolId", auth.isAuthenticated, Course.findAll);
 
     router.put("/:id", auth.isAuthenticated, Course.update);
 

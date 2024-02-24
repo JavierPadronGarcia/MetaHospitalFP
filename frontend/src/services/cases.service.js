@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { backendCasesEndpoint } from '../consts/backendEndpoints';
+import { backendCasesEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;

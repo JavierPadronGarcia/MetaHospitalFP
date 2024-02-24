@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendUsersEndpoint } from '../consts/backendEndpoints';
+import { backendUsersEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(user) {
   let base64UserAndPassword = window.btoa(user.username + ":" + user.password);
@@ -33,16 +33,15 @@ async function login(user) {
     const response = await axios.post(`${backendUsersEndpoint}/signin`, null, getOptions(user));
     if (response.data.user) {
       localStorage.setItem("token", response.data.access_token);
-      return response.data.user.role;
+      return response.data.user;
     }
   } catch (error) {
-    console.log('Error', error);
     throw error;
   }
 }
 
 async function logout() {
-  localStorage.removeItem("token");
+  localStorage.clear();
   return;
 }
 
@@ -74,10 +73,7 @@ const navigateByRole = (role, navigate) => {
       navigate('/teacher/main');
       break;
     case 'student':
-      navigate('/student-groups');
-      break;
-    case 'director':
-      navigate('/director-panel');
+      navigate('/student/home');
       break;
   }
 }

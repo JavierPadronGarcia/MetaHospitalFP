@@ -1,0 +1,22 @@
+.admincourse-page .container-right {
+  display: none;
+  min-width: 25%;
+}
+
+.admincourse-page .container-right>.right_menu {
+  padding-inline: 2rem;
+}
+
+@media screen and (min-width: 1300px) {
+  .admincourse-page .container-right {
+    display: block;
+  }
+
+  .admincourse-page .floating-button {
+    display: none;
+  }
+
+  .admincourse-page .container-right>.right_menu .inputs {
+    width: auto;
+  }
+}

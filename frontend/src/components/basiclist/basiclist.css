@@ -1,0 +1,40 @@
+.table-component {
+    background-color: white;
+    width: auto;
+    height: 100%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 30px;
+    overflow: auto;
+}
+
+.table-component .edit-normal {
+    display: none;
+}
+
+.table-component .edit-popform {
+    display: inline-flex;
+}
+
+.table-component table {
+    width: 100%;
+}
+
+td {
+    text-align: center;
+    border-top: 2px solid;
+}
+
+.table-component .headlines {
+    user-select: none;
+}
+
+@media screen and (min-width: 950px) {
+    .table-component .edit-normal {
+        display: inline-flex;
+    }
+
+    .table-component .edit-popform {
+        display: none;
+    }
+}

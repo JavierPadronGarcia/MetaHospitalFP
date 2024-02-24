@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendGroupsEndpoint } from '../consts/backendEndpoints';
+import { backendGroupsEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;
@@ -37,9 +37,33 @@ async function getAllGroups() {
   }
 }
 
-async function addGroup(groupName) {
+async function getGroup(id) {
+  try {
+    const response = await axios.get(backendGroupsEndpoint + '/' + id,
+      getOptions(localStorage.getItem("token"))
+    );
+    const group = await response.data;
+    return group;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getUserGroup() {
+  try {
+    const response = await axios.get(backendGroupsEndpoint + '/userGroup', getOptions(localStorage.getItem("token")))
+    const group = await response.data;
+    return group;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function addGroup(group) {
   const body = new URLSearchParams();
-  body.append("name", groupName);
+  body.append("name", group.name);
+  body.append("date", group.date);
+  body.append("CourseId", group.CourseId);
   let response = [];
   try {
     response = await axios.post(backendGroupsEndpoint,
@@ -55,6 +79,8 @@ async function addGroup(groupName) {
 async function updateGroup(updatedGroup) {
   const body = new URLSearchParams();
   body.append("name", updatedGroup.name);
+  body.append("date", updatedGroup.date);
+  body.append("CourseId", updatedGroup.CourseId);
 
   try {
     const response = await axios.put(`${backendGroupsEndpoint}/${updatedGroup.id}`,
@@ -84,5 +110,7 @@ export default {
   addGroup,
   updateGroup,
   deleteGroup,
-  getAllGroupsWithoutCount
+  getAllGroupsWithoutCount,
+  getGroup,
+  getUserGroup
 }

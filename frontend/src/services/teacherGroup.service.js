@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { backendTeacherGroupEndpoint } from '../consts/backendEndpoints';
+import { backendTeacherGroupEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;
@@ -73,11 +73,23 @@ async function assignTeacherToGroup(teacherid, groupId) {
   }
 }
 
+async function unAssignTeacherToGroup(teacherid, groupId) {
+  try {
+    const response = await axios.delete(backendTeacherGroupEndpoint + '/' + teacherid +'/'+ groupId,
+      getOptions(localStorage.getItem('token'))
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 
 export default {
   getAllOrderedByGroupDesc,
   getAllTeachersNotInAGroup,
   getAllTeachersInAGroup,
   getAllGroupsAssignedToTeacher,
-  assignTeacherToGroup
+  assignTeacherToGroup,
+  unAssignTeacherToGroup
 }

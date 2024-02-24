@@ -1,0 +1,12 @@
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #3E94E7;
+    color: white;
+    border: none;
+}
+
+.blue-background-modal .ant-modal-content {
+    background-color: #3E94E7;
+}

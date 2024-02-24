@@ -33,7 +33,7 @@ exports.addStudentToSchool = async (req, res) => {
         const user = await User.findOne({
             where: {
                 id: userId,
-                role: 'estudiante'
+                role: 'student'
             }
         });
 

@@ -1,0 +1,125 @@
+.menu2 {
+  display: flex;
+  width: auto;
+  height: 129px;
+  background: #f9f9f9;
+  border-radius: 30px;
+  margin: 10px;
+  align-items: center;
+  user-select: none;
+  justify-content: space-between;
+}
+
+.menu2>nav {
+  display: flex;
+  margin-left: 1rem;
+}
+
+.menu2 .menuItems {
+  list-style: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.menu2 .menuItems li {
+  margin-right: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.menu2 .menuItems a {
+  text-decoration: none;
+  color: #3D3D3D;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.menu2 .menuItems a::before {
+  content: attr(data-item);
+  transition: width 0.5s ease-in-out;
+  color: #3E94E7;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.menu2 .menuItems a:hover::before {
+  width: 100%;
+}
+
+.menu2 .logotype {
+  width: 80px;
+  margin: 0.5rem;
+}
+
+.menu2 .menuItems a.active {
+  color: #3E94E7;
+}
+
+.menu2 .more-options-container {
+  margin-right: 2rem;
+}
+
+.menu2 .more-options-container .setting-display {
+  display: none;
+}
+
+.menu2 .more-options-container .setting-icon {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.6rem;
+}
+
+.menu2 .more-options-container .more-options-content {
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu2 .more-options-dropdown {
+  display: none;
+}
+
+@media screen and (min-width: 600px) {
+  .menu2 .logotype {
+    width: 99px;
+    margin-right: 25px;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .menu2 .menuItems a {
+    font-size: 15px;
+  }
+
+  .menu2 .menuItems {
+    flex-wrap: nowrap;
+  }
+
+  .menu2 .more-options-dropdown {
+    display: block;
+  }
+
+  .menu2 .more-options-dropdown-small-screen {
+    display: none;
+  }
+
+  .menu2 .menuItems {
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 1020px) {
+  .menu2 .menuItems a {
+    font-size: 24px;
+  }
+}

@@ -91,9 +91,18 @@ db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
 
 db.case.hasMany(db.exercise, { foreignKey: 'CaseID' });
 db.exercise.hasMany(db.participation, { foreignKey: 'ExerciseID' });
+db.users.hasMany(db.participation, {foreignKey: 'UserId'});
 
 db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
 
 db.student.hasMany(db.participation, { foreignKey: 'StudentID' });
+db.groups.hasMany(db.messages, { foreignKey: 'GroupID' });
+
+//subscriptions relations
+db.users.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
+db.activitySubscription.belongsTo(db.users, {foreignKey: 'UserID'});
+
+//course relations
+db.course.belongsTo(db.school, { throw: 'SchoolId'})
 
 module.exports = db;
