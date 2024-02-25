@@ -1,6 +1,6 @@
 module.exports = app => {
-  const activitySubscriptions = require('../controllers/activitySubscription.controller');
-  const auth = require('../controllers/auth');
+  const activitySubscriptions = require('../../controllers/activitySubscription.controller');
+  const auth = require('../../controllers/roleManagement/auth');
 
   var router = require("express").Router();
 

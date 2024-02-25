@@ -1,9 +1,9 @@
 module.exports = app => {
-  const auth = require('../controllers/auth');
+  const auth = require('../../controllers/roleManagement/auth.js');
   const multer = require('multer');
   const storage = multer.memoryStorage();
   const upload = multer({ storage });
-  const Mailer = require('../controllers/mailer.controller.js');
+  const Mailer = require('../../controllers/mailer.controller.js');
 
   var router = require("express").Router();
 

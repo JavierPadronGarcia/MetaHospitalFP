@@ -33,6 +33,7 @@ db.studentSchool = require('./administration/studentschool.model.js')(sequelize,
 db.teacherSchool = require('./administration/teacherschool.model.js')(sequelize, Sequelize);
 db.studentGroup = require('./administration/studentgroup.model.js')(sequelize, Sequelize);
 db.teacherGroup = require('./administration/teachergroup.model.js')(sequelize, Sequelize);
+db.activitySubscription = require('./administration/activitiesSubscription.model.js')(sequelize, Sequelize);
 
 // Educational
 db.workUnit = require('./educational/workunit.model.js')(sequelize, Sequelize);
@@ -46,6 +47,7 @@ db.workUnitGroup = require('./educational/workunitGroup.model.js')(sequelize, Se
 db.workUnitColor = require('./educational/workUnitColor.model.js')(sequelize, Sequelize);
 db.itemPlayerRole = require('./educational/itemplayerrole.model.js')(sequelize, Sequelize);
 db.playerRole = require('./educational/playerrole.model.js')(sequelize, Sequelize);
+db.messages = require('./educational/messages.model.js')(sequelize, Sequelize);
 
 // Role Management Relations
 db.application.hasMany(db.userRole, { foreignKey: 'AppID' });
@@ -91,7 +93,6 @@ db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
 
 db.case.hasMany(db.exercise, { foreignKey: 'CaseID' });
 db.exercise.hasMany(db.participation, { foreignKey: 'ExerciseID' });
-db.users.hasMany(db.participation, {foreignKey: 'UserId'});
 
 db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
 
@@ -99,10 +100,10 @@ db.student.hasMany(db.participation, { foreignKey: 'StudentID' });
 db.groups.hasMany(db.messages, { foreignKey: 'GroupID' });
 
 //subscriptions relations
-db.users.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
-db.activitySubscription.belongsTo(db.users, {foreignKey: 'UserID'});
+db.userAccounts.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
+db.activitySubscription.belongsTo(db.userAccounts, { foreignKey: 'UserID' });
 
 //course relations
-db.course.belongsTo(db.school, { throw: 'SchoolId'})
+db.course.belongsTo(db.school, { throw: 'SchoolId' })
 
 module.exports = db;

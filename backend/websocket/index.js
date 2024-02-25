@@ -1,4 +1,4 @@
-const userController = require('../controllers/user.controller');
+const userController = require('../controllers/roleManagement/user.controller');
 const messageController = require('../controllers/messages.controller');
 
 module.exports = webSocketServer => {
