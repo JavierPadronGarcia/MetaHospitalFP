@@ -22,10 +22,9 @@ function TeacherSchools() {
 
   const getTeacher = async () => {
     try {
-      const response = await TeacherSchoolsService.getTeachersBySchool(
+      const teacherList = await TeacherSchoolsService.getTeachersBySchool(
         localStorage.getItem('schoolId')
       );
-      const teacherList = response.map(teacher => teacher);
       setTeacher(teacherList);
     } catch (error) {
       message.error('No se pudo obtener a los profesores de la escuela');

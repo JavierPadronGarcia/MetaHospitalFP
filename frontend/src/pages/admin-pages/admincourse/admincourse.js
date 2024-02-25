@@ -23,51 +23,6 @@ function AdminCourse() {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const getTeachers = async () => {
-    try {
-      const response = await teacherGroupService.getAllTeachersNotInAGroup();
-      const teacherlist = response;
-      setTeachers(teacherlist);
-    } catch (error) {
-      console.error('Error fetching schools:', error);
-      message.error(error.message)
-    }
-  };
-
-  const getTeachersInGroup = async () => {
-    try {
-      const response = await teacherGroupService.getAllTeachersInAGroup(localStorage.getItem("groupsId"));
-      const teacherlist = response.map(teacher => teacher.User);
-      setTeachersInGroup(teacherlist);
-    } catch (error) {
-      console.error('Error fetching schools:', error);
-      message.error(error.message)
-    }
-  };
-
-  const getStudents = async () => {
-    try {
-      const response = await groupEnrolementService.getAllStudentsNotInAGroup();
-      const studentslist = response;
-      setStudents(studentslist);
-    } catch (error) {
-      console.error('Error fetching schools:', error);
-      message.error(error.message)
-    }
-  };
-
-  const getStudentInGroup = async () => {
-    try {
-      const response = await groupEnrolementService.getAllStudentsInAGroup(localStorage.getItem("groupsId"));
-      const studentslist = response.map(student => student.User);
-      setStudentsInGroup(studentslist);
-    } catch (error) {
-      console.error('Error fetching schools:', error);
-      message.error(error.message)
-    }
-  };
-
-
   useEffect(() => {
     getTeachers();
     getTeachersInGroup();
@@ -75,8 +30,47 @@ function AdminCourse() {
     getStudentInGroup();
   }, []);
 
+  const getTeachers = async () => {
+    try {
+      const teacherlist = await teacherGroupService.getAllTeachersNotInAGroup();
+      setTeachers(teacherlist);
+    } catch (error) {
+      console.error('Error fetching all teachers:', error);
+      message.error(error.message)
+    }
+  };
 
-  const renderSchoolRow = (student) => (
+  const getTeachersInGroup = async () => {
+    try {
+      const teacherlist = await teacherGroupService.getAllTeachersInAGroup(localStorage.getItem("groupsId"));
+      setTeachersInGroup(teacherlist);
+    } catch (error) {
+      console.error('Error fetching teachers in group:', error);
+      message.error(error.message)
+    }
+  };
+
+  const getStudents = async () => {
+    try {
+      const studentslist = await groupEnrolementService.getAllStudentsNotInAGroup();
+      setStudents(studentslist);
+    } catch (error) {
+      console.error('Error fetching all students:', error);
+      message.error(error.message)
+    }
+  };
+
+  const getStudentInGroup = async () => {
+    try {
+      const studentslist = await groupEnrolementService.getAllStudentsInAGroup(localStorage.getItem("groupsId"));
+      setStudentsInGroup(studentslist);
+    } catch (error) {
+      console.error('Error fetching students in group:', error);
+      message.error(error.message)
+    }
+  };
+
+  const renderStudentsRow = (student) => (
     <>
       <td>{student.name}</td>
     </>
@@ -201,7 +195,7 @@ function AdminCourse() {
         <Menu2></Menu2>
         <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
         <h2 className='list-titles'>Profesores</h2>
-        <BasicList items={teachersInGroup} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
+        <BasicList items={teachersInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
         <h2 className='list-titles'>Estudiantes</h2>
         <BasicList items={studentsInGroup} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} ></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />

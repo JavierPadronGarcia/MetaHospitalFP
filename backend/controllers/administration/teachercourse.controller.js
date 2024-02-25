@@ -1,6 +1,8 @@
 const db = require("../../models");
-const TeacherCourse = db.teachercourse;
+const TeacherGroup = db.teacherGroup;
 const User = db.users;
+const UserAccount = db.userAccounts;
+const Teacher = db.teacher;
 const Group = db.groups;
 const Op = db.Sequelize.Op;
 
@@ -60,20 +62,34 @@ exports.findAllOrderedByGroupDesc = (req, res) => {
 }
 
 exports.findAllTeachersNotInAGroup = (req, res) => {
-  User.findAll({
-    attributes: {
-      exclude: ['password']
-    },
-    include: [{
-      model: TeacherCourse,
-      attributes: []
-    }],
+  Teacher.findAll({
+    include: [
+      {
+        model: TeacherGroup,
+        attributes: []
+      },
+      {
+        model: UserAccount,
+        attributes: {
+          exclude: ['password']
+        },
+      }
+    ],
     where: {
-      role: 'teacher',
-      '$TeacherCourses.UserID$': null
+      '$TeacherGroups.TeacherID$': null
     }
   }).then(users => {
-    res.send(users);
+    const teachers = [];
+
+    users.map((teacher) => {
+      teachers.push({
+        id: teacher.id,
+        name: teacher.name,
+        username: teacher.UserAccount.username
+      })
+    })
+
+    res.send(teachers);
   }).catch(err => {
     res.status(500).send({
       message: err.message || "Error retrieving users not in a group."
@@ -83,19 +99,39 @@ exports.findAllTeachersNotInAGroup = (req, res) => {
 
 exports.findAllTeacherInCourse = (req, res) => {
   const groupId = req.params.id;
-  TeacherCourse.findAll({
-    where: { GroupID: groupId },
-    include: [{ model: User }]
-  })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send({
-        message: err.message || "Error retrieving data"
+  Teacher.findAll({
+    include: [
+      {
+        model: TeacherGroup,
+        where: {
+          GroupID: groupId
+        }
+      },
+      {
+        model: UserAccount,
+        attributes: {
+          exclude: ['password']
+        },
+      }
+    ]
+  }).then(teachers => {
+    const formattedTeachers = [];
+
+    teachers.map((teacher) => {
+      formattedTeachers.push({
+        id: teacher.id,
+        name: teacher.name,
+        username: teacher.UserAccount.username,
       });
+    })
+
+    res.send(formattedTeachers);
+  }).catch(err => {
+    console.error(err);
+    res.status(500).send({
+      message: err.message || "Error retrieving data"
     });
+  });
 };
 
 exports.findAllGroupsByTeacher = (req, res) => {

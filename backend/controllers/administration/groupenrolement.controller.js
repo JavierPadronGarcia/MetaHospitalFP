@@ -1,6 +1,8 @@
 const db = require("../../models");
 const GroupEnrolement = db.groupEnrolement;
-const User = db.users;
+const UserAccounts = db.userAccounts;
+const Student = db.student;
+const StudentGroup = db.studentGroup;
 const Group = db.groups;
 const Op = db.Sequelize.Op;
 
@@ -66,20 +68,33 @@ exports.findAllOrderedByGroupDesc = (req, res) => {
 }
 
 exports.findAllStudentsNotInAGroup = (req, res) => {
-  User.findAll({
-    attributes: {
-      exclude: ['password']
-    },
-    include: [{
-      model: GroupEnrolement,
-      attributes: []
-    }],
+  Student.findAll({
+    include: [
+      {
+        model: StudentGroup,
+        attributes: []
+      },
+      {
+        model: UserAccounts,
+        attributes: {
+          exclude: ['password']
+        },
+      }
+    ],
     where: {
-      role: 'student',
-      '$groupEnrolements.id$': null
+      '$StudentGroups.StudentID$': null
     }
   }).then(users => {
-    res.send(users);
+    const students = [];
+
+    users.map((student) => {
+      students.push({
+        id: student.id,
+        name: student.name,
+        username: student.UserAccount.username
+      })
+    })
+    res.send(students);
   }).catch(err => {
     res.status(500).send({
       message: err.message || "Error retrieving users not in a group."
@@ -89,9 +104,14 @@ exports.findAllStudentsNotInAGroup = (req, res) => {
 
 exports.findAllStudentsInGroup = (req, res) => {
   const groupId = req.params.id;
-  GroupEnrolement.findAll({
-    where: { GroupID: groupId },
-    include: [{ model: User }]
+  Student.findAll({
+    include: [
+      { model: UserAccounts },
+      {
+        model: StudentGroup,
+        where: { GroupID: groupId }
+      }
+    ]
   })
     .then(data => {
       res.send(data);

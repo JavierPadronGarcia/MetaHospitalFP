@@ -78,6 +78,11 @@ db.school.hasMany(db.teacherSchool, { foreignKey: 'SchoolID' });
 db.groups.hasMany(db.studentGroup, { foreignKey: 'GroupID' });
 db.groups.hasMany(db.teacherGroup, { foreignKey: 'GroupID' });
 
+db.teacherGroup.belongsTo(db.teacher, { foreignKey: 'TeacherID' });
+db.teacherGroup.belongsTo(db.groups, { foreignKey: 'GroupID' });
+
+
+
 db.school.hasMany(db.groups, { foreignKey: 'SchoolID' });
 db.course.hasMany(db.groups, { foreignKey: 'CourseID' });
 

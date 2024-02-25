@@ -75,8 +75,8 @@ app.use(function (req, res, next) {
 require('./routes/roleManagement/user.routes')(app);
 
 require("./routes/administration/group.routes")(app);
-// require("./routes/teachercourse.routes")(app);
-// require("./routes/groupenrolement.routes")(app);
+require("./routes/administration/teachercourse.routes")(app);
+require("./routes/administration/groupenrolement.routes")(app);
 // require("./routes/workunit.routes")(app);
 // require("./routes/case.routes")(app);
 // require("./routes/item.routes")(app);
@@ -87,7 +87,7 @@ require("./routes/administration/group.routes")(app);
 // require("./routes/workunitgroup.routes")(app);
 require("./routes/administration/studentschool.routes")(app);
 require("./routes/administration/teacherschool.routes")(app);
-// require("./routes/course.routes")(app);
+require("./routes/administration/course.routes")(app);
 require("./routes/administration/school.routes")(app);
 // require("./routes/participation.routes")(app);
 // require('./routes/activitySubscription.routes')(app);
