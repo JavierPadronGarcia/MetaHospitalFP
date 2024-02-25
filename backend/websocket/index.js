@@ -1,5 +1,5 @@
 const userController = require('../controllers/roleManagement/user.controller');
-const messageController = require('../controllers/messages.controller');
+const messageController = require('../controllers/administration/messages.controller');
 
 module.exports = webSocketServer => {
 
@@ -28,9 +28,7 @@ module.exports = webSocketServer => {
 
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message);
-      console.log('---------------------------------------------------------------')
-      console.log(parsedMessage)
-      console.log('---------------------------------------------------------------')
+
       if (parsedMessage.type === CHAT_MESSAGE) {
         console.log(parsedMessage);
         userController.getUserById(parsedMessage.userId).then(user => {

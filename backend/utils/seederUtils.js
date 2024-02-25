@@ -155,3 +155,43 @@ exports.replacePunctuationMarks = (str) => {
 
   return str.replace(/[áéíóúÁÉÍÓÚ]/g, match => punctuationWords[match]);
 };
+
+exports.addWorkUnits = (workUnits) => {
+  const workUnitsArray = workUnits.map((workUnit, index) => ({
+    id: index + 1,
+    name: workUnit,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return workUnitsArray;
+}
+
+exports.addColors = (colors) => {
+  const colorsArray = colors.map((color, index) => ({
+    id: index + 1,
+    ...color,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return colorsArray;
+}
+
+exports.addWorkUnitColors = (workUnitColors) => {
+  const workUnitColorsArray = workUnitColors.map((workUnitColor, index) => ({
+    id: index + 1,
+    ...workUnitColor,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return workUnitColorsArray;
+}
+
+exports.addWorkUnitGroups = (workUnitGroups) => {
+  const workUnitGroupsArray = workUnitGroups.map((workUnitGroup, index) => ({
+    id: index + 1,
+    ...workUnitGroup,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return workUnitGroupsArray;
+}
