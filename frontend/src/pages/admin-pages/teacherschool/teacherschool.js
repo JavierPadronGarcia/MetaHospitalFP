@@ -25,7 +25,7 @@ function TeacherSchools() {
       const response = await TeacherSchoolsService.getTeachersBySchool(
         localStorage.getItem('schoolId')
       );
-      const teacherList = response.map(teacher => teacher.User);
+      const teacherList = response.map(teacher => teacher);
       setTeacher(teacherList);
     } catch (error) {
       message.error('No se pudo obtener a los profesores de la escuela');

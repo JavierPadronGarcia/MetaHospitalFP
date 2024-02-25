@@ -59,12 +59,18 @@ db.userAccounts.hasOne(db.student, { foreignKey: 'id' });
 db.userAccounts.hasOne(db.teacher, { foreignKey: 'id' });
 db.userAccounts.hasOne(db.admin, { foreignKey: 'id' });
 
+db.student.belongsTo(db.userAccounts, { foreignKey: 'id' });
+db.teacher.belongsTo(db.userAccounts, { foreignKey: 'id' });
+db.admin.belongsTo(db.userAccounts, { foreignKey: 'id' });
+
 // Administration relations
 db.student.hasMany(db.studentSchool, { foreignKey: 'StudentID' });
 db.student.hasMany(db.studentGroup, { foreignKey: 'StudentID' });
+db.studentSchool.belongsTo(db.student, { foreignKey: 'StudentID' });
 
 db.teacher.hasMany(db.teacherSchool, { foreignKey: 'TeacherID' });
 db.teacher.hasMany(db.teacherGroup, { foreignKey: 'TeacherID' });
+db.teacherSchool.belongsTo(db.teacher, { foreignKey: 'TeacherID' });
 
 db.school.hasMany(db.studentSchool, { foreignKey: 'SchoolID' });
 db.school.hasMany(db.teacherSchool, { foreignKey: 'SchoolID' });

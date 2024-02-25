@@ -1,6 +1,7 @@
 const db = require("../../models");
 const StudentSchool = db.studentSchool;
-const User = db.users;
+const Student = db.student;
+const UserAccount = db.userAccounts;
 
 exports.getStudentsBySchool = async (req, res) => {
     const schoolId = req.params.schoolId;
@@ -11,12 +12,23 @@ exports.getStudentsBySchool = async (req, res) => {
                 SchoolId: schoolId
             },
             include: [{
-                model: User,
-                attributes: { exclude: ['password','role'] },
+                model: Student,
+                include: [
+                    { model: UserAccount }
+                ]
             }],
         });
 
-        res.send(students);
+        const formattedStudents = students.map((student) => {
+            return {
+                id: student.StudentID,
+                username: student.Student.UserAccount.username,
+                name: student.Student.name,
+                role: 'student'
+            };
+        })
+
+        res.send(formattedStudents);
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Server error. Couldn't fetch students." });
@@ -29,7 +41,7 @@ exports.addStudentToSchool = async (req, res) => {
     const schoolId = req.params.schoolId;
 
     try {
-        
+
         const user = await User.findOne({
             where: {
                 id: userId,
@@ -60,9 +72,10 @@ exports.deleteStudentFromSchool = async (req, res) => {
     try {
         await StudentSchool.destroy({
             where: {
-            userId: userId,
-            schoolId: schoolId,
-        }});
+                userId: userId,
+                schoolId: schoolId,
+            }
+        });
 
     } catch (error) {
         console.error(error);

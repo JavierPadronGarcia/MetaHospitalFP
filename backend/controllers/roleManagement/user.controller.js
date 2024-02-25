@@ -1,6 +1,9 @@
 const db = require("../../models");
 const User = db.userAccounts;
 const Role = db.role;
+const Admin = db.admin;
+const Student = db.student;
+const Teacher = db.teacher;
 const UserRole = db.userRole;
 const Op = db.Sequelize.Op;
 const utils = require("../../utils");
@@ -48,7 +51,7 @@ exports.create = async (req, res) => {
       RoleID: role.id
     }
     await UserRole.create(userRole);
-    
+
     const userObj = utils.getCleanUser(createdUser);
     userObj.role = role.name;
 
@@ -88,15 +91,38 @@ exports.findByRole = (req, res) => {
   req.send(req.user.role);
 }
 
-exports.findAll = (req, res) => {
-  User.findAll().then(data => {
-    res.send(data);
-  }).catch(err => {
-    res.status(500).send({
+exports.findAll = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      include: [
+        { model: Admin },
+        { model: Student },
+        { model: Teacher }
+      ]
+    });
+
+    const formattedUsers = users.map(user => {
+      let userData = user.toJSON();
+      if (user.Admin) {
+        userData.name = user.Admin.name;
+        userData.role = 'admin';
+      } else if (user.Student) {
+        userData.name = user.Student.name;
+        userData.role = 'student';
+      } else if (user.Teacher) {
+        userData.name = user.Teacher.name;
+        userData.role = 'teacher';
+      }
+      return userData;
+    });
+
+    return res.send(formattedUsers);
+  } catch (err) {
+    return res.status(500).send({
       message:
         err.message || "Some error occurred while retrieving users."
     })
-  })
+  }
 }
 
 exports.findOne = (req, res) => {

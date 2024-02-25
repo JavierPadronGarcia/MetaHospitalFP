@@ -22,10 +22,9 @@ function StudentSchools() {
 
   const getStudents = async () => {
     try {
-      const response = await StudentSchoolsService.getStudentsBySchool(
+      const studentList = await StudentSchoolsService.getStudentsBySchool(
         localStorage.getItem('schoolId')
       );
-      const studentList = response.map(student => student.User);
       setStudents(studentList);
     } catch (error) {
       message.error('No se pudo obtener a los usuarios de la escuela')

@@ -1,6 +1,7 @@
 const db = require("../../models");
 const TeacherSchool = db.teacherSchool;
-const User = db.users;
+const UserAccount = db.userAccounts;
+const Teacher = db.teacher;
 
 exports.getTeachersBySchool = async (req, res) => {
     const schoolId = req.params.schoolId;
@@ -11,12 +12,23 @@ exports.getTeachersBySchool = async (req, res) => {
                 SchoolId: schoolId
             },
             include: [{
-                model: User,
-                attributes: { exclude: ['password', 'role'] },
+                model: Teacher,
+                include: [
+                    { model: UserAccount }
+                ]
             }],
         });
 
-        res.send(teachers);
+        const formattedTeachers = teachers.map((teacher) => {
+            return {
+                id: teachers.TeacherID,
+                username: teacher.Teacher.UserAccount.username,
+                name: teacher.Teacher.name,
+                role: 'teacher'
+            };
+        })
+
+        res.send(formattedTeachers);
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Server error. Couldn't fetch teachers." });
