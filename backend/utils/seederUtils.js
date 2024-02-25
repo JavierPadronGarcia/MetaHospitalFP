@@ -195,3 +195,68 @@ exports.addWorkUnitGroups = (workUnitGroups) => {
   }));
   return workUnitGroupsArray;
 }
+
+exports.addCases = (data) => {
+  let idCounter = 1;
+  return data.flatMap(({ cases, workUnitID }) =>
+    cases.map((name, index) => ({
+      id: idCounter++,
+      WorkUnitID: workUnitID,
+      name,
+      caseNumber: index + 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
+  );
+};
+
+exports.addExercises = (exercises) => {
+  const exercisesArray = exercises.map((exercise, index) => ({
+    id: index + 1,
+    ...exercise,
+    finishDate: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return exercisesArray;
+}
+
+exports.addParticipations = (participations) => {
+  const participationsArray = participations.map((participation, index) => ({
+    id: index + 1,
+    ...participation,
+    SubmittedAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return participationsArray;
+}
+
+exports.addItems = (data) => {
+  let idCounter = 1;
+  return data.flatMap(({ items, caseID }) =>
+    items.map((item) => ({
+      id: idCounter++,
+      CaseID: caseID,
+      name: item,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
+  );
+};
+
+exports.addGrades = (data) => {
+  let idCounter = 1;
+
+  return data.flatMap(({ allGrades, participationId }) =>
+    allGrades.map(({ correct, grade, itemId }) => ({
+      id: idCounter++,
+      correct,
+      grade,
+      ItemID: itemId,
+      ParticipationID: participationId,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
+  );
+};
