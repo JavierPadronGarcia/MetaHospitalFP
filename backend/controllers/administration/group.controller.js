@@ -13,15 +13,16 @@ exports.createGroup = (req, res) => {
   const name = req.body.name;
   const date = req.body.date;
   const CourseId = req.body.CourseId;
+  const schoolId = req.body.schoolId;
 
   const workUnitGroupCreation = [];
 
-  if (!name) {
+  if (!name || !CourseId || !schoolId) {
     return res.status(400).send({
       error: "You must provide a name"
     });
   }
-  const newGroup = { name: name, date: date, CourseId: CourseId };
+  const newGroup = { name: name, date: date, CourseID: CourseId, SchoolID: schoolId };
 
   Group.create(newGroup).then((group) => {
     //find all the work units to assign them to the new group

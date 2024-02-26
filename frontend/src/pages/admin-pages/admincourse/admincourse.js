@@ -178,6 +178,7 @@ function AdminCourse() {
         message.success('Profesor asignado correctamente');
       }
     } catch (error) {
+      console.log(error.message)
       message.error('No se pudo asignar al usuario')
     } finally {
       setSelectedTeacher(null);

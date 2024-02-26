@@ -11,6 +11,14 @@ module.exports = (sequelize, Sequelize) => {
     },
     date: {
       type: Sequelize.STRING
+    },
+    CourseID: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    SchoolID: {
+      type: Sequelize.INTEGER,
+      allowNull: false
     }
   })
   return Group;

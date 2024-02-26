@@ -75,7 +75,7 @@ app.use(function (req, res, next) {
 require('./routes/roleManagement/user.routes')(app);
 require("./routes/administration/group.routes")(app);
 require("./routes/administration/teachercourse.routes")(app);
-require("./routes/administration/groupenrolement.routes")(app);
+require("./routes/administration/studentgroup.routes")(app);
 require("./routes/roleManagement/student.routes")(app);
 require("./routes/roleManagement/teacher.routes")(app);
 // require("./routes/workunit.routes")(app);

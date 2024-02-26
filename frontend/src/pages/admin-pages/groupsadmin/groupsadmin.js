@@ -167,7 +167,7 @@ function GroupsAdmin() {
           CourseId: courseId
         };
 
-        await GroupsService.addGroup(Groups);
+        await GroupsService.addGroup(Groups, localStorage.getItem('schoolId'));
         getGroups();
         message.success('Grupo agregado correctamente');
       }
@@ -179,6 +179,7 @@ function GroupsAdmin() {
         noConnectionError();
       } else {
         message.error('No se ha podido agregar/actualizar el grupo');
+        console.log(error.message)
       }
     }
   };

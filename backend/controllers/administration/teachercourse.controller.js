@@ -8,18 +8,19 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-  if (!req.body.UserID || !req.body.GroupID) {
+  if (!req.body.UserID || !req.body.GroupID || !req.body.Date) {
     return res.status(400).send({
       message: "Content can not be empty!"
     });
   }
 
   const group = {
-    UserID: req.body.UserID,
+    TeacherID: req.body.UserID,
     GroupID: req.body.GroupID,
+    Date: req.body.Date
   };
 
-  TeacherCourse.create(group).then(data => {
+  TeacherGroup.create(group).then(data => {
     res.send(data);
   }).catch(err => {
     res.status(500).send({

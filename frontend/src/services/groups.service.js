@@ -59,11 +59,12 @@ async function getUserGroup() {
   }
 }
 
-async function addGroup(group) {
+async function addGroup(group, schoolId) {
   const body = new URLSearchParams();
   body.append("name", group.name);
   body.append("date", group.date);
   body.append("CourseId", group.CourseId);
+  body.append("schoolId", schoolId);
   let response = [];
   try {
     response = await axios.post(backendGroupsEndpoint,

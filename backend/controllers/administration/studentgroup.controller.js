@@ -8,28 +8,27 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-  const userId = req.body.UserID;
+  const studentId = req.body.UserID;
   const groupId = req.body.GroupID;
   const date = req.body.Date;
 
-  console.log(userId, groupId, date)
-
-  if (!userId || !groupId || !date) {
+  if (!studentId || !groupId || !date) {
     return res.status(400).send({
       message: "Content can not be empty!"
     });
   }
 
-  const groupEnrolement = {
-    UserID: userId,
+  const studentGroup = {
+    StudentID: studentId,
     GroupID: groupId,
     Date: date
   };
 
-  GroupEnrolement.create(groupEnrolement).then(data => {
+  StudentGroup.create(studentGroup).then(data => {
     res.send(data);
   }).catch(err => {
     res.status(500).send({
+      error: true,
       message: err.message || "Some error occurred while creating a groupEnrolement"
     });
   });
