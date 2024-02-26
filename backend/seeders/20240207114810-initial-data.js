@@ -64,12 +64,12 @@ function setupData() {
   ]);
 
   const groups = addGroups([
-    { name: '1ºCAE', date: '2023-2024', CourseId: 1 },
-    { name: '2ºCAE', date: '2023-2024', CourseId: 1 },
-    { name: '1ºTES', date: '2023-2024', CourseId: 2 },
-    { name: '2ºTES', date: '2023-2024', CourseId: 2 },
-    { name: '1ºIMD', date: '2023-2024', CourseId: 3 },
-    { name: '2ºIMD', date: '2023-2024', CourseId: 3 }
+    { name: '1ºCAE', date: '2023-2024', SchoolID: 1, CourseId: 1 },
+    { name: '2ºCAE', date: '2023-2024', SchoolID: 1, CourseId: 1 },
+    { name: '1ºTES', date: '2023-2024', SchoolID: 1, CourseId: 2 },
+    { name: '2ºTES', date: '2023-2024', SchoolID: 1, CourseId: 2 },
+    { name: '1ºIMD', date: '2023-2024', SchoolID: 1, CourseId: 3 },
+    { name: '2ºIMD', date: '2023-2024', SchoolID: 1, CourseId: 3 }
   ])
 
   const studentGroups = addStudentGroups([

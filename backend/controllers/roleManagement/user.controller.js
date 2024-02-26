@@ -17,7 +17,7 @@ const adminController = require('./admin.controller');
 //Create and Save a new User
 exports.create = async (req, res) => {
   // Validate request
-  if (!req.body.username || !req.body.password || !req.body.role) {
+  if (!req.body.username || !req.body.password || !req.body.role || !req.body.name) {
     return res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -56,6 +56,7 @@ exports.create = async (req, res) => {
     userObj.role = role.name;
 
     req.body.userId = userObj.id;
+    console.log(userObj.role)
 
     switch (userObj.role) {
       case 'admin':

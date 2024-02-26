@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
   const { userId, name, age, schoolId } = req.body;
 
-  if (!name || !age || !userId) {
+  if (!name || !userId) {
     return res.status(400).send({
       error: true,
       message: 'Content cannot be empty'
@@ -15,7 +15,7 @@ exports.create = (req, res) => {
   const newAdmin = {
     id: userId,
     name: name,
-    age: age,
+    age: age || null,
     SchoolID: schoolId || null
   }
 

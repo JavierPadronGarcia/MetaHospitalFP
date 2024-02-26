@@ -43,9 +43,7 @@ exports.addCourses = (courses) => {
 exports.addGroups = (groups) => {
   const groupsArray = groups.map((group, index) => ({
     id: index + 1,
-    name: group.name,
-    date: group.date,
-    CourseId: group.CourseId,
+    ...group,
     createdAt: new Date(),
     updatedAt: new Date()
   }));

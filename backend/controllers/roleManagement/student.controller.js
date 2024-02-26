@@ -9,7 +9,7 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
   const { userId, name, age } = req.body;
 
-  if (!userId || !name || !age) {
+  if (!userId || !name) {
     return res.status(400).send({
       error: true,
       message: 'Content cannot be empty'
@@ -19,7 +19,7 @@ exports.create = (req, res) => {
   const newStudent = {
     id: userId,
     name: name,
-    age: age
+    age: age || null
   }
 
   Student.create(newStudent).then(student => {
