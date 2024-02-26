@@ -30,7 +30,7 @@ function GroupsAdmin() {
 
   const getGroups = async () => {
     try {
-      const groupsList = await GroupsService.getAllGroupsWithoutCount();
+      const groupsList = await GroupsService.getAllGroupsWithoutCount(localStorage.getItem('schoolId'));
       setGroups(groupsList);
     } catch (error) {
       console.error('Error fetching Groups:', error);

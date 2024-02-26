@@ -12,6 +12,8 @@ module.exports = app => {
 
   router.get("/userGroup", auth.isAuthenticated, groups.findUserGroup);
 
+  router.get('/school/:schoolId', auth.isAuthenticated, groups.findAllInSchool);
+
   //retrieve all groups
   router.get("/", auth.isAuthenticated, groups.findAll);
 

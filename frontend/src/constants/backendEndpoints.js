@@ -8,6 +8,10 @@ export const backendImageEndpoint = `${backendEndpoint}/images`;
 
 export const backendUsersEndpoint = `${backendEndpoint}/api/users`;
 
+export const backendStudentsEndpoint = `${backendEndpoint}/api/students`;
+
+export const backendTeachersEndpoint = `${backendEndpoint}/api/teachers`;
+
 export const backendTeacherGroupEndpoint = `${backendEndpoint}/api/teachercourse`;
 
 export const backendGroupsEndpoint = `${backendEndpoint}/api/groups`;

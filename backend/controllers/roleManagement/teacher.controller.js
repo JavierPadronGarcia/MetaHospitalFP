@@ -3,6 +3,8 @@ const User = db.userAccounts;
 const Role = db.role;
 const UserRole = db.userRole;
 const Teacher = db.teacher;
+const TeacherGroup = db.teacherGroup;
+const UserAccount = db.userAccounts;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -33,8 +35,24 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  Teacher.findAll().then(allTeachers => {
-    return res.send(allTeachers);
+
+  Teacher.findAll({
+    include: [
+      { model: TeacherGroup },
+      { model: UserAccount }
+    ]
+  }).then(allTeachers => {
+    const teachers = [];
+
+    allTeachers.map((teacher) => {
+      teachers.push({
+        id: teacher.id,
+        name: teacher.name,
+        username: teacher.UserAccount.username
+      });
+    });
+
+    return res.send(teachers);
   }).catch(err => {
     return res.status(500).send({
       error: true,

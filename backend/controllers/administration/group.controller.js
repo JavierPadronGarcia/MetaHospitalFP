@@ -2,6 +2,7 @@ const db = require("../../models");
 const dayjs = require('dayjs');
 const Group = db.groups;
 const User = db.users;
+const School = db.school;
 const WorkUnit = db.workUnit;
 const GroupEnrolement = db.groupEnrolement;
 const Teachercourse = db.teachercourse;
@@ -108,6 +109,23 @@ exports.findOne = (req, res) => {
         error: err
       })
     })
+}
+
+exports.findAllInSchool = (req, res) => {
+  const schoolId = req.params.schoolId;
+
+  Group.findAll({
+    where: {
+      SchoolID: schoolId
+    }
+  }).then(allGroups => {
+    res.send(allGroups);
+  }).catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving groups"
+    });
+  });
 }
 
 exports.findUserGroup = (req, res) => {

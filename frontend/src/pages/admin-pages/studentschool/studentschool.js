@@ -34,6 +34,7 @@ function StudentSchools() {
   const getUsers = async () => {
     try {
       const response = await usersService.getStudents();
+      console.log(response)
       setUsers(response);
     } catch (error) {
       message.error('No se pudo obtener usuarios')
@@ -88,6 +89,7 @@ function StudentSchools() {
 
   const onDelete = (id) => {
     try {
+      console.log(id)
       getStudents();
       StudentSchoolsService.deleteStudentFromSchool(localStorage.getItem('schoolId'), id);
       message.error('Estudiante eliminado correctamente');
@@ -106,7 +108,7 @@ function StudentSchools() {
       }
 
       const student = {
-        UserId: userId,
+        studentId: userId,
       };
 
       await StudentSchoolsService.createNewStudent(localStorage.getItem('schoolId'), student);

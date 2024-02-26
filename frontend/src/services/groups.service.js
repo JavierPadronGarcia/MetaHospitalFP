@@ -13,9 +13,9 @@ function getOptions(token) {
   return options;
 }
 
-async function getAllGroupsWithoutCount() {
+async function getAllGroupsWithoutCount(schoolId) {
   try {
-    const response = await axios.get(backendGroupsEndpoint,
+    const response = await axios.get(`${backendGroupsEndpoint}/school/${schoolId}`,
       getOptions(localStorage.getItem("token"))
     );
     const groups = await response.data;

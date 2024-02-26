@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendUsersEndpoint } from '../constants/backendEndpoints';
+import { backendUsersEndpoint, backendStudentsEndpoint, backendTeachersEndpoint } from '../constants/backendEndpoints';
 
 const encodeCredentials = (email, password) => {
   return btoa(`${email}:${password}`);
@@ -68,7 +68,7 @@ async function getUsers() {
 
 async function getStudents() {
   try {
-    const response = await axios.get(backendUsersEndpoint + '/students',
+    const response = await axios.get(backendStudentsEndpoint,
       getOptions(localStorage.getItem('token'))
     );
     const user = response.data;
@@ -80,7 +80,7 @@ async function getStudents() {
 
 async function getTeachers() {
   try {
-    const response = await axios.get(backendUsersEndpoint + '/teachers',
+    const response = await axios.get(backendTeachersEndpoint,
       getOptions(localStorage.getItem('token'))
     );
     const user = response.data;

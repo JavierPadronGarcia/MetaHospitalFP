@@ -20,23 +20,23 @@ app.use(express.json());
 
 const db = require("./models");
 //normal use. Doesn't delete the database data
-// db.sequelize.sync();
+db.sequelize.sync();
 
 //In development, it drops the database data
-db.sequelize.sync({ force: true }).then(() => {
-  console.log('Drop and re-sync db.');
-  exec('sequelize db:seed:all', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error al ejecutar los seeders: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-      return;
-    }
-    console.log(`Seeders ejecutados correctamente: ${stdout}`);
-  });
-})
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log('Drop and re-sync db.');
+//   exec('sequelize db:seed:all', (error, stdout, stderr) => {
+//     if (error) {
+//       console.error(`Error al ejecutar los seeders: ${error.message}`);
+//       return;
+//     }
+//     if (stderr) {
+//       console.error(`stderr: ${stderr}`);
+//       return;
+//     }
+//     console.log(`Seeders ejecutados correctamente: ${stdout}`);
+//   });
+// })
 
 app.use(function (req, res, next) {
   var token = req.headers['authorization'];
@@ -73,10 +73,11 @@ app.use(function (req, res, next) {
 })
 
 require('./routes/roleManagement/user.routes')(app);
-
 require("./routes/administration/group.routes")(app);
 require("./routes/administration/teachercourse.routes")(app);
 require("./routes/administration/groupenrolement.routes")(app);
+require("./routes/roleManagement/student.routes")(app);
+require("./routes/roleManagement/teacher.routes")(app);
 // require("./routes/workunit.routes")(app);
 // require("./routes/case.routes")(app);
 // require("./routes/item.routes")(app);
