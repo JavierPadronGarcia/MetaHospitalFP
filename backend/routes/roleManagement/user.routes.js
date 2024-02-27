@@ -30,6 +30,8 @@ module.exports = app => {
   //Sign in
   router.post('/signin', auth.signin);
 
+  router.put('/changePassword', auth.isAuthenticated, auth.changePassword);
+
   router.post('/signinCode', auth.codeSignin);
 
   app.use('/api/users', router);

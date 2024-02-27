@@ -6,7 +6,6 @@ const Case = db.case;
 const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
 const Group = db.groups;
-const User = db.users;
 const Grade = db.grade;
 const Item = db.item;
 const Student = db.student;
@@ -56,7 +55,7 @@ exports.createExerciseAndParticipations = async (req, res) => {
   splittedStudents.forEach(studentId => {
     participations.push({
       StudentID: studentId,
-      ExerciseId: createdExercise.id
+      ExerciseID: createdExercise.id
     })
   })
 
@@ -178,7 +177,8 @@ exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
       JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
       JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
       JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
-      JOIN \`${User.tableName}\` AS u ON u.id = p.UserId
+      JOIN \`${Student.tableName}\` AS stud p ON p.StudentID = stud.id
+      JOIN  \`${UserAccount.tableName}\` AS u ON u.id = stud.id
       JOIN \`${Grade.tableName}\` AS grd ON grd.ParticipationID = p.id
       JOIN \`${Item.tableName}\` AS i ON i.id = grd.ItemID
       WHERE g.id = ${groupId}
@@ -271,7 +271,9 @@ exports.getAllStudentsAssignedToExercise = async (req, res) => {
       JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
       JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
       JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
-      JOIN \`${User.tableName}\` AS u ON u.id = ex.UserID
+      JOIN \`${Participation.tableName}\` AS p ON ex.id = p.ExerciseID 
+      JOIN \`${Student.tableName}\` AS stud ON p.StudentID = stud.id
+      JOIN \`${UserAccount.tableName}\` AS u ON stud.id = u.id
       WHERE g.id = ${groupId} 
       AND wku.id = ${workUnitId} 
       AND ex.assigned = ${assigned}

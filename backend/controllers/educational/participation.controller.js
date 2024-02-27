@@ -79,7 +79,7 @@ exports.submitGrade = (req, res) => {
 
   Participation.findOne({
     where: {
-      UserId: userId,
+      StudentID: userId,
     },
     include: [
       {
