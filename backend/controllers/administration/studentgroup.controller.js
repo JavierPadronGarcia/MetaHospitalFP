@@ -1,5 +1,4 @@
 const db = require("../../models");
-const GroupEnrolement = db.groupEnrolement;
 const UserAccounts = db.userAccounts;
 const Student = db.student;
 const StudentGroup = db.studentGroup;
@@ -35,7 +34,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  GroupEnrolement.findAll().then(data => {
+  StudentGroup.findAll().then(data => {
     res.send(data);
   }).catch(err => {
     res.status(500).send({
@@ -45,13 +44,13 @@ exports.findAll = (req, res) => {
 };
 
 exports.findAllOrderedByGroupDesc = (req, res) => {
-  GroupEnrolement.findAll({
+  StudentGroup.findAll({
     attributes: ['id', 'Date', 'createdAt', 'updatedAt'],
     order: [['GroupID', 'DESC']],
     include: [
       {
-        model: User,
-        attributes: ['id', 'username', 'role', 'filename', 'createdAt', 'updatedAt']
+        model: UserAccounts,
+        attributes: ['id', 'username', 'filename', 'createdAt', 'updatedAt']
       },
       {
         model: Group,
@@ -125,7 +124,7 @@ exports.findAllStudentsInGroup = (req, res) => {
 
 exports.getCountOfStudentsInGroup = (req, res) => {
   const groupId = req.params.id
-  GroupEnrolement.count({
+  StudentGroup.count({
     where: { GroupID: groupId }
   }).then(studentsCount => {
     res.send({ count: studentsCount })
@@ -144,19 +143,19 @@ exports.update = (req, res) => {
     });
   }
 
-  GroupEnrolement.findOne({ where: { id: id } }).then(data => {
+  StudentGroup.findOne({ where: { id: id } }).then(data => {
     if (!data) {
       return res.status(404).send({
         message: "Data not found"
       });
     }
     const groupEnrolement = {
-      UserID: newUserId,
+      StudentID: newUserId,
       GroupID: newGroupId,
       Date: date
     }
 
-    GroupEnrolement.update(
+    StudentGroup.update(
       groupEnrolement,
       { where: { id: id } }
     ).then(data => {
@@ -177,7 +176,7 @@ exports.update = (req, res) => {
 
 exports.remove = (req, res) => {
   const id = req.params.id;
-  GroupEnrolement.destroy({
+  StudentGroup.destroy({
     where: { id: id }
   }).then(num => {
     if (num == 1) {
@@ -198,8 +197,8 @@ exports.remove = (req, res) => {
 
 exports.unAssignStudent = (req, res) => {
   const { userId, groupId } = req.params;
-  GroupEnrolement.destroy({
-    where: { UserID: userId, groupId: groupId }
+  StudentGroup.destroy({
+    where: { StudentID: userId, groupId: groupId }
   }).then(num => {
     if (num == 1) {
       return res.send({

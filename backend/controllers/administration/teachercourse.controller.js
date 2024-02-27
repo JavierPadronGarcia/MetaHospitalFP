@@ -30,7 +30,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  TeacherCourse.findAll().then(data => {
+  TeacherGroup.findAll().then(data => {
     res.send(data);
   }).catch(err => {
     res.status(500).send({
@@ -40,7 +40,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findAllOrderedByGroupDesc = (req, res) => {
-  TeacherCourse.findAll({
+  TeacherGroup.findAll({
     order: [['GroupID', 'DESC']],
     include: [
       {
@@ -137,8 +137,8 @@ exports.findAllTeacherInCourse = (req, res) => {
 
 exports.findAllGroupsByTeacher = (req, res) => {
   const teacherId = req.params.id;
-  TeacherCourse.findAll({
-    where: { UserID: teacherId },
+  TeacherGroup.findAll({
+    where: { TeacherID: teacherId },
     include: [{ model: Group }]
   }).then(data => {
     res.send(data);
@@ -152,7 +152,7 @@ exports.findAllGroupsByTeacher = (req, res) => {
 
 exports.getCountOfTeachersInCourse = (req, res) => {
   const groupId = req.params.id
-  TeacherCourse.count({
+  TeacherGroup.count({
     where: { GroupID: groupId }
   }).then(teacherCount => {
     res.send({ count: teacherCount })
@@ -171,7 +171,7 @@ exports.update = (req, res) => {
     });
   }
 
-  TeacherCourse.findOne({ where: { GroupID: prevGroupId, UserID: prevUserId } }).then(data => {
+  TeacherGroup.findOne({ where: { GroupID: prevGroupId, TeacherID: prevUserId } }).then(data => {
     if (!data) {
       return res.status(404).send({
         message: "Data not found"
@@ -182,9 +182,9 @@ exports.update = (req, res) => {
       GroupID: newGroupId
     }
 
-    TeacherCourse.update(
+    TeacherGroup.update(
       teacherCourse,
-      { where: { UserID: prevUserId, GroupID: prevGroupId } }
+      { where: { TeacherID: prevUserId, GroupID: prevGroupId } }
     ).then(data => {
       res.send({
         message: "Updated succesfully"
@@ -205,8 +205,8 @@ exports.remove = (req, res) => {
   const userId = req.params.userId;
   const groupId = req.params.groupId;
 
-  TeacherCourse.destroy({
-    where: { UserID: userId, GroupID: groupId }
+  TeacherGroup.destroy({
+    where: { TeacherID: userId, GroupID: groupId }
   }).then(num => {
     if (num == 1) {
       return res.send({
