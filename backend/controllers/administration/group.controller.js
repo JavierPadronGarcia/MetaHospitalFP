@@ -1,11 +1,12 @@
 const db = require("../../models");
 const dayjs = require('dayjs');
 const Group = db.groups;
-const User = db.users;
+const User = db.userAccounts;
 const School = db.school;
+const Student = db.student;
 const WorkUnit = db.workUnit;
-const GroupEnrolement = db.groupEnrolement;
-const Teachercourse = db.teachercourse;
+const StudentGroup = db.studentGroup;
+const TeacherGroup = db.teacherGroup;
 const WorkUnitGroup = db.workUnitGroup;
 const Op = db.Sequelize.Op;
 
@@ -54,7 +55,7 @@ exports.findAllWithCounts = async (req, res) => {
     studentCount = await db.sequelize.query(`
       SELECT gr.id, gr.name, COALESCE(COUNT(gre.GroupID), 0) AS StudentCount
       FROM \`${Group.tableName}\` AS gr
-      LEFT JOIN \`${GroupEnrolement.tableName}\` AS gre ON gr.id = gre.GroupID
+      LEFT JOIN \`${StudentGroup.tableName}\` AS gre ON gr.id = gre.GroupID
       GROUP BY gr.id, gr.name
     `, { type: db.Sequelize.QueryTypes.SELECT });
   } catch (err) {
@@ -66,7 +67,7 @@ exports.findAllWithCounts = async (req, res) => {
     teacherCount = await db.sequelize.query(`
       SELECT gr.id, gr.name, COALESCE(COUNT(the.GroupID), 0) AS TeacherCount
       FROM \`${Group.tableName}\` AS gr
-      LEFT JOIN \`${Teachercourse.tableName}\` AS the ON gr.id = the.GroupID
+      LEFT JOIN \`${TeacherGroup.tableName}\` AS the ON gr.id = the.GroupID
       GROUP BY gr.id, gr.name
     `, { type: db.Sequelize.QueryTypes.SELECT });
   } catch (err) {
@@ -142,10 +143,10 @@ exports.findUserGroup = (req, res) => {
     yearRange = `${year - 1}-${year}`;
   }
 
-  User.findOne({
+  Student.findOne({
     where: { id: userId },
     include: {
-      model: GroupEnrolement,
+      model: StudentGroup,
       required: true,
       include: {
         model: Group,
@@ -156,11 +157,11 @@ exports.findUserGroup = (req, res) => {
     }
   }).then(userWithGroup => {
     if (userWithGroup) {
-      return res.send(userWithGroup.groupEnrolements[0].group);
+      return res.send(userWithGroup.StudentGroups[0].group);
     } else {
-      return res.status(404).send({
+      return res.status(500).send({
         error: true,
-        message: 'User do not have  a group in this range'
+        message: 'User do not have a group in this range'
       });
     }
   });

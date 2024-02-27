@@ -95,6 +95,7 @@ exports.findAllByGroup = async (req, res) => {
   let workUnitGroup = [];
   let workUnitColorsIds = [];
   let newArray = [];
+
   try {
     workUnitColor = await WorkUnitColor.findAll({
       include: [
@@ -103,21 +104,20 @@ exports.findAllByGroup = async (req, res) => {
           attributes: ['id', 'primaryColor', 'secondaryColor', 'text']
         },
         {
-          model: WorkUnit,
-          attributes: ['id', 'name']
-        },
+          model: WorkUnitGroup,
+          attributes: [],
+          where: { GroupID: GroupID }
+        }
       ]
-    })
-  } catch (err) {
-    return res.status(500).send(
-      { message: `Error getting all work units for group ${GroupID}` }
-    )
-  }
-  const workUnitColorTransformed = Object.values(await transformArray(workUnitColor));
+    });
 
-  workUnitColorTransformed.map((data, index) => {
-    workUnitColorsIds[index] = data.id;
-  })
+    workUnitColorsIds = workUnitColor.map(data => data.id);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({
+      message: `Error getting all work units for group ${GroupID}`
+    });
+  }
 
   try {
     workUnitGroup = await WorkUnitGroup.findAll({
@@ -128,24 +128,25 @@ exports.findAllByGroup = async (req, res) => {
         }
       },
       include: [
-        { model: WorkUnit }
+        { model: WorkUnit },
       ]
     });
   } catch (err) {
     return res.status(500).send({
       message: `Error getting all work units with colors for group ${GroupID}`
-    })
+    });
   }
 
-  workUnitGroup.map((data, index) => {
+  workUnitGroup.forEach((data, index) => {
     data = data.get({ plain: true });
-    const workUnitWithColor = workUnitColorTransformed.find(workUnitColor => workUnitColor.id === data.WorkUnitID);
-    data.workUnit = workUnitWithColor;
+
+    data.colors = workUnitColor.find(wkuColor => wkuColor.id === data.WorkUnitID);
     newArray[index] = data;
-  })
+  });
 
   return res.send(newArray);
 }
+
 
 exports.update = (req, res) => {
   const { GroupID, WorkUnitID } = req.params;

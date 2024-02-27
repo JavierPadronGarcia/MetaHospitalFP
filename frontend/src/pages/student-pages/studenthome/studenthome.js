@@ -47,6 +47,7 @@ const Studenthome = () => {
               title={workUnit.workUnit.name}
               route={`/student/workUnit`}
               workUnit={workUnit.workUnit}
+              color={workUnit.colors.color.primaryColor}
             />
         })}
       </div>

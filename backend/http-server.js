@@ -85,7 +85,7 @@ require("./routes/roleManagement/teacher.routes")(app);
 // require("./routes/grade.routes")(app);
 // require("./routes/color.routes")(app);
 // require("./routes/workunitcolors.routes")(app);
-// require("./routes/workunitgroup.routes")(app);
+require("./routes/educational/workunitgroup.routes")(app);
 require("./routes/administration/studentschool.routes")(app);
 require("./routes/administration/teacherschool.routes")(app);
 require("./routes/administration/course.routes")(app);
