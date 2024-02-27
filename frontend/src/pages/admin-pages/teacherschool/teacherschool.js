@@ -25,6 +25,7 @@ function TeacherSchools() {
       const teacherList = await TeacherSchoolsService.getTeachersBySchool(
         localStorage.getItem('schoolId')
       );
+      console.log(teacherList)
       setTeacher(teacherList);
     } catch (error) {
       message.error('No se pudo obtener a los profesores de la escuela');
@@ -90,7 +91,8 @@ function TeacherSchools() {
 
   const onDelete = async (id) => {
     try {
-      getTeacher();
+      console.log(id)
+      console.log(teacher)
       TeacherSchoolsService.deleteTeacherFromSchool(localStorage.getItem('schoolId'), id);
       getTeacher();
 

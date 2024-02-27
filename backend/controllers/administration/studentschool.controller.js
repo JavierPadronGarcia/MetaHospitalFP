@@ -71,12 +71,12 @@ exports.deleteStudentFromSchool = async (req, res) => {
   try {
     await StudentSchool.destroy({
       where: {
-        userId: userId,
-        schoolId: schoolId,
+        StudentID: userId,
+        SchoolID: schoolId,
       }
     });
 
-    return res.send('Deleted');
+    return res.send({ message: 'Deleted' });
 
   } catch (error) {
     return res.status(500).send({ message: "Error del servidor. No se pudo eliminar al estudiante de la escuela." });

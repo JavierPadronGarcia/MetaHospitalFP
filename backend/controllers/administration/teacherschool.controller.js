@@ -21,7 +21,7 @@ exports.getTeachersBySchool = async (req, res) => {
 
     const formattedTeachers = teachers.map((teacher) => {
       return {
-        id: teachers.TeacherID,
+        id: teacher.TeacherID,
         username: teacher.Teacher.UserAccount.username,
         name: teacher.Teacher.name,
         role: 'teacher'
