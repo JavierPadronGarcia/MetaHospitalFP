@@ -165,8 +165,9 @@ async function updateUserWithImage(newUsername, newImage, prevImageName) {
 
 async function updateUserWithoutImage(newUsername, userId, newUserRole, newName) {
   try {
-    if (!newUserRole) { newUserRole = '' }
-    if (!newName) { newName = '' }
+    if (!newUsername) newUserRole = ''
+    if (!newUserRole) newUserRole = ''
+    if (!newName) newName = ''
 
     const token = localStorage.getItem('token');
 

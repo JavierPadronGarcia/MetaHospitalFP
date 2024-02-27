@@ -9,14 +9,14 @@ const Op = db.Sequelize.Op;
 const utils = require("../../utils");
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
 const teacherController = require('./teacher.controller');
 const studentController = require('./student.controller');
 const adminController = require('./admin.controller');
 
 //Create and Save a new User
 exports.create = async (req, res) => {
-  // Validate request
+
   if (!req.body.username || !req.body.password || !req.body.role || !req.body.name) {
     return res.status(400).send({
       message: "Content can not be empty!"
@@ -32,7 +32,7 @@ exports.create = async (req, res) => {
 
   // USER ALREADY EXISTS
   if (data) {
-    return res.status(404).send({
+    return res.status(500).send({
       error: true,
       message: 'The user already exists'
     });
@@ -56,7 +56,6 @@ exports.create = async (req, res) => {
     userObj.role = role.name;
 
     req.body.userId = userObj.id;
-    console.log(userObj.role)
 
     switch (userObj.role) {
       case 'admin':
@@ -70,23 +69,12 @@ exports.create = async (req, res) => {
         break;
     }
   } else {
-    return res.status(404).send({
+    return res.status(500).send({
       error: true,
       mesasge: 'The role was not found'
     });
   }
 }
-
-// exports.findAllDirectors = (req, res) => {
-//   User.findAll({ where: { role: 'director' } }).then(allDirectors => {
-//     return res.send(allDirectors);
-//   }).catch(err => {
-//     return res.status(500).send({
-//       message:
-//         err.message || "Error retrieving all directors"
-//     });
-//   })
-// }
 
 exports.findByRole = (req, res) => {
   req.send(req.user.role);
@@ -138,31 +126,142 @@ exports.findOne = (req, res) => {
   })
 }
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
+
   const id = req.params.id;
-  if (!req.body.newUsername) {
+  if (!req.body.username && !req.body.name && !req.body.role) {
     return res.status(400).send({
       error: true,
       message: 'Content cannot be empty'
     });
   }
 
-  User.findOne({ where: { id: id } }).then(data => {
-    const user = {
-      username: req.body.username || data.username,
-      password: data.password,
-      code: data.code,
-      codeExpirationDate: data.codeExpirationDate,
-      filename: data.filename
+  const userFound = await User.findOne({
+    where: {
+      id: id
+    },
+    include: [
+      { model: Admin },
+      { model: Teacher },
+      { model: Student },
+    ]
+  });
+
+  const actualUserRole = await UserRole.findOne({
+    where: {
+      UserID: userFound.id,
+      AppID: 1
+    },
+    include: [{ model: Role }]
+  })
+
+
+  if (actualUserRole.Role.name !== req.body.role && req.body.role !== '') {
+    const newRole = await Role.findOne({
+      where: {
+        name: req.body.role
+      }
+    })
+    let oldRoleName = actualUserRole.Role.name;
+    let oldUserInTableRole = null;
+
+    oldUserInTableRole = await deleteUserInTableRole(oldRoleName, oldUserInTableRole);
+
+    if (req.body.name !== '') {
+      oldUserInTableRole.name = req.body.name;
+      req.body.name = '';
     }
 
-    User.update(user, { where: { id: id } }).then(response => {
-      return res.send({
-        error: true,
-        message: 'User updated successfully'
+    await UserRole.update(
+      {
+        RoleID: newRole.id,
+      },
+      {
+        where: {
+          UserID: userFound.id,
+          RoleID: actualUserRole.RoleID,
+          AppID: 1
+        }
       });
-    });
-  });
+    await createUserInTableRole(newRole.name, oldUserInTableRole);
+  }
+
+  if (req.body.name !== '') {
+    switch (actualUserRole.Role.name) {
+      case 'admin':
+        const adminUser = await Admin.findOne({ where: { id: userFound.id } });
+        adminUser.name = req.body.name;
+        await adminUser.save();
+        break;
+      case 'teacher':
+        const teacherUser = await Teacher.findOne({ where: { id: userFound.id } });
+        teacherUser.name = req.body.name;
+        await teacherUser.save();
+        break;
+      case 'student':
+        const studentUser = await Student.findOne({ where: { id: userFound.id } });
+        studentUser.name = req.body.name;
+        await studentUser.save();
+        break;
+    }
+  }
+
+  if (req.body.username !== '') {
+    userFound.username = req.body.username;
+    await userFound.save();
+  }
+
+  return res.send();
+
+  async function deleteUserInTableRole(oldRoleName, oldUserInTableRole) {
+    switch (oldRoleName) {
+      case 'admin':
+        oldUserInTableRole = userFound.Admin;
+        await Admin.destroy({
+          where: { id: actualUserRole.UserID }
+        })
+        break;
+      case 'teacher':
+        oldUserInTableRole = userFound.Teacher;
+        await Teacher.destroy({
+          where: { id: actualUserRole.UserID }
+        })
+        break;
+      case 'student':
+        oldUserInTableRole = userFound.Student;
+        await Student.destroy({
+          where: { id: actualUserRole.UserID }
+        })
+        break;
+    }
+    return oldUserInTableRole
+  }
+
+  async function createUserInTableRole(newRoleName, oldUserInTableRole) {
+    switch (newRoleName) {
+      case 'admin':
+        await Admin.create({
+          id: oldUserInTableRole.id,
+          name: oldUserInTableRole.name,
+          age: oldUserInTableRole.age
+        })
+        break;
+      case 'teacher':
+        await Teacher.create({
+          id: oldUserInTableRole.id,
+          name: oldUserInTableRole.name,
+          age: oldUserInTableRole.age
+        })
+        break;
+      case 'student':
+        await Student.create({
+          id: oldUserInTableRole.id,
+          name: oldUserInTableRole.name,
+          age: oldUserInTableRole.age
+        })
+        break;
+    }
+  }
 }
 
 async function generateUUID() {
@@ -276,11 +375,12 @@ exports.unAssignCode = async (req, res) => {
 //   })
 // }
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const id = req.params.id;
+  try {
+    const user = await User.findByPk(id);
 
-  User.findByPk(id).then(user => {
-    if (user.filename != '') {
+    if (user.filename !== '' && user.filename != null) {
       const imagePath = path.join(__dirname, '../public/images', user.filename);
       fs.unlink(imagePath, err => {
         if (err) {
@@ -288,27 +388,15 @@ exports.delete = (req, res) => {
         }
       })
     }
-  }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Could not find the user to delete"
-    });
-  })
 
-  User.destroy({ where: { id: id } }).then(num => {
-    if (num === 1) {
-      return res.send({
-        message: "User was deleted successfully!"
-      })
-    }
-    return res.send({
-      message: `Cannot delete User with id=${id}. Maybe User was not found!`
-    })
+    await user.destroy();
 
-  }).catch(err => {
-    return res.status(500).send({
-      message: "Could not delete User with id=" + id
-    })
-  })
+    return res.send({ message: "User deleted successfuly" });
+
+  } catch (error) {
+    return res.status(500).send({ error: true, message: `Error deleting the user: ${error.message}` });
+  }
+
 }
 
 // User.findByPk(id).then(user => {

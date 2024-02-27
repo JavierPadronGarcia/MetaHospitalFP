@@ -87,6 +87,7 @@ function UserAdmin() {
       message.success("Usuario eliminado correctamente");
       getUsers();
     } catch (error) {
+      console.error(error)
       message.error('Error al eliminar al usuario')
     }
   }
@@ -119,7 +120,7 @@ function UserAdmin() {
         const userToEdit = users.find(user => user.id === Id);
 
         userToEdit.name = name;
-        userToEdit.usrname = email;
+        userToEdit.username = email;
         userToEdit.role = role;
 
         await usersService.updateUserWithoutImage(email, Id, role, name);
@@ -130,12 +131,7 @@ function UserAdmin() {
         getUsers();
       } else {
 
-        const potUser = {
-          name: name,
-          role: role,
-        };
-
-        await usersService.createNewUser(potUser, email);
+        await usersService.createNewUser({ name: name, role: role, }, email);
 
         cleanInputs();
         message.success('Usuario creado correctamente');

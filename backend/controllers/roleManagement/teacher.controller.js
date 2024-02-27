@@ -101,3 +101,24 @@ exports.unAssignDirector = (req, res) => {
     })
   })
 }
+
+exports.resetPasswordForAUser = (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const password = bcrypt.hashSync("test");
+
+    UserAccount.update({ password: password }, { where: { id } })
+      .then(() => {
+        res.status(200).send("Student password has been reset.");
+      })
+      .catch((err) => {
+        console.log('Error in reset password', err);
+      });
+  } catch (err) {
+    res.status(500).send({
+      error: true,
+      message: err.message || "Some error ocurred reseting password",
+    });
+  }
+};

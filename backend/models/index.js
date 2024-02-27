@@ -55,6 +55,8 @@ db.role.hasMany(db.userRole, { foreignKey: 'RoleID' });
 db.userAccounts.hasMany(db.userRole, { foreignKey: 'UserID' });
 db.tokenJWT.belongsTo(db.userAccounts, { foreignKey: 'UserID' });
 
+db.userRole.belongsTo(db.role, { foreignKey: 'RoleID' });
+
 db.userAccounts.hasOne(db.student, { foreignKey: 'id' });
 db.userAccounts.hasOne(db.teacher, { foreignKey: 'id' });
 db.userAccounts.hasOne(db.admin, { foreignKey: 'id' });

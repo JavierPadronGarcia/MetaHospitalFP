@@ -15,7 +15,15 @@ function generateToken(user) {
     expiresIn: 60 * 60 * 24  //expires in 24 hours
   });
 
-  const expireDate = new Date(new Date().getTime() + (60 * 60 * 1000 * 24));
+  // const token = jwt.sign(u, process.env.JWT_SECRET, {
+  //   expiresIn: 50000 / 1000, //expires in 24 hours
+  // });
+
+  const decodeToke = decodeToken(token);
+
+  const date = new Date(decodeToke.exp * 1000);
+
+  const expireDate = date.toISOString();
 
   return { token: token, expireDate: expireDate };
 }

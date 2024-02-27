@@ -176,3 +176,24 @@ async function getToken(user) {
     throw err;
   }
 }
+
+exports.changePassword = (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const password = bcrypt.hashSync(req.body.password);
+
+    User.update({ password: password }, { where: { id } })
+      .then(() => {
+        res.status(200).send("User password has been updated.");
+      })
+      .catch((err) => {
+        console.log('Error in changePassword', err);
+      });
+  } catch (err) {
+    res.status(500).send({
+      error: true,
+      message: err.message || "Some error ocurred changing password",
+    });
+  }
+};
