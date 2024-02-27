@@ -103,7 +103,6 @@ const ProfileHeader = () => {
       <div className="actions">
         <a onClick={handleLogOut} >Cerrar sesión</a>
       </div>
-      <AuthCodeGenerator user={user} />
     </div>
   );
 };

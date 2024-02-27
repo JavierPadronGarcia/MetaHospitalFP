@@ -232,10 +232,10 @@ exports.addParticipations = (participations) => {
 
 exports.addItems = (data) => {
   let idCounter = 1;
-  return data.flatMap(({ items, caseID }) =>
+  return data.flatMap(({ items, CaseId }) =>
     items.map((item) => ({
       id: idCounter++,
-      CaseID: caseID,
+      CaseID: CaseId,
       name: item,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -247,14 +247,36 @@ exports.addGrades = (data) => {
   let idCounter = 1;
 
   return data.flatMap(({ allGrades, participationId }) =>
-    allGrades.map(({ correct, grade, itemId }) => ({
+    allGrades.map((grade) => ({
       id: idCounter++,
-      correct,
-      grade,
-      ItemID: itemId,
+      ...grade,
       ParticipationID: participationId,
       createdAt: new Date(),
       updatedAt: new Date()
     }))
   );
 };
+
+exports.addPlayerRoles = (playerRoles) => {
+  const playerRoleArray = playerRoles.map((playerRole, index) => ({
+    id: index + 1,
+    name: playerRole,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }));
+  return playerRoleArray;
+}
+
+exports.addItemPlayerRoles = (data) => {
+  let idCounter = 1;
+
+  return data.flatMap(({ playerRoles, ItemID }) =>
+    playerRoles.map((playerRoleId) => ({
+      id: idCounter++,
+      ItemID: ItemID,
+      PlayerRoleID: playerRoleId,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
+  );
+}

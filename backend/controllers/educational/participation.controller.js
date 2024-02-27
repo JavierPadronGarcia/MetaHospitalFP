@@ -73,25 +73,25 @@ exports.update = (req, res) => {
     })
 }
 
-exports.submitGrade = (req, res) => {
+exports.submitGrade = async (req, res) => {
   const { finalGrade, role, submittedTime, userId, exerciseId, items } = req.body;
   const handWash = [req.body.handWashInit, req.body.handWashEnd];
 
-  Participation.findOne({
-    where: {
-      StudentID: userId,
-    },
-    include: [
-      {
+  try {
+    const participation = await Participation.findOne({
+      where: {
+        StudentID: userId,
+      },
+      include: {
         model: Exercise,
         where: {
           CaseID: exerciseId
         }
       }
-    ]
-  }).then(participation => {
+    });
+
     if (!participation) {
-      return res.status(404).send("No such participation found!");
+      return res.status(500).send({ error: true, message: "No such participation found!" });
     }
 
     if (items && items?.length !== 0
@@ -125,25 +125,28 @@ exports.submitGrade = (req, res) => {
         ItemID: handWash[1].itemId,
         ParticipationID: participationId
       })
+      try {
+        await Grade.bulkCreate(grades);
 
-      Grade.bulkCreate(grades).then(response => {
         return res.send({
           message: 'grades added successfully',
         })
-      }).catch(err => {
+      } catch (error) {
         return res.status(500).send(
-          "Error adding the grading information to the database!: " + err
+          { error: true, message: "Error adding the grading information to the database!: " + err }
         )
-      })
+      }
+
     } else {
-      return res.status(404).send("No item grades found")
+      return res.status(500).send({ error: true, message: "No item grades found" })
     }
 
-  }).catch(err => {
+  } catch (error) {
     return res.status(500).send({
-      error: err || "Error when trying to update the final grade!"
+      error: true,
+      message: err.message || "Error when trying to update the final grade!"
     })
-  })
+  }
 }
 
 exports.delete = (req, res) => {

@@ -114,6 +114,7 @@ db.case.hasMany(db.exercise, { foreignKey: 'CaseID' });
 db.exercise.hasMany(db.participation, { foreignKey: 'ExerciseID' });
 
 db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
+db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseID' });
 
 db.student.hasMany(db.participation, { foreignKey: 'StudentID' });
 db.groups.hasMany(db.messages, { foreignKey: 'GroupID' });

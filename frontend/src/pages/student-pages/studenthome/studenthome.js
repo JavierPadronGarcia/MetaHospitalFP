@@ -18,6 +18,7 @@ const Studenthome = () => {
       setTitle(userGroup.name);
       setGroupId(userGroup.id)
       getWorkUnits(userGroup.id);
+      console.log()
     } catch (err) {
       console.log("Error: ", err);
     };
@@ -26,6 +27,7 @@ const Studenthome = () => {
   const getWorkUnits = async (groupId) => {
     try {
       const workUnits = await workUnitGroupsService.getAllWorkUnitsWithColorsByGroup(groupId);
+      console.log(workUnits)
       setWorkUnits(workUnits);
     } catch (err) {
       console.log('Error: ' + err)
@@ -47,7 +49,7 @@ const Studenthome = () => {
               title={workUnit.workUnit.name}
               route={`/student/workUnit`}
               workUnit={workUnit.workUnit}
-              color={workUnit.colors.color.primaryColor}
+              color={workUnit.workUnit.colors.visible.primaryColor}
             />
         })}
       </div>

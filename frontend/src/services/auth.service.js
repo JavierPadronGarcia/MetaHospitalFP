@@ -78,10 +78,24 @@ const navigateByRole = (role, navigate) => {
   }
 }
 
+const changePassword = async (password) => {
+  try {
+    const response = await axios.put(
+      `${backendUsersEndpoint}/changePassword`,
+      password,
+      setTokenOptions()
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default {
   login,
   logout,
   isLoggedIn,
   getMyRole,
+  changePassword,
   navigateByRole
 }
