@@ -81,7 +81,7 @@ require("./routes/roleManagement/teacher.routes")(app);
 // require("./routes/workunit.routes")(app);
 // require("./routes/case.routes")(app);
 // require("./routes/item.routes")(app);
-// require("./routes/exercise.routes")(app);
+require("./routes/educational/exercise.routes")(app);
 // require("./routes/grade.routes")(app);
 // require("./routes/color.routes")(app);
 // require("./routes/workunitcolors.routes")(app);

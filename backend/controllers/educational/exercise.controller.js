@@ -1,10 +1,18 @@
 const db = require("../../models");
+const webPush = require('web-push');
+const dayjs = require('dayjs');
 const Exercise = db.exercise;
 const Case = db.case;
 const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
 const Group = db.groups;
 const User = db.users;
+const Grade = db.grade;
+const Item = db.item;
+const Student = db.student;
+const UserAccount = db.userAccounts;
+const ActivitySubscription = db.activitySubscription;
+const Participation = db.participation;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -27,37 +35,69 @@ exports.create = (req, res) => {
   });
 };
 
-// exports.createSomeExercises = (req, res) => {
+exports.createExerciseAndParticipations = async (req, res) => {
+  const { Students, assigned, finishDate, CaseID } = req.body;
 
-//   const { CaseID, Students, assigned, finishDate } = req.body;
-//   let newFinishDate = new Date(finishDate)
+  if (!assigned || !finishDate || !CaseID || !Students || Students?.length === 0) {
+    return res.status(400).send({ error: true, message: 'Please, add at least one participation and exerciseData' })
+  }
 
-//   const creationExercises = [];
-//   const splittedStudents = Students.split(',');
-//   if (newFinishDate instanceof Date && !isNaN(newFinishDate)) {
-//     splittedStudents.forEach(studentId => {
-//       creationExercises.push({
-//         assigned: assigned,
-//         CaseID: CaseID,
-//         UserID: studentId,
-//         finishDate: newFinishDate
-//       })
-//     });
-//   } else {
-//     splittedStudents.forEach(studentId => {
-//       creationExercises.push({
-//         assigned: assigned,
-//         CaseID: CaseID,
-//         UserID: studentId,
-//         finishDate: null
-//       })
-//     });
-//   }
+  const participations = [];
+  const newFinishDate = new Date(finishDate);
+  const splittedStudents = Students.split(',');
 
-//   Exercise.bulkCreate(creationExercises).then(data => {
-//     return res.send(data)
-//   })
-// }
+  const newExercise = {
+    assigned: assigned,
+    CaseID: CaseID,
+    finishDate: (newFinishDate instanceof Date && !isNaN(newFinishDate)) ? newFinishDate : null
+  }
+  const createdExercise = await Exercise.create(newExercise);
+
+  splittedStudents.forEach(studentId => {
+    participations.push({
+      StudentID: studentId,
+      ExerciseId: createdExercise.id
+    })
+  })
+
+  const createdParticipations = await Participation.bulkCreate(participations);
+
+  const allSubscriptions = await ActivitySubscription.findAll({
+    include: [
+      {
+        model: UserAccount,
+        required: true,
+        include: [
+          {
+            model: Student,
+            required: true,
+            include: {
+              model: Participation,
+              required: true,
+              where: { ExerciseId: createdExercise.id }
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  allSubscriptions.forEach(s => {
+    const subscriptionRecipient = {
+      endpoint: s.endpoint,
+      expirationTime: s.expirationTime,
+      keys: JSON.parse(s.keys)
+    }
+    const title = `Nuevo ejercicio`;
+
+    let description = (assigned == 'true')
+      ? `Fecha final: ${dayjs(finishDate).format('DD/MM/YYYY')}`
+      : 'Ejercicio no evaluado';
+
+    sendNotification(subscriptionRecipient, title, description);
+  })
+  return res.send(createdParticipations);
+}
 
 exports.findAll = (req, res) => {
   Exercise.findAll().then(data => {
@@ -84,19 +124,96 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   const { groupId, workUnitId } = req.params;
   try {
     const result = await db.sequelize.query(`
-      SELECT c.id, c.name, ex.finishDate, ex.assigned, ex.CaseID
+      SELECT c.id, c.name, ex.finishDate, ex.assigned, ex.CaseID, ex.id as exerciseId
       FROM \`${Group.tableName}\` AS g
       JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id 
       JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
       JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
       JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
       WHERE g.id = ${groupId} and wku.id = ${workUnitId}
-      GROUP BY c.id, c.WorkUnitId, c.name, ex.assigned, ex.finishDate, ex.CaseID;
+      GROUP BY c.id, c.WorkUnitId, c.name, ex.assigned, ex.finishDate, ex.CaseID, ex.id;
     `, { type: db.Sequelize.QueryTypes.SELECT });
     return res.send(result);
   } catch (err) {
     return res.status(500).send({
       error: err.message || "Some error occurred while retrieving the cases and their exercises."
+    });
+  }
+}
+
+exports.findAllExercisesAssignedToStudent = async (req, res) => {
+  const { groupId, workUnitId } = req.params;
+  try {
+    const result = await db.sequelize.query(`
+      SELECT ex.id AS exerciseId, ex.assigned, ex.finishDate, c.id AS caseId, c.WorkUnitId AS workUnitId, c.name AS caseName 
+      FROM \`${Group.tableName}\` AS g
+      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
+      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
+      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
+      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
+      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
+      JOIN \`${Student.tableName}\` AS st ON st.id = p.StudentID
+      JOIN \`${UserAccount.tableName}\` AS u ON u.id = st.id
+      WHERE g.id = ${groupId}
+      AND wku.id = ${workUnitId}
+      AND u.id = ${req.user.id}
+    `, { type: db.Sequelize.QueryTypes.SELECT });
+    return res.send(result);
+  } catch (err) {
+    return res.status(500).send({
+      error: err.message || "Some error occurred while retrieving the exercises of the student"
+    });
+  }
+}
+
+exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
+  try {
+    const { groupId, workUnitId, caseId, assigned, finishDate } = req.params;
+
+    const result = await db.sequelize.query(`
+      SELECT grd.id as gradeId, grd.grade as gradeValue, u.id as userId, u.username, u.name, i.id as itemId, i.name as itemName
+      FROM \`${Group.tableName}\` AS g
+      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
+      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
+      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
+      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
+      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
+      JOIN \`${User.tableName}\` AS u ON u.id = p.UserId
+      JOIN \`${Grade.tableName}\` AS grd ON grd.ParticipationID = p.id
+      JOIN \`${Item.tableName}\` AS i ON i.id = grd.ItemID
+      WHERE g.id = ${groupId}
+      AND wku.id = ${workUnitId}
+      AND ex.assigned = ${assigned}
+      AND ex.CaseID = ${caseId}
+      AND (date(ex.finishDate) like '${finishDate}' OR ex.finishDate IS NULL)
+    `, { type: db.Sequelize.QueryTypes.SELECT });
+
+    const formattedResult = {};
+
+    result.forEach(item => {
+      if (!formattedResult[item.userId]) {
+        formattedResult[item.userId] = {
+          userId: item.userId,
+          username: item.username,
+          name: item.name,
+          items: []
+        };
+      }
+
+      formattedResult[item.userId].items.push({
+        itemId: item.itemId,
+        itemName: item.itemName,
+        gradeValue: item.gradeValue
+      });
+    });
+
+    return res.send(Object.values(formattedResult));
+
+  } catch (err) {
+    console.log(err.message)
+
+    return res.status(500).send({
+      error: err.message || "Some error occurred while retreaving  the exercises"
     });
   }
 }
@@ -254,19 +371,8 @@ exports.delete = async (req, res) => {
     const { groupId, workUnitId, caseId, assigned, finishDate } = req.params;
     const idsToDelete = [];
     let formattedDate = null;
-    if (finishDate) {
 
-      const date = new Date(finishDate);
-
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hour = date.getHours().toString().padStart(2, '0');
-      const minute = date.getMinutes().toString().padStart(2, '0');
-      const second = date.getSeconds().toString().padStart(2, '0');
-
-      formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-    }
+    if (finishDate) formattedDate = dayjs(finishDate).format('YYYY-MM-DD HH:MM:SS');
 
     const result = await db.sequelize.query(`
       SELECT ex.id
@@ -298,5 +404,29 @@ exports.delete = async (req, res) => {
     return res.status(500).send({
       error: err.message || "Some error occurred while deleting the exercises"
     });
+  }
+}
+
+const sendNotification = async (subscriptionRecipient, title, description) => {
+  const options = {
+    vapidDetails: {
+      subject: 'mailto:myemail@example.com',
+      publicKey: process.env.PUBLIC_KEY,
+      privateKey: process.env.PRIVATE_KEY
+    }
+  };
+
+  try {
+    await webPush.sendNotification(
+      subscriptionRecipient,
+      JSON.stringify({
+        title,
+        description,
+        image: 'http://localhost:12080/images/logo144.png'
+      }),
+      options
+    );
+  } catch (err) {
+    throw (err);
   }
 }

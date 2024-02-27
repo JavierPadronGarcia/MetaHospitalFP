@@ -68,6 +68,7 @@ exports.findOne = async (req, res) => {
 
 const transformArray = (array) => {
   return array.reduce((acc, obj) => {
+    console.log(obj.workUnitGroup.workUnit)
     const propertyName = obj.visibility ? 'visible' : 'invisible';
     const colorObject = {
       id: obj.color.id,
@@ -76,14 +77,14 @@ const transformArray = (array) => {
       text: obj.color.text
     };
 
-    acc[obj.workUnit.name] = acc[obj.workUnit.name] || {
-      id: obj.workUnit.id,
-      name: obj.workUnit.name,
+    acc[obj.workUnitGroup.workUnit.name] = acc[obj.workUnitGroup.workUnit.name] || {
+      id: obj.workUnitGroup.workUnit.id,
+      name: obj.workUnitGroup.workUnit.name,
       visibility: obj.visibility,
       colors: {}
     };
 
-    acc[obj.workUnit.name].colors[propertyName] = colorObject;
+    acc[obj.workUnitGroup.workUnit.name].colors[propertyName] = colorObject;
 
     return acc;
   }, {});
@@ -95,7 +96,6 @@ exports.findAllByGroup = async (req, res) => {
   let workUnitGroup = [];
   let workUnitColorsIds = [];
   let newArray = [];
-
   try {
     workUnitColor = await WorkUnitColor.findAll({
       include: [
@@ -105,19 +105,23 @@ exports.findAllByGroup = async (req, res) => {
         },
         {
           model: WorkUnitGroup,
-          attributes: [],
-          where: { GroupID: GroupID }
-        }
+          include: {
+            model: WorkUnit
+          }
+        },
       ]
-    });
-
-    workUnitColorsIds = workUnitColor.map(data => data.id);
+    })
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).send({
-      message: `Error getting all work units for group ${GroupID}`
-    });
+    return res.status(500).send(
+      { message: `Error getting all work units for group ${GroupID}` }
+    )
   }
+  const workUnitColorTransformed = Object.values(await transformArray(workUnitColor));
+
+  workUnitColorTransformed.map((data, index) => {
+    workUnitColorsIds[index] = data.id;
+  })
+
 
   try {
     workUnitGroup = await WorkUnitGroup.findAll({
@@ -128,21 +132,21 @@ exports.findAllByGroup = async (req, res) => {
         }
       },
       include: [
-        { model: WorkUnit },
+        { model: WorkUnit }
       ]
     });
   } catch (err) {
     return res.status(500).send({
       message: `Error getting all work units with colors for group ${GroupID}`
-    });
+    })
   }
 
-  workUnitGroup.forEach((data, index) => {
+  workUnitGroup.map((data, index) => {
     data = data.get({ plain: true });
-
-    data.colors = workUnitColor.find(wkuColor => wkuColor.id === data.WorkUnitID);
+    const workUnitWithColor = workUnitColorTransformed.find(workUnitColor => workUnitColor.id === data.WorkUnitID);
+    data.workUnit = workUnitWithColor;
     newArray[index] = data;
-  });
+  })
 
   return res.send(newArray);
 }
