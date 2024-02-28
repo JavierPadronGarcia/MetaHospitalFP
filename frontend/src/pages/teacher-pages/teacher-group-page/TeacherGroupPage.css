@@ -1,6 +1,3 @@
-.teacher-group-page>h2 {
-  text-align: center;
-}
 
 .teacher-group-page-main {
   display: flex;
@@ -12,22 +9,12 @@
 }
 
 .teacher-group-page-main .work-unit-component-selection {
-  box-sizing: border-box;
   user-select: none;
 }
 
 @media screen and (min-width: 768px) {
 
-  #root :where(.teacher-group-page) {
-    overflow: hidden;
-  }
-
-  .teacher-group-page>h2 {
-    display: none;
-  }
-
   .teacher-group-page-main {
-    margin-top: 7rem;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;

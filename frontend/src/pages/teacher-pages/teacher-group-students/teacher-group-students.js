@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './teacher-group-students.css'
 import Headers from '../../../components/headers/headers';
 import BasicList from '../../../components/basiclist/basiclist';
 import PopForm from '../../../components/popform/popform';

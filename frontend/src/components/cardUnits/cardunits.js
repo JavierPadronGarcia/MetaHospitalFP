@@ -12,8 +12,8 @@ const CardUnits = ({ title, color, route, workUnit, date }) => {
   }
 
   return (
-    <div className="cardunits-container" onClick={handleNavigate}>
-      <div className='cardunits'>
+    <div className="cardunits-container">
+      <div className='cardunits' onClick={handleNavigate}>
         <div className="square" style={{ backgroundColor: color }}></div>
         <div className="content">
           <div>{title}</div>
