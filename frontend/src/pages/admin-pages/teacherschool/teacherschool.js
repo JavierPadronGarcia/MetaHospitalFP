@@ -80,7 +80,7 @@ function TeacherSchools() {
         bordered
         dataSource={searchResults}
         renderItem={(user) => (
-          <List.Item onClick={() => changeName(user.name, user.id)}>
+          <List.Item onClick={() => changeName(user.name, user.id)} className='list-item'>
             {user.name}
           </List.Item>
         )}

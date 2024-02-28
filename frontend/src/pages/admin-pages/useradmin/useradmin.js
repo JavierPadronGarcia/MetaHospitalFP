@@ -9,7 +9,7 @@ import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './useradmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 
@@ -19,10 +19,15 @@ function UserAdmin() {
   const [name, setName] = useState('');
   const [Id, setId] = useState('');
   const [role, setRole] = useState('student');
-  const Headlines = ['Imagen', 'Nombre', 'Email', 'Identificador'];
+  const Headlines = ['Imagen', 'Nombre', 'Email', 'Escuela', 'Identificador'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
+
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   const optionRole = [
     { value: 'student', label: 'Estudiante' },
@@ -45,11 +50,10 @@ function UserAdmin() {
     }
   };
 
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
+  const navigateSchool = (id, name) => {
+    localStorage.setItem('schoolId', id);
+    localStorage.setItem('schoolName', name)
+  }
 
   const renderUserRow = (user) => (
     <>
@@ -57,6 +61,10 @@ function UserAdmin() {
         src={`${process.env.REACT_APP_BACKEND_URL}/images/${user.filename}`} alt="avatar" /></td>
       <td>{user.name}</td>
       <td>{user.username}</td>
+      {user.schoolId
+        ? <td><Link onClick={() => navigateSchool(user.schoolId, user.schoolName)} to='/admin/school' >{user.schoolName}</Link></td>
+        : <td>---</td>
+      }
       <td>{user.role}</td>
     </>
   );

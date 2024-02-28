@@ -5,6 +5,9 @@ const Admin = db.admin;
 const Student = db.student;
 const Teacher = db.teacher;
 const UserRole = db.userRole;
+const School = db.school;
+const StudentSchool = db.studentSchool;
+const TeacherSchool = db.teacherSchool;
 const Op = db.Sequelize.Op;
 const utils = require("../../utils");
 const bcrypt = require('bcryptjs');
@@ -80,39 +83,107 @@ exports.findByRole = (req, res) => {
   req.send(req.user.role);
 }
 
+// exports.findAll = async (req, res) => {
+//   try {
+//     const users = await User.findAll({
+//       include: [
+//         { model: Admin },
+//         { model: Student },
+//         { model: Teacher }
+//       ]
+//     });
+
+//     const formattedUsers = users.map(user => {
+//       let userData = user.toJSON();
+//       if (user.Admin) {
+//         userData.name = user.Admin.name;
+//         userData.role = 'admin';
+//       } else if (user.Student) {
+//         userData.name = user.Student.name;
+//         userData.role = 'student';
+//       } else if (user.Teacher) {
+//         userData.name = user.Teacher.name;
+//         userData.role = 'teacher';
+//       }
+//       return userData;
+//     });
+
+//     return res.send(formattedUsers);
+//   } catch (err) {
+//     return res.status(500).send({
+//       message:
+//         err.message || "Some error occurred while retrieving users."
+//     })
+//   }
+// }
+
 exports.findAll = async (req, res) => {
   try {
     const users = await User.findAll({
-      include: [
-        { model: Admin },
-        { model: Student },
-        { model: Teacher }
-      ]
+      include: [{ model: Admin }, { model: Student }, { model: Teacher }],
     });
 
-    const formattedUsers = users.map(user => {
+    const formattedUsersPromises = users.map(async (user) => {
       let userData = user.toJSON();
       if (user.Admin) {
+        await School.findByPk(user.Admin.schoolId).then((data) => {
+          if (data == null) {
+            userData.schoolName = "";
+            userData.schoolId = null;
+          } else {
+            userData.schoolName = data.name;
+            userData.schoolId = data.id;
+          }
+        });
         userData.name = user.Admin.name;
-        userData.role = 'admin';
+        userData.role = "admin";
       } else if (user.Student) {
+        const studentSchool = await StudentSchool.findOne({
+          where: {
+            StudentID: user.id,
+          },
+        });
+
+        if (!studentSchool) {
+          userData.schoolName = "";
+          userData.schoolId = null;
+        } else {
+          const school = await School.findByPk(studentSchool.SchoolID);
+          userData.schoolName = school.name;
+          userData.schoolId = school.id;
+        }
+
         userData.name = user.Student.name;
-        userData.role = 'student';
+        userData.role = "student";
       } else if (user.Teacher) {
+        const teacherSchool = await TeacherSchool.findOne({
+          where: {
+            TeacherID: user.id,
+          },
+        });
+
+        if (!teacherSchool) {
+          userData.schoolName = "";
+          userData.schoolId = null;
+        } else {
+          const school = await School.findByPk(teacherSchool.SchoolID);
+          userData.schoolName = school.name;
+          userData.schoolId = school.id;
+        }
+
         userData.name = user.Teacher.name;
-        userData.role = 'teacher';
+        userData.role = "teacher";
       }
       return userData;
     });
-
+    const formattedUsers = await Promise.all(formattedUsersPromises);
     return res.send(formattedUsers);
   } catch (err) {
     return res.status(500).send({
-      message:
-        err.message || "Some error occurred while retrieving users."
-    })
+      message: err.message || "Some error occurred while retrieving users.",
+    });
   }
-}
+};
 
 exports.findOne = (req, res) => {
   const id = req.params.id;
