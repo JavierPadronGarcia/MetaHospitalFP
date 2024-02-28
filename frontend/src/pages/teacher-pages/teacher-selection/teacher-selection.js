@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Headers from '../../../components/headers/headers';
 import Square from '../../../components/square/square';
+import './teacher-selectionn.css';
 
 const TeacherSelection = () => {
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -12,11 +13,11 @@ const TeacherSelection = () => {
     }, []);
 
     return (
-        <div>
+        <div className='teacher-selection-container'>
             <Headers title={name} Page={'selected'}/>
-            <div>
-                <Square label={'Students'} route={currentPath+'/students'}/>
-                <Square label={'Units'} route={currentPath+'/units'}/>
+            <div className='Squares'>
+                <Square label={'Students'} route={currentPath+'/students'} icon='/assets/imgs/users.svg'/>
+                <Square label={'Units'} route={currentPath+'/units'} icon='/assets/imgs/schools.svg'/>
             </div>
         </div>
     );

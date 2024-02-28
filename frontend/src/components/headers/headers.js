@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState  } from 'react';
 import { Dropdown } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { RolesContext } from '../../context/roles';
 import authService from '../../services/auth.service';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import './headers.css';
 
 const Headers = ({ title, color, groupId , Page }) => {
+  const location = useLocation();
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -29,6 +30,12 @@ const Headers = ({ title, color, groupId , Page }) => {
         if (RoleContext.role === 'teacher') navigate('/teacher/main');
         if (RoleContext.role === 'student') navigate('/student/home');
         break;
+      case 'units':
+        navigate(location.pathname + '/units');
+        break;
+      case 'students':
+        navigate(location.pathname + '/students');
+        break;
       default:
         break;
     }
@@ -44,10 +51,6 @@ const Headers = ({ title, color, groupId , Page }) => {
         label: 'Perfil',
         key: 'profile',
       },
-      {
-        label: 'Cerrar Sesión',
-        key: 'logout',
-      },
     ];
 
     const studentItems = [
@@ -62,10 +65,6 @@ const Headers = ({ title, color, groupId , Page }) => {
       {
         label: 'Chat de grupo',
         key: 'chat',
-      },
-      {
-        label: 'Cerrar Sesión',
-        key: 'logout',
       },
     ];
 
@@ -88,6 +87,12 @@ const Headers = ({ title, color, groupId , Page }) => {
         key: 'units',
       });
     }
+
+    updatedItems.push({
+      label: 'Cerrar Sesión',
+      key: 'logout',
+    });
+
 
 
     setItems(updatedItems);
