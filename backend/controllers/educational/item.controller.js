@@ -11,7 +11,7 @@ exports.create = (req, res) => {
   }
 
   const newItem = {
-    CaseId: caseId,
+    CaseID: caseId,
     name: name,
   }
 
@@ -58,7 +58,7 @@ exports.update = (req, res) => {
 
   const updatedItem = {
     id: id,
-    CaseId: caseId,
+    CaseID: caseId,
     name: name,
   }
 

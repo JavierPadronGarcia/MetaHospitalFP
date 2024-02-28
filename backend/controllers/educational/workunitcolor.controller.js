@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 
   const newWorkUnitColor = {
     WorkUnitId: req.body.WorkUnitId,
-    ColorId: req.body.ColorId,
+    ColorID: req.body.ColorId,
     visibility: req.body.visibility || false,
   }
 
@@ -78,8 +78,8 @@ exports.findOne = (req, res) => {
 
   WorkUnitColor.findOne({
     where: {
-      WorkUnitId: workUnitId,
-      ColorId: colorId
+      WorkUnitID: workUnitId,
+      ColorID: colorId
     }
   }).then(data => {
     return res.send(data);
@@ -94,15 +94,15 @@ exports.update = (req, res) => {
   const { workUnitId, colorId } = req.params;
 
   const newWorkUnitColor = {
-    WorkUnitId: req.body.WorkUnitId,
-    ColorId: req.body.ColorId,
+    WorkUnitID: req.body.WorkUnitId,
+    ColorID: req.body.ColorId,
     visibility: req.body.visibility || false,
   }
 
   WorkUnitColor.update(newWorkUnitColor, {
     where: {
-      WorkUnitId: workUnitId,
-      ColorId: colorId
+      WorkUnitID: workUnitId,
+      ColorID: colorId
     }
   }).then(num => {
     if (num == 1) {
@@ -127,8 +127,8 @@ exports.delete = (req, res) => {
 
   WorkUnitColor.destroy({
     where: {
-      WorkUnitId: workUnitId,
-      ColorId: colorId
+      WorkUnitID: workUnitId,
+      ColorID: colorId
     }
   }).then(num => {
     if (num == 1) {

@@ -50,7 +50,7 @@ exports.update = (req, res) => {
     id: req.params.id,
     value: req.body.value,
     ItemID: req.body.ItemID,
-    ExerciseID: req.body.ExerciseID
+    ParticipationID: req.body.ParticipationID
   }
 
   if (!updatedGrade.value || !updatedGrade.ItemID || !updatedGrade.ExerciseID) {
