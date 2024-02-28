@@ -28,8 +28,7 @@ const TeacherGroupStudents = () => {
 
     const getStudentsInGroup = async () => {
         try {
-            const response = await groupEnrolementService.getAllStudentsInAGroup(id)
-            const studentslist = response.map(student => student.User);
+            const studentslist = await groupEnrolementService.getAllStudentsInAGroup(id)
             setstudentsInGroup(studentslist);
         } catch (err) {
             console.log('Error:', err);
@@ -58,7 +57,7 @@ const TeacherGroupStudents = () => {
 
             getStudentsInGroup();
             getStudents();
-        } catch (err){
+        } catch (err) {
             console.log('Error:', err);
         }
     }
@@ -108,9 +107,9 @@ const TeacherGroupStudents = () => {
 
     return (
         <div>
-            <Headers title={name}/>
+            <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
             <BasicList items={studentsInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} />
-            <PopForm renderInputs={renderSchoolInputs} onSubmit={onSubmit} cancel={Cancel}/>
+            <PopForm renderInputs={renderSchoolInputs} onSubmit={onSubmit} cancel={Cancel} />
         </div>
     );
 }

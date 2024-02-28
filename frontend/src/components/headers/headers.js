@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState  } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { RolesContext } from '../../context/roles';
 import authService from '../../services/auth.service';
-import { useNavigate, useLocation  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './headers.css';
 
-const Headers = ({ title, color, groupId , Page }) => {
-  const location = useLocation();
+const Headers = ({ title, color, groupId, Page, groupData }) => {
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -31,10 +30,12 @@ const Headers = ({ title, color, groupId , Page }) => {
         if (RoleContext.role === 'student') navigate('/student/home');
         break;
       case 'units':
-        navigate(location.pathname + '/units');
+        if (RoleContext.role === 'teacher')
+          navigate(`/teacher/main/group/${groupData.groupName}/${groupData.groupId}/units`);
         break;
       case 'students':
-        navigate(location.pathname + '/students');
+        if (RoleContext.role === 'teacher')
+          navigate(`/teacher/main/group/${groupData.groupName}/${groupData.groupId}/students`);
         break;
       default:
         break;
@@ -71,29 +72,31 @@ const Headers = ({ title, color, groupId , Page }) => {
     let updatedItems = [...items];
 
     if (RoleContext.role === 'teacher') {
-      updatedItems = [...updatedItems, ...teacherItems]; 
+      updatedItems = [...updatedItems, ...teacherItems];
     }
 
     if (RoleContext.role === 'student') {
-      updatedItems = [...updatedItems, ...studentItems]; 
+      updatedItems = [...updatedItems, ...studentItems];
     }
 
     if (Page === 'selected') {
       updatedItems.push({
         label: 'Mis alumnos',
         key: 'students',
-      },{
+      }, {
         label: 'Unidades',
         key: 'units',
       });
     }
 
-    updatedItems.push({
-      label: 'Cerrar Sesión',
-      key: 'logout',
-    });
-
-
+    updatedItems.push(
+      {
+        type: 'divider'
+      },
+      {
+        label: 'Cerrar Sesión',
+        key: 'logout',
+      });
 
     setItems(updatedItems);
   };

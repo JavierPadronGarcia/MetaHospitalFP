@@ -52,7 +52,7 @@ function TeacherGroupPage() {
 
   return (
     <div className='teacher-group-page'>
-      <Headers title={name} />
+      <Headers title={name} Page={'selected'} groupData={{groupId: id, groupName: name}} />
       <div className='teacher-group-page-main'>
         {loading &&
           <LoadingOutlined style={{ fontSize: 60, color: '#08c', display: 'flex', justifyContent: 'center' }} />
