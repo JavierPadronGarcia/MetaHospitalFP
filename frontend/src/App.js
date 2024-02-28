@@ -85,7 +85,7 @@ function App() {
         </Route>
 
         <Route path="/student" element={<ExpireToken />}>
-          <Route element={<ExpireToken permittedRole="student" />}>
+          <Route element={<PrivateRoute permittedRole="student" />}>
             <Route path="home" element={<Studenthome />} />
             <Route path="workUnit" element={<StudentExercises />} />
           </Route>

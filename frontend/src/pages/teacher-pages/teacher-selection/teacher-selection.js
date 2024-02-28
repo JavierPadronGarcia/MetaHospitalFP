@@ -6,7 +6,7 @@ import './teacher-selectionn.css';
 
 const TeacherSelection = () => {
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
-    const { name } = useParams();
+    const { name, id } = useParams();
 
     useEffect(() => {
         setCurrentPath(window.location.pathname);
@@ -14,10 +14,10 @@ const TeacherSelection = () => {
 
     return (
         <div className='teacher-selection-container'>
-            <Headers title={name} Page={'selected'}/>
+            <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
             <div className='Squares'>
-                <Square label={'Students'} route={currentPath+'/students'} icon='/assets/imgs/users.svg'/>
-                <Square label={'Units'} route={currentPath+'/units'} icon='/assets/imgs/schools.svg'/>
+                <Square label={'Estudiantes'} route={currentPath + '/students'} icon='/assets/imgs/users.svg' />
+                <Square label={'Unidades'} route={currentPath + '/units'} icon='/assets/imgs/schools.svg' />
             </div>
         </div>
     );

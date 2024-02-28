@@ -1,5 +1,4 @@
 import './TeacherMainPage.css';
-import Toolbar from '../../../components/toolbar/Toolbar';
 import teacherGroupService from '../../../services/teacherGroup.service';
 import { useEffect, useState } from 'react';
 import { decodeToken } from '../../../utils/shared/globalFunctions';
@@ -43,7 +42,7 @@ function TeacherMainPage() {
 
   return (
     <div className="teacher-page">
-      <Headers  title='Mis grupos' />
+      <Headers title='Mis grupos' />
       <div className='teacher-page-main'>
         {loading &&
           <LoadingOutlined style={{ fontSize: 60, color: '#08c', display: 'flex', justifyContent: 'center' }} />
