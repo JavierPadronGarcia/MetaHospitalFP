@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './AuthCodeGenerator.css';
 import { jwtDecode } from 'jwt-decode';
 import userService from '../../services/users.service';
+import { Button } from 'antd';
 
 function AuthCodeGenerator() {
   const user = jwtDecode(localStorage.getItem('token'));
@@ -85,7 +86,14 @@ function AuthCodeGenerator() {
 
   return (
     <div className='auth-code-container'>
-      <button onClick={() => generateCode()} disabled={codigo != null}>Generar Código</button>
+      <Button
+        onClick={() => generateCode()}
+        type='primary'
+        className='generate-button'
+        disabled={codigo != null}
+      >
+        Generar
+      </Button>
       {codigo && <p>Código: {codigo}</p>}
       {!codigo && <p>Código no generado</p>}
       {remainingTime && <p>Tiempo restante: {remainingTime} horas</p>}

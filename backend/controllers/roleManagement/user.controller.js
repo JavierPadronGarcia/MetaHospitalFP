@@ -188,8 +188,26 @@ exports.findAll = async (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id).then(data => {
-    res.send(data);
+  User.findByPk(id, {
+    include: [
+      { model: Student },
+      { model: Admin },
+      { model: Teacher }
+    ]
+  }).then(data => {
+    const user = data.toJSON();
+    let name = null;
+
+    if (user.Teacher && user.Teacher.name) {
+      name = user.Teacher.name;
+    } else if (user.Admin && user.Admin.name) {
+      name = user.Admin.name;
+    } else if (user.Teacher && user.Teacher.name) {
+      name = user.Teacher.name;
+    }
+
+    user.name = name;
+    res.send(user);
   }).catch(err => {
     res.status(500).send({
       message: "Error retrieving User with id=" + id
