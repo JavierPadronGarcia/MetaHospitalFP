@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { json, useParams } from "react-router-dom";
 import { decodeToken } from '../../utils/shared/globalFunctions';
 import { webSocketEndpoint, backendMessagesEndpoint } from "../../constants/backendEndpoints";
 import { Button, Input, message } from "antd";
 import './ChatComponent.css';
 import Headers from "../headers/headers";
 import { CaretRightOutlined } from "@ant-design/icons";
+import usersService from "../../services/users.service";
 
 function ChatComponent() {
   const params = useParams();
   const groupId = params.groupId;
-  const user = decodeToken();
   const [chatMessages, setChatMessages] = useState([]);
   const [offlineChatMessages, setOfflineMessages] = useState([]);
   const [connectedUsers, setConnectedUsers] = useState(0);
   const [messageField, setMessageField] = useState('');
+  const [user, setUser] = useState(decodeToken());
 
   const group = JSON.parse(localStorage.getItem('studentGroup'));
 
@@ -25,6 +26,17 @@ function ChatComponent() {
 
   const ws = useRef();
   const messagesEndRef = useRef(null);
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await usersService.getUserById(user.id);
+      setUser(userData);
+    };
+  
+    if (user.id) {
+      fetchUserData();
+    }
+  }, [user.id]);
 
   useEffect(() => {
     const SERVER_URL = `${webSocketEndpoint}?&groupId=${groupId}&userId=${user.id}`;
@@ -211,7 +223,7 @@ function ChatComponent() {
       <div className="chat-component">
         <div className="connected-users">En línea: {connectedUsers}</div>
         <div className="messages">
-          {chatMessages.map((message, index) => {
+          {user.name && chatMessages.map((message, index) => {
             if (message.username === user.name) {
               return (
                 <div key={index} className="personal-message">

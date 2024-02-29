@@ -202,8 +202,8 @@ exports.findOne = (req, res) => {
       name = user.Teacher.name;
     } else if (user.Admin && user.Admin.name) {
       name = user.Admin.name;
-    } else if (user.Teacher && user.Teacher.name) {
-      name = user.Teacher.name;
+    } else if (user.Student && user.Student.name) {
+      name = user.Student.name;
     }
 
     user.name = name;
@@ -540,4 +540,28 @@ exports.updateWithImage = (req, res) => {
       message: err.message || "Error updating User with id=" + id
     });
   })
+}
+
+exports.getUserById = async (userId) => {
+  try {
+    const user = await User.findOne({
+      where: { id: userId },
+      include: [
+        { model: Teacher },
+        { model: Student },
+      ]
+    });
+
+    user.toJSON();
+
+    if (user.Teacher) {
+      user.name = user.Teacher.name;
+    } else if (user.Student) {
+      user.name = user.Student.name;
+    }
+
+    return user;
+  } catch (err) {
+    throw err;
+  }
 }
