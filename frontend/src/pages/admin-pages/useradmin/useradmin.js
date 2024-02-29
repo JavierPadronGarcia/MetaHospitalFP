@@ -3,12 +3,11 @@ import BasicList from '../../../components/basiclist/basiclist';
 import usersService from '../../../services/users.service';
 import Menu from '../../../components/menu/menu';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
-import { Input, Select, Avatar, message, notification } from 'antd';
+import { Input, Select, Avatar, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
-import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 import { Link, useLocation } from 'react-router-dom';
 import './useradmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
@@ -176,7 +175,6 @@ function UserAdmin() {
         <Menu />
         <Tag name="Usuarios" />
         <BasicList items={users} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
-        <FloatingMenu />
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

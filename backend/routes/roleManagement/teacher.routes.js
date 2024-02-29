@@ -16,5 +16,7 @@ module.exports = app => {
   // Un assign a director
   router.put("/unAssignDirector/:id", auth.isAuthenticated, Teacher.unAssignDirector);
 
+  router.put('/resetStudentPassword/:id', auth.isAuthenticated, Teacher.resetPasswordForAUser);
+
   app.use('/api/teachers', router);
 }

@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
-import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
 import './schooladmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 
@@ -134,7 +133,6 @@ function SchoolsAdmin() {
         <Menu />
         <Tag name='Escuelas' />
         <BasicList items={Schools} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
-        <FloatingMenu />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

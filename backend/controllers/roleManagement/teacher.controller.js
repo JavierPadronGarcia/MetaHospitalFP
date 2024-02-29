@@ -1,4 +1,5 @@
 const db = require("../../models");
+const bcrypt = require('bcryptjs');
 const User = db.userAccounts;
 const Role = db.role;
 const UserRole = db.userRole;
@@ -105,7 +106,6 @@ exports.unAssignDirector = (req, res) => {
 exports.resetPasswordForAUser = (req, res) => {
   try {
     const { id } = req.params;
-
     const password = bcrypt.hashSync("test");
 
     UserAccount.update({ password: password }, { where: { id } })
@@ -116,6 +116,7 @@ exports.resetPasswordForAUser = (req, res) => {
         console.log('Error in reset password', err);
       });
   } catch (err) {
+    console.log(err)
     res.status(500).send({
       error: true,
       message: err.message || "Some error ocurred reseting password",

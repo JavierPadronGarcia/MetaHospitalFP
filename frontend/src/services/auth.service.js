@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendUsersEndpoint } from '../constants/backendEndpoints';
+import { backendTeachersEndpoint, backendUsersEndpoint } from '../constants/backendEndpoints';
 
 function getOptions(user) {
   let base64UserAndPassword = window.btoa(user.username + ":" + user.password);
@@ -91,11 +91,25 @@ const changePassword = async (password) => {
   }
 };
 
+const resetPassword = async (studentId) => {
+  try {
+    const response = await axios.put(
+      `${backendTeachersEndpoint}/resetStudentPassword/${studentId}`,
+      null,
+      setTokenOptions()
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export default {
   login,
   logout,
   isLoggedIn,
   getMyRole,
   changePassword,
+  resetPassword,
   navigateByRole
 }

@@ -3,9 +3,10 @@ import Headers from '../../../components/headers/headers';
 import BasicList from '../../../components/basiclist/basiclist';
 import PopForm from '../../../components/popform/popform';
 import groupEnrolementService from '../../../services/groupEnrolement.service';
-import { Select } from 'antd';
+import { Select, message, notification } from 'antd';
 import { useParams } from 'react-router-dom';
 import { Consts } from '../../../constants/modes';
+import authService from '../../../services/auth.service';
 
 const TeacherGroupStudents = () => {
     const { id, name } = useParams();
@@ -103,11 +104,20 @@ const TeacherGroupStudents = () => {
         );
     };
 
+    const onEdit = async (studentId) => {
+        try {
+            await authService.resetPassword(studentId);
+            message.success('La contraseña del estudiante ha sido reestablecida');
+        } catch (error) {
+            console.log(error);
+            message.error("Error al restablecer la contraseña del estudiante");
+        }
+    }
 
     return (
         <div>
             <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
-            <BasicList items={studentsInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} />
+            <BasicList items={studentsInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} />
             <PopForm renderInputs={renderSchoolInputs} onSubmit={onSubmit} cancel={Cancel} />
         </div>
     );
