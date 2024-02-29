@@ -15,7 +15,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     ItemID: {
       type: Sequelize.INTEGER,
-      allowNull: false
+    },
+    ItemPlayerRoleID: {
+      type: Sequelize.INTEGER,
     },
     ParticipationID: {
       type: Sequelize.INTEGER,

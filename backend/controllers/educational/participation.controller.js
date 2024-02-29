@@ -3,6 +3,8 @@ const Participation = db.participation;
 const Grade = db.grade
 const Exercise = db.exercise;
 const Case = db.case;
+const ItemPlayerRole = db.itemPlayerRole;
+const PlayerRole = db.playerRole;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -109,12 +111,27 @@ exports.submitGrade = async (req, res) => {
       participation.SubmittedAt = submittedTime;
       participation.save();
 
+
+
       const grades = [];
       for (let i = 0; i < items.length; i++) {
+        const itemPlayerRole = await ItemPlayerRole.findOne({
+          where: {
+            ItemID: items[i].itemId
+          },
+          include: {
+            model: PlayerRole,
+            where: {
+              name: role
+            },
+            attributes: []
+          }
+        });
+
         grades.push({
           grade: items[i].grade,
           correct: items[i].correct,
-          ItemID: items[i].itemId,
+          ItemPlayerRoleID: itemPlayerRole.id,
           ParticipationID: participationId
         })
       }
@@ -138,7 +155,7 @@ exports.submitGrade = async (req, res) => {
         })
       } catch (error) {
         return res.status(500).send(
-          { error: true, message: "Error adding the grading information to the database!: " + err }
+          { error: true, message: "Error adding the grading information to the database!: " + error }
         )
       }
 

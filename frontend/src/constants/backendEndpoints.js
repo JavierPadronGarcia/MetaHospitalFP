@@ -18,7 +18,7 @@ export const backendGroupsEndpoint = `${backendEndpoint}/api/groups`;
 
 export const backendCoursesEndpoint = `${backendEndpoint}/api/courses`;
 
-export const backendGroupEnrolementEndpoint = `${backendEndpoint}/api/groupenrolement`;
+export const backendGroupEnrolementEndpoint = `${backendEndpoint}/api/studentgroup`;
 
 export const backendWorkUnitsEndpoint = `${backendEndpoint}/api/workunit`;
 
