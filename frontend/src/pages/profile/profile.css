@@ -69,12 +69,11 @@
 
 @media screen and (min-width: 1400px) {
   .main-container {
-    height: 60vh;
+    height: 70vh;
     margin-top: 0rem;
   }
 
   .main-container .floating-container {
     width: 30%;
-    margin-top: 2rem;
   }
 }
