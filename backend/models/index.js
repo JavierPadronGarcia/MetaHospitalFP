@@ -112,6 +112,7 @@ db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
 
 db.case.hasMany(db.exercise, { foreignKey: 'CaseID' });
 db.exercise.hasMany(db.participation, { foreignKey: 'ExerciseID' });
+db.exercise.belongsTo(db.case, {foreignKey: 'CaseID'});
 
 db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
 db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseID' });

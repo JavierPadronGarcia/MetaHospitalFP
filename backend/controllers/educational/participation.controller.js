@@ -2,6 +2,7 @@ const db = require("../../models");
 const Participation = db.participation;
 const Grade = db.grade
 const Exercise = db.exercise;
+const Case = db.case;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -74,7 +75,7 @@ exports.update = (req, res) => {
 }
 
 exports.submitGrade = async (req, res) => {
-  const { finalGrade, role, submittedTime, userId, exerciseId, items } = req.body;
+  const { finalGrade, role, submittedTime, userId, exerciseId, items, UT } = req.body;
   const handWash = [req.body.handWashInit, req.body.handWashEnd];
 
   try {
@@ -84,8 +85,12 @@ exports.submitGrade = async (req, res) => {
       },
       include: {
         model: Exercise,
-        where: {
-          CaseID: exerciseId
+        include: {
+          model: Case,
+          where: {
+            caseNumber: exerciseId,
+            WorkUnitID: UT
+          }
         }
       }
     });
@@ -144,7 +149,7 @@ exports.submitGrade = async (req, res) => {
   } catch (error) {
     return res.status(500).send({
       error: true,
-      message: err.message || "Error when trying to update the final grade!"
+      message: error.message || "Error when trying to update the final grade!"
     })
   }
 }
