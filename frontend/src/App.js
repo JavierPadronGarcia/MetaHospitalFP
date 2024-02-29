@@ -27,6 +27,9 @@ import StudentExercises from './pages/student-pages/studentexercises/studentexer
 
 import ChatComponent from './components/chat/ChatComponent';
 import UserProfilePage from './pages/profile/profile';
+import TeacherSelection from './pages/teacher-pages/teacher-selection/teacher-selection';
+import TeacherGroupStudents from './pages/teacher-pages/teacher-group-students/teacher-group-students';
+import ExpireToken from './utils/ExpireToken';
 
 function App() {
 
@@ -48,32 +51,44 @@ function App() {
         <Route path="/" element={<Login />} />
 
         <Route element={<PrivateRoute onlyLogged={true} />}>
-          <Route path="/myUser" element={<UserProfilePage />} />
-          <Route path="/chat/:groupId" element={<ChatComponent />} />
+          <Route path="/myUser" element={<ExpireToken />}>
+            <Route path="" element={<UserProfilePage />} />
+          </Route>
+          <Route path="/chat/:groupId" element={<ExpireToken />}>
+            <Route path="" element={<ChatComponent />} />
+          </Route>
         </Route>
 
-        <Route path='/admin' element={<PrivateRoute permittedRole='admin' />}>
-          <Route path="control-panel" element={<AdminHome />} />
-          <Route path="users" element={<UserAdmin />} />
-          <Route path="schools" element={<SchoolsAdmin />} />
-          <Route path="school" element={<AdminSchool />} />
-          <Route path="groups" element={<GroupAdmin />} />
-          <Route path="group" element={<AdminCourse />} />
-          <Route path="courses" element={<CoursesAdmin />} />
-          <Route path="students" element={<StudentSchools />} />
-          <Route path="teachers" element={<TeacherSchools />} />
+        <Route path="/admin" element={<ExpireToken />}>
+          <Route element={<PrivateRoute permittedRole="admin" />}>
+            <Route path="control-panel" element={<AdminHome />} />
+            <Route path="users" element={<UserAdmin />} />
+            <Route path="schools" element={<SchoolsAdmin />} />
+            <Route path="school" element={<AdminSchool />} />
+            <Route path="groups" element={<GroupAdmin />} />
+            <Route path="group" element={<AdminCourse />} />
+            <Route path="courses" element={<CoursesAdmin />} />
+            <Route path="teachers" element={<TeacherSchools />} />
+            <Route path="students" element={<StudentSchools />} />
+          </Route>
         </Route>
 
-        <Route path='/teacher' element={<PrivateRoute permittedRole='teacher' />}>
-          <Route path="main" element={<TeacherMainPage />} />
-          <Route path="main/group/:name/:id" element={<TeacherGroupPage />} />
-          <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
-          <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/add" element={<AddActivityPage />} />
+        <Route path="/teacher" element={<ExpireToken />}>
+          <Route element={<PrivateRoute permittedRole='teacher' />}>
+            <Route path="main" element={<TeacherMainPage />} />
+            <Route path="main/group/:name/:id" element={<TeacherSelection />} />
+            <Route path="main/group/:name/:id/units" element={<TeacherGroupPage />} />
+            <Route path="main/group/:name/:id/students" element={<TeacherGroupStudents />} />
+            <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
+            <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/add" element={<AddActivityPage />} />
+          </Route>
         </Route>
 
-        <Route path='/student' element={<PrivateRoute permittedRole='student' />}>
-          <Route path="home" element={<Studenthome />} />
-          <Route path="workUnit" element={<StudentExercises />} />
+        <Route path="/student" element={<ExpireToken />}>
+          <Route element={<PrivateRoute permittedRole="student" />}>
+            <Route path="home" element={<Studenthome />} />
+            <Route path="workUnit" element={<StudentExercises />} />
+          </Route>
         </Route>
 
       </Routes>

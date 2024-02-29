@@ -30,16 +30,16 @@ const StudentExercises = () => {
 
   const showAssignedExercises = () => (
     <>
-      {assignedExercises.map(exercise => (
-        <Card title={exercise.caseName} content={dayjs(exercise.finishDate).format('DD-MM-YYYY')} />
+      {assignedExercises.map((exercise, index) => (
+        <Card key={index} title={exercise.caseName} content={dayjs(exercise.finishDate).format('DD-MM-YYYY')} />
       ))}
     </>
   )
 
   const showUnAssignedExercises = () => (
     <>
-      {unAssignedExercises.map(exercise => (
-        <Card title={exercise.caseName} content={''} />
+      {unAssignedExercises.map((exercise, index) => (
+        <Card key={index} title={exercise.caseName} content={''} />
       ))}
     </>
   )

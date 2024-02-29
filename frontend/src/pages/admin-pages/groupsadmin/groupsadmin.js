@@ -30,7 +30,7 @@ function GroupsAdmin() {
 
   const getGroups = async () => {
     try {
-      const groupsList = await GroupsService.getAllGroupsWithoutCount();
+      const groupsList = await GroupsService.getAllGroupsWithoutCount(localStorage.getItem('schoolId'));
       setGroups(groupsList);
     } catch (error) {
       console.error('Error fetching Groups:', error);
@@ -56,7 +56,6 @@ function GroupsAdmin() {
   const navigateGroups = (id, name) => {
     localStorage.setItem('groupsId', id);
     localStorage.setItem('groupsName', name)
-    console.log(id);
   }
 
   const renderGroupsRow = (Groups) => (
@@ -111,10 +110,9 @@ function GroupsAdmin() {
     try {
       await GroupsService.deleteGroup(id);
       getGroups();
-      console.log('Groups deleted successfully');
+      message.success('Grupo eliminado correctamente');
     } catch (error) {
-      console.error('Error delete Groups:', error);
-      message.error(error.message)
+      message.error('Error al eliminar el grupo')
     }
   };
 
@@ -155,8 +153,9 @@ function GroupsAdmin() {
         groupsToEdit.name = name;
         groupsToEdit.date = yearRange;
         groupsToEdit.CourseId = courseId;
+        groupsToEdit.id = Id;
 
-        await GroupsService.updateGroup(Id, groupsToEdit);
+        await GroupsService.updateGroup(groupsToEdit);
 
         message.success('Grupo actualizado correctamente');
         getGroups();
@@ -167,7 +166,7 @@ function GroupsAdmin() {
           CourseId: courseId
         };
 
-        await GroupsService.addGroup(Groups);
+        await GroupsService.addGroup(Groups, localStorage.getItem('schoolId'));
         getGroups();
         message.success('Grupo agregado correctamente');
       }
@@ -179,6 +178,7 @@ function GroupsAdmin() {
         noConnectionError();
       } else {
         message.error('No se ha podido agregar/actualizar el grupo');
+        console.log(error.message)
       }
     }
   };

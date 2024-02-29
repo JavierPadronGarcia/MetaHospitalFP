@@ -60,8 +60,10 @@ async function getAllGroupsAssignedToTeacher(teacherId) {
 
 async function assignTeacherToGroup(teacherid, groupId) {
   const body = new URLSearchParams();
+  const date = new Date();
   body.append('GroupID', groupId);
   body.append('UserID', teacherid);
+  body.append('Date', date);
   try {
     const response = await axios.post(backendTeacherGroupEndpoint,
       body,
@@ -75,7 +77,7 @@ async function assignTeacherToGroup(teacherid, groupId) {
 
 async function unAssignTeacherToGroup(teacherid, groupId) {
   try {
-    const response = await axios.delete(backendTeacherGroupEndpoint + '/' + teacherid +'/'+ groupId,
+    const response = await axios.delete(backendTeacherGroupEndpoint + '/' + teacherid + '/' + groupId,
       getOptions(localStorage.getItem('token'))
     );
     return response.data;

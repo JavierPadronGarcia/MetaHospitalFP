@@ -22,10 +22,10 @@ function TeacherSchools() {
 
   const getTeacher = async () => {
     try {
-      const response = await TeacherSchoolsService.getTeachersBySchool(
+      const teacherList = await TeacherSchoolsService.getTeachersBySchool(
         localStorage.getItem('schoolId')
       );
-      const teacherList = response.map(teacher => teacher.User);
+      console.log(teacherList)
       setTeacher(teacherList);
     } catch (error) {
       message.error('No se pudo obtener a los profesores de la escuela');
@@ -80,7 +80,7 @@ function TeacherSchools() {
         bordered
         dataSource={searchResults}
         renderItem={(user) => (
-          <List.Item onClick={() => changeName(user.name, user.id)}>
+          <List.Item onClick={() => changeName(user.name, user.id)} className='list-item'>
             {user.name}
           </List.Item>
         )}
@@ -91,7 +91,8 @@ function TeacherSchools() {
 
   const onDelete = async (id) => {
     try {
-      getTeacher();
+      console.log(id)
+      console.log(teacher)
       TeacherSchoolsService.deleteTeacherFromSchool(localStorage.getItem('schoolId'), id);
       getTeacher();
 

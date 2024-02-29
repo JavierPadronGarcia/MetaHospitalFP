@@ -3,120 +3,218 @@
 const bcrypt = require('bcryptjs');
 const { fakerES } = require('@faker-js/faker');
 
-function replacePunctuationMarks(str) {
-  const punctuationWods = {
-    'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
-    'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U'
-  };
+const {
+  addRoles,
+  addGroups,
+  addSchools,
+  addCourses,
+  addUserRoles,
+  addApplications,
+  addStudentGroups,
+  addTeacherGroups,
+  replacePunctuationMarks,
+  getUserAccountsAndUserForRoles,
+  addTeacherSchools,
+  addStudentSchools,
+} = require('../utils/seederUtils');
 
-  return str.replace(/[áéíóúÁÉÍÓÚ]/g, function (wordWithPunctuation) {
-    return punctuationWods[wordWithPunctuation];
-  });
+
+function setAllUsers() {
+  const allUsers = [];
+  allUsers.push({ id: 1, username: 'admin', password: bcrypt.hashSync('test'), name: fakerES.person.fullName(), role: 'admin', createdAt: new Date(), updatedAt: new Date() });
+
+  for (let i = 2; i < 7; i++) {
+    const firstName = fakerES.person.firstName();
+    const lastName = fakerES.person.lastName();
+    const username = replacePunctuationMarks((firstName + lastName + '@metahospital.com')).replace(/\s/g, '').toLowerCase();
+    allUsers.push(
+      { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'teacher', createdAt: new Date(), updatedAt: new Date() },
+    )
+  }
+
+  for (let i = 7; i < 21; i++) {
+    const firstName = fakerES.person.firstName();
+    const lastName = fakerES.person.lastName();
+    const username = replacePunctuationMarks((firstName + lastName + '@metahospital.com')).replace(/\s/g, '').toLowerCase();
+    allUsers.push(
+      { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'student', createdAt: new Date(), updatedAt: new Date() },
+    )
+  }
+
+  return allUsers;
+}
+
+function setupData() {
+  const roles = addRoles(['admin', 'teacher', 'student']);
+
+  const applications = addApplications(['Metahospital']);
+
+  const schools = addSchools(['IES Los Gladiolos']);
+
+  const allusers = setAllUsers();
+
+  const { users, admins, teachers, students } = getUserAccountsAndUserForRoles(allusers);
+
+  const userRoles = addUserRoles({ admins, teachers, students });
+
+  const courses = addCourses([
+    { name: 'Técnicos Cuidados Auxiliares de Enfermería', acronyms: 'CAE', schoolId: 1 },
+    { name: 'Técnicos de emergencias sanitarias', acronyms: 'TES', schoolId: 1 },
+    { name: 'Técnicos de Imagen para el Diagnóstico', acronyms: 'IMD', schoolId: 1 }
+  ]);
+
+  const groups = addGroups([
+    { name: '1ºCAE', date: '2023-2024', SchoolID: 1, CourseId: 1 },
+    { name: '2ºCAE', date: '2023-2024', SchoolID: 1, CourseId: 1 },
+    { name: '1ºTES', date: '2023-2024', SchoolID: 1, CourseId: 2 },
+    { name: '2ºTES', date: '2023-2024', SchoolID: 1, CourseId: 2 },
+    { name: '1ºIMD', date: '2023-2024', SchoolID: 1, CourseId: 3 },
+    { name: '2ºIMD', date: '2023-2024', SchoolID: 1, CourseId: 3 }
+  ])
+
+  const studentGroups = addStudentGroups([
+    { StudentID: 7, GroupID: 1 },
+    { StudentID: 8, GroupID: 1 },
+    { StudentID: 9, GroupID: 2 },
+    { StudentID: 10, GroupID: 2 },
+    { StudentID: 11, GroupID: 3 },
+    { StudentID: 12, GroupID: 3 },
+    { StudentID: 13, GroupID: 4 },
+    { StudentID: 14, GroupID: 4 },
+    { StudentID: 15, GroupID: 5 },
+    { StudentID: 16, GroupID: 5 }
+  ], '2023-09-06');
+
+  const teacherGroups = addTeacherGroups([
+    { TeacherID: 2, GroupID: 1 },
+    { TeacherID: 2, GroupID: 2 },
+    { TeacherID: 3, GroupID: 2 },
+    { TeacherID: 3, GroupID: 3 },
+    { TeacherID: 4, GroupID: 3 },
+    { TeacherID: 4, GroupID: 4 },
+    { TeacherID: 5, GroupID: 4 },
+    { TeacherID: 5, GroupID: 5 },
+    { TeacherID: 6, GroupID: 6 },
+  ], '2023-09-06');
+
+  const teacherSchools = addTeacherSchools([
+    { TeacherID: 2, SchoolID: 1 },
+    { TeacherID: 3, SchoolID: 1 },
+    { TeacherID: 4, SchoolID: 1 },
+    { TeacherID: 5, SchoolID: 1 },
+    { TeacherID: 6, SchoolID: 1 },
+  ])
+
+  const studentSchools = addStudentSchools([
+    { startStudentId: 7, endStudentId: 20, schoolId: 1 }
+  ]);
+
+  return {
+    roles,
+    applications,
+    schools,
+    users,
+    admins,
+    teachers,
+    students,
+    userRoles,
+    courses,
+    groups,
+    studentGroups,
+    teacherGroups,
+    teacherSchools,
+    studentSchools,
+  }
 }
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const allusers = [];
+    try {
+      const {
+        roles,
+        applications,
+        schools,
+        users,
+        admins,
+        teachers,
+        students,
+        userRoles,
+        courses,
+        groups,
+        studentGroups,
+        teacherGroups,
+        teacherSchools,
+        studentSchools,
+      } = setupData();
 
-    allusers.push({ id: 1, username: 'admin', password: bcrypt.hashSync('test'), name: fakerES.person.fullName(), role: 'admin', createdAt: new Date(), updatedAt: new Date() });
+      console.log('\ndata setup completed...\n');
 
-    for (let i = 2; i < 7; i++) {
-      const firstName = fakerES.person.firstName();
-      const lastName = fakerES.person.lastName();
-      const username = replacePunctuationMarks((firstName + lastName + '@metahospital.com')).replace(/\s/g, '').toLowerCase();
-      allusers.push(
-        { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'teacher', createdAt: new Date(), updatedAt: new Date() },
-      )
+      await Promise.all([
+        queryInterface.bulkInsert('Roles', roles),
+        queryInterface.bulkInsert('Applications', applications),
+        queryInterface.bulkInsert('UserAccounts', users),
+        queryInterface.bulkInsert('Schools', schools),
+      ]);
+
+      console.log('first stage completed...\n');
+
+      await Promise.all([
+        queryInterface.bulkInsert('Admins', admins),
+        queryInterface.bulkInsert('Teachers', teachers),
+        queryInterface.bulkInsert('Students', students),
+        queryInterface.bulkInsert('Courses', courses),
+        queryInterface.bulkInsert('UserRoles', userRoles),
+      ]);
+
+      console.log('second stage completed...\n');
+
+      await Promise.all([
+        queryInterface.bulkInsert('groups', groups),
+        queryInterface.bulkInsert('TeacherSchools', teacherSchools),
+        queryInterface.bulkInsert('StudentSchools', studentSchools),
+      ]);
+
+      console.log('third stage completed...\n');
+
+      await Promise.all([
+        queryInterface.bulkInsert('StudentGroups', studentGroups),
+        queryInterface.bulkInsert('TeacherGroups', teacherGroups),
+      ]);
+
+      console.log('fourth stage completed...\n');
+    } catch (error) {
+      console.error('Error during migration:', error);
+      throw error;
     }
-
-    for (let i = 7; i < 21; i++) {
-      const firstName = fakerES.person.firstName();
-      const lastName = fakerES.person.lastName();
-      const username = replacePunctuationMarks((firstName + lastName + '@metahospital.com')).replace(/\s/g, '').toLowerCase();
-      allusers.push(
-        { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'student', createdAt: new Date(), updatedAt: new Date() },
-      )
-    }
-    await queryInterface.bulkInsert('Users', allusers, {});
-
-    await queryInterface.bulkInsert('Schools', [
-      { id: 1, name: 'IES Los Gladiolos', createdAt: new Date(), updatedAt: new Date() },
-    ])
-
-    await queryInterface.bulkInsert('Courses', [
-      { id: 1, name: 'Técnicos Cuidados Auxiliares de Enfermería', acronyms: 'CAE', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, name: 'Técnicos de emergencias sanitarias', acronyms: 'TES', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, name: 'Técnicos de Imagen para el Diagnóstico', acronyms: 'IMD', SchoolId: 1, createdAt: new Date(), updatedAt: new Date() },
-    ])
-
-    await queryInterface.bulkInsert('groups', [
-      { id: 1, name: '1ºCAE', date: '2023-2024', createdAt: new Date(), updatedAt: new Date(), CourseId: 1 },
-      { id: 2, name: '2ºCAE', date: '2023-2024', createdAt: new Date(), updatedAt: new Date(), CourseId: 1 },
-      { id: 3, name: '1ºTES', date: '2023-2024', createdAt: new Date(), updatedAt: new Date(), CourseId: 2 },
-      { id: 4, name: '2ºTES', date: '2023-2024', createdAt: new Date(), updatedAt: new Date(), CourseId: 2 },
-      { id: 5, name: '1ºIMD', date: '2023-2024', createdAt: new Date(), updatedAt: new Date(), CourseId: 3 },
-      { id: 6, name: '2ºIMD', date: '2023-2024', createdAt: new Date(), updatedAt: new Date(), CourseId: 3 }
-    ], {})
-
-    let groupEnrolements = []
-
-    for (let i = 1; i <= 14; i++) {
-      groupEnrolements.push(
-        { id: 1, UserID: i + 7, GroupID: i % 7, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      );
-    }
-
-    await queryInterface.bulkInsert('groupEnrolements', [
-      { id: 1, UserID: 7, GroupID: 1, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, UserID: 8, GroupID: 1, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, UserID: 9, GroupID: 2, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 4, UserID: 10, GroupID: 2, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 5, UserID: 11, GroupID: 3, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 6, UserID: 12, GroupID: 3, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 7, UserID: 13, GroupID: 4, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 8, UserID: 14, GroupID: 4, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 9, UserID: 15, GroupID: 5, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-      { id: 10, UserID: 16, GroupID: 5, Date: new Date('2023-09-06'), createdAt: new Date(), updatedAt: new Date() },
-    ], {})
-
-    await queryInterface.bulkInsert('TeacherCourses', [
-      { UserID: 2, GroupID: 1, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 2, GroupID: 2, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 3, GroupID: 2, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 3, GroupID: 3, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 4, GroupID: 3, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 4, GroupID: 4, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 5, GroupID: 4, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 5, GroupID: 5, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 6, GroupID: 6, createdAt: new Date(), updatedAt: new Date() },
-    ])
-
-    await queryInterface.bulkInsert('TeacherSchools', [
-      { UserID: 2, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 3, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 4, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 5, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
-      { UserID: 6, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },
-    ])
-
-    const studentSchools = [];
-
-    for (let i = 7; i < 21; i++) {
-      studentSchools.push({ UserID: i, SchoolID: 1, createdAt: new Date(), updatedAt: new Date() },)
-    }
-
-    await queryInterface.bulkInsert('StudentSchools', studentSchools);
   },
-
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulckDelete('groupEnrolements', null, {});
-    await queryInterface.bulkDelete('TeacherCourses', null, {});
-    await queryInterface.bulkDelete('teacherschools', null, {});
-    await queryInterface.bulkDelete('TeacherSchools', null, {});
-    await queryInterface.bulkDelete('Users', null, {});
-    await queryInterface.bulkDelete('groups', null, {});
-    await queryInterface.bulckDelete('Courses', null, {});
-    await queryInterface.bulckDelete('Schools', null, {});
+    try {
+      await Promise.all([
+        queryInterface.bulkDelete('StudentGroups', null, {}),
+        queryInterface.bulkDelete('TeacherGroups', null, {}),
+      ]);
+      await Promise.all([
+        queryInterface.bulkDelete('TeacherSchools', null, {}),
+        queryInterface.bulkDelete('StudentSchools', null, {}),
+        queryInterface.bulkDelete('groups', null, {}),
+      ]);
+      await Promise.all([
+        queryInterface.bulkDelete('UserRoles', null, {}),
+        queryInterface.bulkDelete('Courses', null, {}),
+        queryInterface.bulkDelete('Students', null, {}),
+        queryInterface.bulkDelete('Teachers', null, {}),
+        queryInterface.bulkDelete('Admins', null, {}),
+      ]);
+      await Promise.all([
+        queryInterface.bulkDelete('Roles', null, {}),
+        queryInterface.bulkDelete('Applications', null, {}),
+        queryInterface.bulkDelete('UserAccounts', null, {}),
+        queryInterface.bulkDelete('Schools', null, {}),
+      ]);
+    } catch (error) {
+      console.error('Error al revertir la migración:', error);
+      throw error;
+    }
   }
 };
 

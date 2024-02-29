@@ -1,45 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Avatar, Upload, message } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { jwtDecode } from 'jwt-decode';
+import { LeftOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import './profileheader.css';
 import { RolesContext } from '../../context/roles';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/auth.service';
 import usersService from '../../services/users.service';
-import { errorMessage, noConnectionError } from '../../utils/shared/errorHandler';
+import { noConnectionError } from '../../utils/shared/errorHandler';
 import { backendImageEndpoint } from '../../constants/backendEndpoints';
-import AuthCodeGenerator from '../auth-code-generator/AuthCodeGenerator'
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ user, updateUserInfo }) => {
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [userImage, setUserImage] = useState('');
-  const [userName, setUserName] = useState('');
-
-  const getUserInfo = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const tokenDecoded = jwtDecode(token);
-      const user = await usersService.getUserById(tokenDecoded.id);
-      setUser(user);
-      setUserName(user.name);
-      setUserImage(user.filename || '');
-    } catch (err) {
-      if (!err.response) {
-        noConnectionError();
-      }
-
-      if (err.response && err.code === 500) {
-        errorMessage('No se ha podido encontrar su usuario', 'Inténtalo de nuevo');
-      }
-    }
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
 
   const handleUpdateUser = async (options) => {
     const prevFilename = user.filename === '' ? null : user.filename;
@@ -56,7 +28,7 @@ const ProfileHeader = () => {
         message.success('Imagen actualizada correctamente');
       }
 
-      getUserInfo();
+      updateUserInfo();
     } catch (err) {
       handleError(err);
     } finally {
@@ -84,26 +56,25 @@ const ProfileHeader = () => {
           showUploadList={false}
           onChange={handleUpdateUser}
         >
-          {userImage ? (
+          {user?.filename != '' && user?.filename != null ? (
             <Avatar
               icon={<img src={`${backendImageEndpoint}/${user.filename}`} alt={`imagen del usuario ${user && user.username}`} />}
-              size={100}
-              style={{ cursor: 'pointer' }}
+              className="user-avatar"
             />
           ) : (
             <Avatar
               icon={<UserOutlined />}
-              size={100}
-              style={{ cursor: 'pointer' }}
+              className="user-avatar"
             />
           )}
         </Upload>
-        <div className="username">{userName}</div>
+      </div>
+      <div className='go-back'>
+        <LeftOutlined onClick={() => navigate(-1)} >Cerrar sesión</LeftOutlined>
       </div>
       <div className="actions">
-        <a onClick={handleLogOut} >Cerrar sesión</a>
+        <LogoutOutlined onClick={handleLogOut} >Cerrar sesión</LogoutOutlined>
       </div>
-      <AuthCodeGenerator user={user} />
     </div>
   );
 };

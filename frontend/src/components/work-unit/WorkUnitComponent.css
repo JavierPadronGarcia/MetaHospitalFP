@@ -41,10 +41,6 @@
   transition: transform .3s ease-in-out;
 }
 
-.work-unit-component-selection.expanded {
-  height: 6rem;
-}
-
 .work-unit-component-selection.expanded .work-unit-component-selection-second-line {
   border-top: 1px solid black;
   animation: changeSecondLineAnimation 0.3s ease-in-out alternate;

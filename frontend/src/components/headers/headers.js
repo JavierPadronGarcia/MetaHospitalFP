@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { RolesContext } from '../../context/roles';
@@ -6,9 +6,10 @@ import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import './headers.css';
 
-const Headers = ({ title, color, groupId }) => {
+const Headers = ({ title, color, groupId, Page, groupData }) => {
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
+  const [items, setItems] = useState([]);
 
   const handleMenuClick = (e) => {
     switch (e.key) {
@@ -25,29 +26,80 @@ const Headers = ({ title, color, groupId }) => {
         navigate('/chat/' + groupId);
         break;
       case 'home':
-        navigate('/student/home');
+        if (RoleContext.role === 'teacher') navigate('/teacher/main');
+        if (RoleContext.role === 'student') navigate('/student/home');
+        break;
+      case 'units':
+        if (RoleContext.role === 'teacher')
+          navigate(`/teacher/main/group/${groupData.groupName}/${groupData.groupId}/units`);
+        break;
+      case 'students':
+        if (RoleContext.role === 'teacher')
+          navigate(`/teacher/main/group/${groupData.groupName}/${groupData.groupId}/students`);
+        break;
+      default:
         break;
     }
   };
 
-  const items = [
-    {
-      label: 'Inicio',
-      key: 'home',
-    },
-    {
-      label: 'Perfil',
-      key: 'profile',
-    },
-    {
-      label: 'Chat de grupo',
-      key: 'chat',
-    },
-    {
-      label: 'Cerrar Sesión',
-      key: 'logout',
-    },
-  ];
+  const ItemsByRole = () => {
+    const teacherItems = [
+      {
+        label: 'Inicio',
+        key: 'home',
+      },
+      {
+        label: 'Perfil',
+        key: 'profile',
+      },
+    ];
+
+    const studentItems = [
+      {
+        label: 'Inicio',
+        key: 'home',
+      },
+      {
+        label: 'Perfil',
+        key: 'profile',
+      },
+      {
+        label: 'Chat de grupo',
+        key: 'chat',
+      },
+    ];
+
+    let updatedItems = [...items];
+
+    if (RoleContext.role === 'teacher') {
+      updatedItems = [...updatedItems, ...teacherItems];
+    }
+
+    if (RoleContext.role === 'student') {
+      updatedItems = [...updatedItems, ...studentItems];
+    }
+
+    if (Page === 'selected') {
+      updatedItems.push({
+        label: 'Mis alumnos',
+        key: 'students',
+      }, {
+        label: 'Unidades',
+        key: 'units',
+      });
+    }
+
+    updatedItems.push(
+      {
+        type: 'divider'
+      },
+      {
+        label: 'Cerrar Sesión',
+        key: 'logout',
+      });
+
+    setItems(updatedItems);
+  };
 
   const showMenuList = () => (
     items.map((item, index) => (
@@ -58,7 +110,11 @@ const Headers = ({ title, color, groupId }) => {
         {item.label}
       </li>
     ))
-  )
+  );
+
+  useEffect(() => {
+    ItemsByRole();
+  }, []);
 
   return (
     <div className='headers' style={{ backgroundColor: color }}>

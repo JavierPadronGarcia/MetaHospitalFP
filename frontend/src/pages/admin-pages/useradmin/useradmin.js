@@ -3,13 +3,12 @@ import BasicList from '../../../components/basiclist/basiclist';
 import usersService from '../../../services/users.service';
 import Menu from '../../../components/menu/menu';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
-import { Input, Select, Avatar, message, notification } from 'antd';
+import { Input, Select, Avatar, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
-import FloatingMenu from '../../../components/FloatingMenu/FloatingMenu';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './useradmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 
@@ -19,10 +18,15 @@ function UserAdmin() {
   const [name, setName] = useState('');
   const [Id, setId] = useState('');
   const [role, setRole] = useState('student');
-  const Headlines = ['Imagen', 'Nombre', 'Email', 'Identificador'];
+  const Headlines = ['Imagen', 'Nombre', 'Email', 'Escuela', 'Identificador'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
+
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   const optionRole = [
     { value: 'student', label: 'Estudiante' },
@@ -45,11 +49,10 @@ function UserAdmin() {
     }
   };
 
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
+  const navigateSchool = (id, name) => {
+    localStorage.setItem('schoolId', id);
+    localStorage.setItem('schoolName', name)
+  }
 
   const renderUserRow = (user) => (
     <>
@@ -57,6 +60,10 @@ function UserAdmin() {
         src={`${process.env.REACT_APP_BACKEND_URL}/images/${user.filename}`} alt="avatar" /></td>
       <td>{user.name}</td>
       <td>{user.username}</td>
+      {user.schoolId
+        ? <td><Link onClick={() => navigateSchool(user.schoolId, user.schoolName)} to='/admin/school' >{user.schoolName}</Link></td>
+        : <td>---</td>
+      }
       <td>{user.role}</td>
     </>
   );
@@ -87,6 +94,7 @@ function UserAdmin() {
       message.success("Usuario eliminado correctamente");
       getUsers();
     } catch (error) {
+      console.error(error)
       message.error('Error al eliminar al usuario')
     }
   }
@@ -119,7 +127,7 @@ function UserAdmin() {
         const userToEdit = users.find(user => user.id === Id);
 
         userToEdit.name = name;
-        userToEdit.usrname = email;
+        userToEdit.username = email;
         userToEdit.role = role;
 
         await usersService.updateUserWithoutImage(email, Id, role, name);
@@ -130,12 +138,7 @@ function UserAdmin() {
         getUsers();
       } else {
 
-        const potUser = {
-          name: name,
-          role: role,
-        };
-
-        await usersService.createNewUser(potUser, email);
+        await usersService.createNewUser({ name: name, role: role, }, email);
 
         cleanInputs();
         message.success('Usuario creado correctamente');
@@ -172,7 +175,6 @@ function UserAdmin() {
         <Menu />
         <Tag name="Usuarios" />
         <BasicList items={users} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
-        <FloatingMenu />
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

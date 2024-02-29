@@ -22,10 +22,9 @@ function StudentSchools() {
 
   const getStudents = async () => {
     try {
-      const response = await StudentSchoolsService.getStudentsBySchool(
+      const studentList = await StudentSchoolsService.getStudentsBySchool(
         localStorage.getItem('schoolId')
       );
-      const studentList = response.map(student => student.User);
       setStudents(studentList);
     } catch (error) {
       message.error('No se pudo obtener a los usuarios de la escuela')
@@ -35,6 +34,7 @@ function StudentSchools() {
   const getUsers = async () => {
     try {
       const response = await usersService.getStudents();
+      console.log(response)
       setUsers(response);
     } catch (error) {
       message.error('No se pudo obtener usuarios')
@@ -78,7 +78,7 @@ function StudentSchools() {
         bordered
         dataSource={searchResults}
         renderItem={(user) => (
-          <List.Item onClick={() => changeName(user.name, user.id)}>
+          <List.Item onClick={() => changeName(user.name, user.id)} className='list-item'>
             {user.name}
           </List.Item>
         )}
@@ -89,6 +89,7 @@ function StudentSchools() {
 
   const onDelete = (id) => {
     try {
+      console.log(id)
       getStudents();
       StudentSchoolsService.deleteStudentFromSchool(localStorage.getItem('schoolId'), id);
       message.error('Estudiante eliminado correctamente');
@@ -107,7 +108,7 @@ function StudentSchools() {
       }
 
       const student = {
-        UserId: userId,
+        studentId: userId,
       };
 
       await StudentSchoolsService.createNewStudent(localStorage.getItem('schoolId'), student);

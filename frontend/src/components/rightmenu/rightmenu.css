@@ -9,6 +9,10 @@
     user-select: none;
 }
 
+.right_menu .list-item{
+    cursor: pointer;
+}
+
 .inputs {
     width: 90%;
     margin-left: auto;

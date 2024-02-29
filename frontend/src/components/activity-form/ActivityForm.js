@@ -79,7 +79,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
   const transformStudents = (studentArray) => {
     let newStudentArray = [];
     studentArray.map((student) => {
-      newStudentArray.push(student.User);
+      newStudentArray.push(student.UserAccount);
     })
     return newStudentArray;
   }
@@ -108,6 +108,8 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
 
   const filteredStudents = allStudents.filter((o) => !selectedItems.includes(o));
 
+  console.log(allStudents)
+
   const handleCreate = (e) => {
     e.preventDefault();
     setStatus({ caseStatus: '', studentStatus: '', dateStatus: '' });
@@ -133,8 +135,8 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         setDisabled(false);
       }).catch(err => {
         if (!err.response) noConnectionError();
-        if (err.response === err.code == 500) {
-          errorMessage('No se ha podido agregar correctamente la activiad', 'intentelo de unuevo')
+        if (err.response && err.code == 500) {
+          errorMessage('No se ha podido agregar correctamente la actividad', 'intentalo de nuevo')
         };
       });
     }

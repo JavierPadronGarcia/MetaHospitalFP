@@ -13,9 +13,9 @@ function getOptions(token) {
   return options;
 }
 
-async function getAllGroupsWithoutCount() {
+async function getAllGroupsWithoutCount(schoolId) {
   try {
-    const response = await axios.get(backendGroupsEndpoint,
+    const response = await axios.get(`${backendGroupsEndpoint}/school/${schoolId}`,
       getOptions(localStorage.getItem("token"))
     );
     const groups = await response.data;
@@ -59,11 +59,12 @@ async function getUserGroup() {
   }
 }
 
-async function addGroup(group) {
+async function addGroup(group, schoolId) {
   const body = new URLSearchParams();
   body.append("name", group.name);
   body.append("date", group.date);
   body.append("CourseId", group.CourseId);
+  body.append("schoolId", schoolId);
   let response = [];
   try {
     response = await axios.post(backendGroupsEndpoint,

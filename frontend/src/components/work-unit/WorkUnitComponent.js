@@ -1,9 +1,8 @@
 import Icon from '@ant-design/icons/lib/components/Icon';
 import './WorkUnitComponent.css';
-import { SettingOutlined } from "@ant-design/icons";
+import { EyeOutlined, EyeInvisibleOutlined, SettingOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';;
 
 function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility }) {
 
@@ -12,10 +11,17 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
   const [containerExpanded, setContainerExpanded] = useState(false);
   const [visibility, setVisibility] = useState(unitVisibility);
   const [colors, setColors] = useState(visibility ? workUnit.colors.visible : workUnit.colors.invisible);
+  const [currentPath, setCurrentPath] = useState('');
 
   useEffect(() => {
     setColors(visibility ? workUnit.colors.visible : workUnit.colors.invisible);
+    setCurrentPath(window.location.pathname);
   }, [visibility]);
+
+  const changeVisibility = () => {
+    notifyUpdateVisibility(workUnit.id, !visibility);
+    setVisibility(!visibility);
+  }
 
   const iconEnter = () => (
     <svg width="1em" height="1em" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,53 +30,26 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
     </svg>
   )
 
-  const toggleExpandContainer = () => {
-    const component = componentRef.current;
-    if (containerExpanded) {
-      component.classList.remove('expanded');
-    } else {
-      component.classList.toggle('expanded');
-    }
-    setContainerExpanded(!containerExpanded);
-  }
-
-  const changeVisibility = () => {
-    notifyUpdateVisibility(workUnit.id, !visibility);
-    setVisibility(!visibility);
-    toggleExpandContainer();
-  }
-
   const handleNavigateToWorkUnit = () => {
     sessionStorage.setItem('colors', JSON.stringify(colors));
-    navigate(`./unit/${workUnit.id}/${workUnit.name}`);
+    const newPath = currentPath.replace('/units', `/unit/${workUnit.id}/${workUnit.name}`);
+    console.log(newPath);
+    navigate(newPath);
   }
 
-  const showFirsLine = () => (
+  const showFirstLine = () => (
     <div className="work-unit-component-selection-first-line">
-      <SettingOutlined
-        className='work-unit-component-icon setting'
-        onClick={() => toggleExpandContainer()}
-      />
-      <span>{workUnit.name}</span>
       <Icon
         component={iconEnter}
         className='work-unit-component-icon enter'
         onClick={() => handleNavigateToWorkUnit()}
       />
-    </div>
-  )
-
-  const showSecondLine = () => (
-    <div className="work-unit-component-selection-second-line">
-      {visibility ? <span>Visible</span> : <span>Invisible</span>}
-      <span>
-        <Button
-          onClick={() => changeVisibility()}
-          style={{ background: colors.secondaryColor, border: '1px solid black' }}
-        >
-          Cambiar visibilidad
-        </Button>
-      </span>
+      <span>{workUnit.name}</span>
+      <Icon
+        component={visibility ? EyeOutlined : EyeInvisibleOutlined}
+        className='work-unit-component-icon visibility'
+        onClick={() => changeVisibility()}
+      />
     </div>
   )
 
@@ -80,13 +59,11 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
       style={{ background: colors.primaryColor }}
       ref={componentRef}
     >
-      {showFirsLine()}
-      {containerExpanded &&
-        showSecondLine()
-      }
+      {showFirstLine()}
     </div>
   )
 
 }
 
 export default WorkUnitComponent;
+

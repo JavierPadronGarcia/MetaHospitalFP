@@ -1,0 +1,80 @@
+.main-container {
+  height: 72vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.main-container .username {
+  color: rgb(41, 41, 41);
+  font-size: 1.5rem;
+}
+
+.main-container .floating-container {
+  background-color: rgb(216, 216, 216);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  padding-bottom: 2rem;
+  margin-top: 2rem;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 9px 14px 0px;
+}
+
+.main-container .form-container {
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.main-container .form-container .input-password {
+  width: 100%;
+}
+
+.main-container .form-container .form-button {
+  margin-top: 1rem;
+}
+
+.main-container .auth-code-header {
+  font-size: 1.2rem;
+  font-weight: bolder;
+  padding-block: 0.5rem;
+}
+
+.main-container .form-container .form-button>button:disabled {
+  background-color: rgb(173, 173, 173);
+  color: rgba(0, 0, 0, 0.534);
+}
+
+@media screen and (min-width: 500px) {
+  .main-container .floating-container {
+    width: 70%;
+    padding-bottom: 2rem;
+    margin-top: 2rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .main-container .floating-container {
+    width: 50%;
+    padding-bottom: 2rem;
+    margin-top: 2rem;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .main-container {
+    height: 60vh;
+    margin-top: 0rem;
+  }
+
+  .main-container .floating-container {
+    width: 30%;
+    margin-top: 2rem;
+  }
+}

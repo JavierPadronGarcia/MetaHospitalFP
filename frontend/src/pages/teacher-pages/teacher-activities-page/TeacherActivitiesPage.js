@@ -1,14 +1,12 @@
 import './TeacherActivitiesPage.css';
 import { useParams } from 'react-router-dom';
-import Header from '../../../components/Header/Header';
-import Toolbar from '../../../components/toolbar/Toolbar';
-import GoBack from '../../../components/go-back/GoBack';
 import Add from '../../../components/add/Add';
 import ActivityCard from '../../../components/activity-card/ActivityCard';
 import { useEffect, useState } from 'react';
 import exercisesService from '../../../services/exercises.service';
 import { errorMessage, noConnectionError } from '../../../utils/shared/errorHandler';
-import { Modal, Popover, message } from 'antd';
+import { message } from 'antd';
+import Headers from '../../../components/headers/headers';
 function TeacherActivitiesPage() {
 
   const { name, id, workUnitId, workUnitName } = useParams();
@@ -19,9 +17,8 @@ function TeacherActivitiesPage() {
 
   const getAllExercises = () => {
     exercisesService.getAllExercisesOfTheGroup(id, workUnitId).then(exercises => {
-      setAssignedExercises(exercises.filter(exercise => exercise.assigned == true));
-      setUnAssignedExercises(exercises.filter(exercise => exercise.assigned == false));
-      console.log(exercises)
+      setAssignedExercises(exercises.filter(exercise => Boolean(exercise.assigned) === true));
+      setUnAssignedExercises(exercises.filter(exercise => Boolean(exercise.assigned) === false));
     }).catch(err => {
       if (!err.response) {
         noConnectionError();
@@ -87,11 +84,10 @@ function TeacherActivitiesPage() {
 
   return (
     <div className='teacher-activities-page'>
-      <Header pageName={name} />
+      <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
       <div className='teacher-activities-page-main'>
         <div style={{ background: colors.primaryColor }} className='activity-section'>
           <header>
-            <GoBack link={`/teacher/main/group/${name}/${id}`} alt='volver a todas las unidades' />
             <span className='workUnitName' style={{ color: colors.text }}>{workUnitName}</span>
             <Add
               link={`./add`}
@@ -121,7 +117,6 @@ function TeacherActivitiesPage() {
           </main>
         </div>
       </div>
-      <Toolbar />
     </div>
   );
 }

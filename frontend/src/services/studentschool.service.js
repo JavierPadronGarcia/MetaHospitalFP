@@ -3,7 +3,7 @@ import { backendSchoolsEndpoint } from '../constants/backendEndpoints';
 
 export const getStudentsBySchool = async (id) => {
     try {
-        const response = await axios.get(backendSchoolsEndpoint+ '/' +id +'/students',{
+        const response = await axios.get(backendSchoolsEndpoint + '/' + id + '/students', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }
@@ -17,7 +17,7 @@ export const getStudentsBySchool = async (id) => {
 
 export const createNewStudent = async (id, idStudent) => {
     try {
-        const response = await axios.post(backendSchoolsEndpoint+ '/' + id +'/students', idStudent,{
+        const response = await axios.post(backendSchoolsEndpoint + '/' + id + '/students', idStudent, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             }
@@ -38,7 +38,7 @@ export const deleteStudentFromSchool = async (schoolId, userId) => {
         });
 
         return response.data;
-        
+
     } catch (error) {
         console.error('Error deleting student: ', error);
         throw error;

@@ -11,9 +11,21 @@ function generateToken(user) {
     role: user.role
   }
 
-  return jwt.sign(u, process.env.JWT_SECRET, {
+  const token = jwt.sign(u, process.env.JWT_SECRET, {
     expiresIn: 60 * 60 * 24  //expires in 24 hours
-  })
+  });
+
+  // const token = jwt.sign(u, process.env.JWT_SECRET, {
+  //   expiresIn: 50000 / 1000, //expires in 24 hours
+  // });
+
+  const decodeToke = decodeToken(token);
+
+  const date = new Date(decodeToke.exp * 1000);
+
+  const expireDate = date.toISOString();
+
+  return { token: token, expireDate: expireDate };
 }
 
 function getCleanUser(user) {
