@@ -87,8 +87,10 @@ exports.submitGrade = async (req, res) => {
       },
       include: {
         model: Exercise,
+        required: true,
         include: {
           model: Case,
+          required: true,
           where: {
             caseNumber: exerciseId,
             WorkUnitID: UT
@@ -110,9 +112,7 @@ exports.submitGrade = async (req, res) => {
       participation.Role = role;
       participation.SubmittedAt = submittedTime;
       participation.save();
-
-
-
+      
       const grades = [];
       for (let i = 0; i < items.length; i++) {
         const itemPlayerRole = await ItemPlayerRole.findOne({

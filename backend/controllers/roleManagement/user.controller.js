@@ -502,9 +502,8 @@ exports.delete = async (req, res) => {
 //     message: err.message || "Could not find the user to delete"
 //   });
 // })
-
 exports.updateWithImage = (req, res) => {
-  const userDecoded = utils.decodeToken(req.headers['authorization']);
+  const userDecoded = req.user;
   const previousImage = req.body.previousImage;
   const newUsername = req.body.newUsername;
 
@@ -517,29 +516,30 @@ exports.updateWithImage = (req, res) => {
   }
 
   if (previousImage !== '') {
-    const previousImagePath = path.join(__dirname, '../public/images', previousImage);
-
-    fs.unlink(previousImagePath, err => {
+    const previousImagePath = path.join(__dirname, '../../public/images', previousImage);
+    fs.unlinkSync(previousImagePath, err => {
       if (err) {
-        return res.status(500).send({ message: "There was an error deleting the previous image" })
+        return res.status(500).send({ message: "There was an error deleting the previous image" });
       }
-    })
+    });
   }
+  updateUser(res, updatedUser);
+}
 
+function updateUser(res, updatedUser) {
   User.update(updatedUser, { where: { id: updatedUser.id } }).then(num => {
     if (num == 1) {
       return res.send({
         message: "User was updated successfully."
-      })
+      });
+    } else {
+      return res.status(500).send({
+        message: `Cannot update User with id=${updatedUser.id}. Maybe User was not found or req.body is empty!`
+      });
     }
-    return res.status(500).send({
-      message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
-    })
-  }).catch(err => {
-    res.status(500).send({
-      message: err.message || "Error updating User with id=" + id
-    });
-  })
+  }).catch(error => {
+    return res.status(500).send({ message: error.message || "Some error occurred while updating the User." });
+  });
 }
 
 exports.getUserById = async (userId) => {
