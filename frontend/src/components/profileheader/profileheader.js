@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Avatar, Upload, message } from 'antd';
 import { LeftOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import './profileheader.css';
@@ -12,27 +12,33 @@ import { backendImageEndpoint } from '../../constants/backendEndpoints';
 const ProfileHeader = ({ user, updateUserInfo }) => {
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleUpdateUser = async (options) => {
-    const prevFilename = user.filename === '' ? null : user.filename;
+    if (isUploading) return;
+    setIsUploading(true);
     const { file } = options;
-    const imageBlob = file.originFileObj;
-    const response = await fetch(URL.createObjectURL(imageBlob));
-    const blob = await response.blob();
 
-    message.loading('Actualizando...', 0);
-    try {
-      if (blob) {
-        await usersService.updateUserWithImage(null, blob, prevFilename);
+    if (file) {
+      const prevFilename = user.filename === '' ? null : user.filename;
+      const imageBlob = file.originFileObj;
+      const response = await fetch(URL.createObjectURL(imageBlob));
+      const blob = await response.blob();
+
+      message.loading('Actualizando...', 0);
+      try {
+        if (blob) {
+          await usersService.updateUserWithImage(null, blob, prevFilename);
+          message.destroy();
+          message.success('Imagen actualizada correctamente');
+        }
+        updateUserInfo();
+      } catch (err) {
+        handleError(err);
+      } finally {
+        setIsUploading(false);
         message.destroy();
-        message.success('Imagen actualizada correctamente');
       }
-
-      updateUserInfo();
-    } catch (err) {
-      handleError(err);
-    } finally {
-      message.destroy();
     }
   };
 
