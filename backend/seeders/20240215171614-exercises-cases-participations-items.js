@@ -7,6 +7,7 @@ const {
   addItems,
   addGrades,
   addItemPlayerRoles,
+  addItemCases
 } = require('../utils/seederUtils');
 
 function setupData() {
@@ -17,18 +18,28 @@ function setupData() {
     { ExerciseId: 1, StudentID: 7, FinalGrade: 5, Role: 'auxiliar' },
     { ExerciseId: 1, StudentID: 8, FinalGrade: 10, Role: 'enfermero' },
   ]);
+  
   const items = addItems([
-    {
-      items: [
-        'Revisar que el cubículo o puesto tiene todo el material necesario',
-        'Poner agua destilada en el depósito para el suministro de humedad de la incubadora y programarla según el peso del neonato.',
-        'Conectar la incubadora a la toma de oxígeno en caso necesario',
-        'Encender incubadora',
-        'Lavado de manos'
-      ],
-      CaseId: 3,
-    },
+    'Revisar que el cubículo o puesto tiene todo el material necesario',
+    'Poner agua destilada en el depósito para el suministro de humedad de la incubadora y programarla según el peso del neonato.',
+    'Conectar la incubadora a la toma de oxígeno en caso necesario',
+    'Encender incubadora',
+    'Lavado de manos'
   ]);
+
+  const itemCases = addItemCases([
+    { ItemID: 1, CaseID: 1 },
+    { ItemID: 3, CaseID: 1 },
+    { ItemID: 4, CaseID: 1 },
+    { ItemID: 5, CaseID: 1 },
+    { ItemID: 1, CaseID: 2 },
+    { ItemID: 2, CaseID: 2 },
+    { ItemID: 3, CaseID: 2 },
+    { ItemID: 5, CaseID: 2 },
+    { ItemID: 1, CaseID: 3 },
+    { ItemID: 2, CaseID: 3 },
+    { ItemID: 5, CaseID: 3 },
+  ])
 
   const playerRoles = addPlayerRoles(['Auxiliar', 'Enfermero', 'Médico']);
 
@@ -72,7 +83,7 @@ function setupData() {
     }
   ]);
 
-  return { exercises, participations, items, grades, playerRoles, itemPlayerRoles };
+  return { exercises, participations, items, grades, playerRoles, itemPlayerRoles, itemCases };
 }
 
 module.exports = {
@@ -85,6 +96,7 @@ module.exports = {
       participations,
       playerRoles,
       itemPlayerRoles,
+      itemCases
     } = setupData();
 
     console.log('\ndata setup completed...\n');
@@ -100,6 +112,7 @@ module.exports = {
     await Promise.all([
       queryInterface.bulkInsert('participations', participations),
       queryInterface.bulkInsert('ItemPlayerRoles', itemPlayerRoles),
+      queryInterface.bulkInsert('itemCases', itemCases),
     ]);
 
     console.log('second stage completed...\n');
@@ -116,6 +129,7 @@ module.exports = {
     await Promise.all([
       queryInterface.bulkDelete('participations', null, {}),
       queryInterface.bulkDelete('ItemPlayerRoles', null, {}),
+      queryInterface.bulkInsert('itemCases', null, {}),
     ]);
 
     await Promise.all([

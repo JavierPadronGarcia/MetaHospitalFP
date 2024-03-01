@@ -230,17 +230,13 @@ exports.addParticipations = (participations) => {
   return participationsArray;
 }
 
-exports.addItems = (data) => {
-  let idCounter = 1;
-  return data.flatMap(({ items, CaseId }) =>
-    items.map((item) => ({
-      id: idCounter++,
-      CaseID: CaseId,
-      name: item,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }))
-  );
+exports.addItems = (items) => {
+  return items.map((item, index) => ({
+    id: ++index,
+    name: item,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }))
 };
 
 exports.addGrades = (data) => {
@@ -279,4 +275,13 @@ exports.addItemPlayerRoles = (data) => {
       updatedAt: new Date()
     }))
   );
+}
+
+exports.addItemCases = (itemCases) => {
+  return itemCases.map(({ CaseID, ItemID }) => ({
+    ItemID: ItemID,
+    CaseID: CaseID,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }))
 }

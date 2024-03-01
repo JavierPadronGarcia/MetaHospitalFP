@@ -39,6 +39,7 @@ db.activitySubscription = require('./administration/activitiesSubscription.model
 db.workUnit = require('./educational/workunit.model.js')(sequelize, Sequelize);
 db.case = require('./educational/case.model.js')(sequelize, Sequelize);
 db.item = require('./educational/item.model.js')(sequelize, Sequelize);
+db.itemCase = require('./educational/itemCase.model.js')(sequelize, Sequelize);
 db.exercise = require('./educational/exercise.model.js')(sequelize, Sequelize);
 db.participation = require('./educational/participation.model.js')(sequelize, Sequelize);
 db.grade = require('./educational/grade.model.js')(sequelize, Sequelize);
@@ -103,16 +104,21 @@ db.workUnitGroup.hasMany(db.workUnitColor, { foreignKey: 'WorkUnitGroupID' });
 db.workUnitColor.belongsTo(db.color, { foreignKey: 'ColorID' });
 db.workUnitColor.belongsTo(db.workUnitGroup, { foreignKey: 'WorkUnitGroupID' });
 
-db.case.hasMany(db.item, { foreignKey: 'CaseID' });
-
 db.item.hasMany(db.itemPlayerRole, { foreignKey: 'ItemID' });
 db.playerRole.hasMany(db.itemPlayerRole, { foreignKey: 'PlayerRoleID' });
 
+
+db.itemPlayerRole.belongsTo(db.playerRole, {foreignKey: 'PlayerRoleID'});
 db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
+
+db.item.hasMany(db.itemCase, { foreignKey: 'ItemID' });
+db.case.hasMany(db.itemCase, { foreignKey: 'CaseID' });
+db.itemCase.belongsTo(db.item, { foreignKey: 'ItemID' });
+db.itemCase.belongsTo(db.case, { foreignKey: 'CaseID' });
 
 db.case.hasMany(db.exercise, { foreignKey: 'CaseID' });
 db.exercise.hasMany(db.participation, { foreignKey: 'ExerciseID' });
-db.exercise.belongsTo(db.case, {foreignKey: 'CaseID'});
+db.exercise.belongsTo(db.case, { foreignKey: 'CaseID' });
 
 db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
 db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseID' });
