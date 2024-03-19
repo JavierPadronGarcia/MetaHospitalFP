@@ -8,7 +8,7 @@ const {
 } = require("../utils/seederUtils");
 
 function setUpData() {
-  const workUnits = addWorkUnits(['UT6 Cardio', 'UT7 Neumología', 'UT10 Neonatología']);
+  const workUnits = addWorkUnits([{ id: 6, name: 'UT6 Cardio' }, { id: 7, name: 'UT7 Neumología' }, { id: 10, name: 'UT10 Neonatología' }]);
 
   const colors = addColors([
     { primaryColor: '#279EFF', secondaryColor: '#2F96C4', text: '#FFFFFF' },
@@ -20,33 +20,27 @@ function setUpData() {
   ]);
 
   const workUnitGroups = addWorkUnitGroups([
-    { GroupID: 1, WorkUnitID: 1, visibility: 0 },
-    { GroupID: 1, WorkUnitID: 2, visibility: 0 },
-    { GroupID: 1, WorkUnitID: 3, visibility: 1 },
-    { GroupID: 2, WorkUnitID: 1, visibility: 0 },
-    { GroupID: 2, WorkUnitID: 2, visibility: 0 },
-    { GroupID: 2, WorkUnitID: 3, visibility: 1 },
-    { GroupID: 3, WorkUnitID: 1, visibility: 0 },
-    { GroupID: 3, WorkUnitID: 2, visibility: 0 },
-    { GroupID: 3, WorkUnitID: 3, visibility: 1 },
-    { GroupID: 4, WorkUnitID: 1, visibility: 0 },
-    { GroupID: 4, WorkUnitID: 2, visibility: 0 },
-    { GroupID: 4, WorkUnitID: 3, visibility: 1 },
-    { GroupID: 5, WorkUnitID: 1, visibility: 0 },
-    { GroupID: 5, WorkUnitID: 2, visibility: 0 },
-    { GroupID: 5, WorkUnitID: 3, visibility: 1 },
-    { GroupID: 6, WorkUnitID: 1, visibility: 0 },
-    { GroupID: 6, WorkUnitID: 2, visibility: 0 },
-    { GroupID: 6, WorkUnitID: 3, visibility: 1 },
+    { GroupID: 1, WorkUnitID: 10, visibility: 1 },
+    { GroupID: 2, WorkUnitID: 10, visibility: 1 },
+    { GroupID: 3, WorkUnitID: 10, visibility: 1 },
+    { GroupID: 4, WorkUnitID: 10, visibility: 1 },
+    { GroupID: 5, WorkUnitID: 10, visibility: 1 },
+    { GroupID: 6, WorkUnitID: 10, visibility: 1 },
   ]);
 
   const workUnitColors = addWorkUnitColors([
     { WorkUnitGroupID: 1, ColorID: 1, visibility: 1 },
     { WorkUnitGroupID: 1, ColorID: 2, visibility: 0 },
-    { WorkUnitGroupID: 2, ColorID: 3, visibility: 1 },
-    { WorkUnitGroupID: 2, ColorID: 4, visibility: 0 },
-    { WorkUnitGroupID: 3, ColorID: 5, visibility: 1 },
-    { WorkUnitGroupID: 3, ColorID: 6, visibility: 0 },
+    { WorkUnitGroupID: 2, ColorID: 1, visibility: 1 },
+    { WorkUnitGroupID: 2, ColorID: 2, visibility: 0 },
+    { WorkUnitGroupID: 3, ColorID: 1, visibility: 1 },
+    { WorkUnitGroupID: 3, ColorID: 2, visibility: 0 },
+    { WorkUnitGroupID: 4, ColorID: 1, visibility: 1 },
+    { WorkUnitGroupID: 4, ColorID: 2, visibility: 0 },
+    { WorkUnitGroupID: 5, ColorID: 1, visibility: 1 },
+    { WorkUnitGroupID: 5, ColorID: 2, visibility: 0 },
+    { WorkUnitGroupID: 6, ColorID: 1, visibility: 1 },
+    { WorkUnitGroupID: 6, ColorID: 2, visibility: 0 },
   ])
 
   return {
