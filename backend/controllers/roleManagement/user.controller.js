@@ -33,7 +33,6 @@ exports.create = async (req, res) => {
 
   const data = await User.findOne({ where: { username: user.username } });
 
-  // USER ALREADY EXISTS
   if (data) {
     return res.status(500).send({
       error: true,
@@ -82,40 +81,6 @@ exports.create = async (req, res) => {
 exports.findByRole = (req, res) => {
   req.send(req.user.role);
 }
-
-// exports.findAll = async (req, res) => {
-//   try {
-//     const users = await User.findAll({
-//       include: [
-//         { model: Admin },
-//         { model: Student },
-//         { model: Teacher }
-//       ]
-//     });
-
-//     const formattedUsers = users.map(user => {
-//       let userData = user.toJSON();
-//       if (user.Admin) {
-//         userData.name = user.Admin.name;
-//         userData.role = 'admin';
-//       } else if (user.Student) {
-//         userData.name = user.Student.name;
-//         userData.role = 'student';
-//       } else if (user.Teacher) {
-//         userData.name = user.Teacher.name;
-//         userData.role = 'teacher';
-//       }
-//       return userData;
-//     });
-
-//     return res.send(formattedUsers);
-//   } catch (err) {
-//     return res.status(500).send({
-//       message:
-//         err.message || "Some error occurred while retrieving users."
-//     })
-//   }
-// }
 
 exports.findAll = async (req, res) => {
   try {
@@ -386,6 +351,7 @@ exports.assignCode = async (req, res) => {
   let uuid = "";
   const expDate = req.body.expDate;
   const userId = req.user.id;
+  console.log(expDate)
   try {
     uuid = await generateUUID();
   } catch (err) {
@@ -403,6 +369,25 @@ exports.assignCode = async (req, res) => {
   })
 }
 
+exports.internalAssignCode = async (userId, expDate) => {
+  let uuid = "";
+  try {
+    uuid = await generateUUID();
+  } catch (err) {
+    return res.status(404).send({ err });
+  }
+  console.log(userId)
+  User.findOne({ where: { id: userId } }).then(user => {
+    user.code = uuid;
+    user.codeExpirationDate = expDate;
+    user.save();
+    return { code: uuid };
+  }).catch(err => {
+    console.log(err.message)
+    return;
+  })
+}
+
 exports.unAssignCode = async (req, res) => {
   const userId = req.user.id;
   User.findOne({ where: { id: userId } }).then(user => {
@@ -416,53 +401,6 @@ exports.unAssignCode = async (req, res) => {
     })
   })
 }
-
-// exports.assignDirector = (req, res) => {
-//   const newDirector = req.params.id;
-//   const previousDirector = req.body.directorId;
-
-//   if (previousDirector) {
-//     User.findByPk(previousDirector).then(prevDirector => {
-//       prevDirector.isDirector = false;
-//       prevDirector.save();
-//       updateNewDirector(newDirector, res);
-//     }).catch(err => {
-//       return res.status(500).send({
-//         message: err.message || "Could not find the user to update"
-//       });
-//     })
-//   } else {
-//     updateNewDirector(newDirector, res);
-//   }
-// }
-
-// const updateNewDirector = (newDirector, res) => {
-//   User.findByPk(newDirector).then(director => {
-//     let newDirector = {
-//       id: director.id,
-//       username: director.username,
-//       password: director.password,
-//       role: director.role,
-//       isDirector: true,
-//       filename: director.filename,
-//       createdAt: director.createdAt,
-//       updatedAt: director.updatedAt
-//     }
-
-//     User.update(newDirector, { where: { id: director.id } }).then(response => {
-//       console.log(response)
-//       return res.send(director);
-//     }).catch(err => {
-//       return res.status(500).send({
-//         message: err.message || "Cannot update the new director"
-//       });
-//     })
-//   }).catch(err => {
-//     return res.status(500).send({
-//       message: err.message || "Cannot find the new director"
-//     });
-//   })
-// }
 
 exports.delete = async (req, res) => {
   const id = req.params.id;
@@ -488,20 +426,6 @@ exports.delete = async (req, res) => {
 
 }
 
-// User.findByPk(id).then(user => {
-//   if (user.filename != '') {
-//     const imagePath = path.join(__dirname, '../public/images', user.filename);
-//     fs.unlink(imagePath, err => {
-//       if (err) {
-//         return res.status(500).send({ message: "There was an error deleting the image" })
-//       }
-//     })
-//   }
-// }).catch(err => {
-//   return res.status(500).send({
-//     message: err.message || "Could not find the user to delete"
-//   });
-// })
 exports.updateWithImage = (req, res) => {
   const userDecoded = req.user;
   const previousImage = req.body.previousImage;

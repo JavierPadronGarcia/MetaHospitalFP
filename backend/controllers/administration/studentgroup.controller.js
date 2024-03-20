@@ -1,4 +1,5 @@
 const db = require("../../models");
+const userController = require('../roleManagement/user.controller');
 const UserAccounts = db.userAccounts;
 const Student = db.student;
 const StudentGroup = db.studentGroup;
@@ -23,7 +24,10 @@ exports.create = (req, res) => {
     Date: date
   };
 
-  StudentGroup.create(studentGroup).then(data => {
+  StudentGroup.create(studentGroup).then(async (data) => {
+    const expirationDate = new Date();
+    expirationDate.setMonth(expirationDate.getMonth() + 10);
+    await userController.internalAssignCode(data.StudentID, expirationDate);
     res.send(data);
   }).catch(err => {
     res.status(500).send({
