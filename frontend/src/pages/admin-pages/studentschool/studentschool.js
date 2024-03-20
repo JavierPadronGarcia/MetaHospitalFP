@@ -10,6 +10,7 @@ import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './studentschool.css';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function StudentSchools() {
   const [students, setStudents] = useState([]);
@@ -130,6 +131,7 @@ function StudentSchools() {
         <Menu2 />
         <Tag name="Estudiantes" />
         <BasicList items={students} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} />
+        <FloatingExcelButton data={students}></FloatingExcelButton>
         <PopForm renderInputs={renderSchoolImputs} cancel={cancel} onSubmit={onSubmit} />
       </div>
       <div className='container-right'>
