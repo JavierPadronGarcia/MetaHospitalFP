@@ -63,7 +63,7 @@ const UserProfilePage = () => {
           <div className="auth-code-container">
             {(user && user.code) && <>
               <div>Codigo: {user.code}</div>
-              <div>Expiración: {dayjs(user.codeExpirationDate).format('DD-MM-YYYY')}</div>
+              {user.codeExpirationDate && <div>Expiración: {dayjs(user.codeExpirationDate).format('DD-MM-YYYY')}</div>}
             </>}
             {(user && !user.code) && <>
               <div>No hay codigo generado</div>

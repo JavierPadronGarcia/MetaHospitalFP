@@ -110,6 +110,7 @@ exports.getUserAccountsAndUserForRoles = (allUsers) => {
     id: user.id,
     username: user.username,
     password: user.password,
+    code: user.code,
     createdAt: new Date(),
     updatedAt: new Date()
   }));

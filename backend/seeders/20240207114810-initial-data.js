@@ -21,25 +21,38 @@ const {
 
 function setAllUsers() {
   const allUsers = [];
+
+  //Admin
   allUsers.push({ id: 1, username: 'admin', password: bcrypt.hashSync('test'), name: fakerES.person.fullName(), role: 'admin', createdAt: new Date(), updatedAt: new Date() });
 
+  // Teacher users
   for (let i = 2; i < 7; i++) {
     const firstName = fakerES.person.firstName();
     const lastName = fakerES.person.lastName();
     const username = replacePunctuationMarks((firstName + lastName + '@metahospital.com')).replace(/\s/g, '').toLowerCase();
     allUsers.push(
-      { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'teacher', createdAt: new Date(), updatedAt: new Date() },
+      { id: i, username: username, password: bcrypt.hashSync('metahospital'), name: firstName + " " + lastName, role: 'teacher', createdAt: new Date(), updatedAt: new Date() },
     )
   }
 
+  // Student users
   for (let i = 7; i < 21; i++) {
     const firstName = fakerES.person.firstName();
     const lastName = fakerES.person.lastName();
     const username = replacePunctuationMarks((firstName + lastName + '@metahospital.com')).replace(/\s/g, '').toLowerCase();
     allUsers.push(
-      { id: i, username: username, password: bcrypt.hashSync('test'), name: firstName + " " + lastName, role: 'student', createdAt: new Date(), updatedAt: new Date() },
+      { id: i, username: username, password: bcrypt.hashSync('metahospital'), name: firstName + " " + lastName, role: 'student', createdAt: new Date(), updatedAt: new Date() },
     )
   }
+
+  //Guest users
+  allUsers.push(
+    { id: 21, username: 'Invitado1', password: bcrypt.hashSync('metahospital'), name: 'Invitado1', role: 'admin', code: 'aaaa', createdAt: new Date(), updatedAt: new Date() },
+    { id: 22, username: 'Invitado2', password: bcrypt.hashSync('metahospital'), name: 'Invitado2', role: 'admin', code: 'bbbb', createdAt: new Date(), updatedAt: new Date() },
+    { id: 23, username: 'Invitado3', password: bcrypt.hashSync('metahospital'), name: 'Invitado3', role: 'admin', code: 'cccc', createdAt: new Date(), updatedAt: new Date() },
+    { id: 24, username: 'Invitado4', password: bcrypt.hashSync('metahospital'), name: 'Invitado4', role: 'admin', code: 'dddd', createdAt: new Date(), updatedAt: new Date() },
+    { id: 25, username: 'Invitado5', password: bcrypt.hashSync('metahospital'), name: 'Invitado5', role: 'admin', code: 'eeee', createdAt: new Date(), updatedAt: new Date() },
+  );
 
   return allUsers;
 }
