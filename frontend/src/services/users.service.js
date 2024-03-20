@@ -188,10 +188,11 @@ async function updateUserWithoutImage(newUsername, userId, newUserRole, newName)
 }
 
 async function assignCode() {
-  let fechaExpiracion = new Date().getTime() + (24 * 60 * 60 * 1000);
-  fechaExpiracion = new Date(fechaExpiracion);
+  let expDate = new Date();
+  expDate.setMonth(expDate.getMonth() + 10);
+  console.log(expDate)
   try {
-    const response = await axios.put(`${backendUsersEndpoint}/assignCode`, { expDate: fechaExpiracion }, getOptions(localStorage.getItem('token')));
+    const response = await axios.put(`${backendUsersEndpoint}/assignCode`, { expDate }, getOptions(localStorage.getItem('token')));
     return response
   } catch (err) {
     throw err
