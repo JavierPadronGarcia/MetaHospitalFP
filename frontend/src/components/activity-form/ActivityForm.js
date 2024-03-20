@@ -1,5 +1,6 @@
 import './ActivityForm.css';
-import { Button, Checkbox, DatePicker, Select, message } from 'antd';
+import { Button, Checkbox, DatePicker, Select, message, Modal,Affix } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import casesService from '../../services/cases.service';
 import groupEnrolementService from '../../services/groupEnrolement.service';
@@ -25,6 +26,8 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
     prevAssigned: updateFormContent?.assigned,
     prevDate: updateFormContent?.date
   });
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const getAllCases = async () => {
     try {
@@ -133,6 +136,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         setSelectedDate(null);
         setChecked(false);
         setDisabled(false);
+        setIsModalVisible(false);
       }).catch(err => {
         if (!err.response) noConnectionError();
         if (err.response && err.code == 500) {
@@ -180,6 +184,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         setSelectedDate(null);
         setChecked(false);
         setDisabled(false);
+        setIsModalVisible(false);
         notifyUpdateInfo();
       }).catch(err => {
         if (!err.response) noConnectionError();
@@ -210,153 +215,94 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
     return newArray
   }
 
-  if (isUpdateForm) {
-
-    return (
-      <div className='update-activity-form' style={{ background: colors.primaryColor }}>
-        <span className='workUnitName' style={{ color: colors.text }}>Actualizando actividad</span>
-        <form onSubmit={handleUpdate} className='activity-form'>
-          <div className='selects'>
-            <label>
-              <Select
-                showSearch
-                status={formStatus.caseStatus}
-                placeholder="Selecciona un caso"
-                optionFilterProp="children"
-                onChange={(value) => setSelectedCase(value)}
-                filterOption={filterOption}
-                style={{
-                  width: '100%',
-                }}
-                options={allCases}
-              />
-            </label>
-            <label>
-              <Select
-                mode="multiple"
-                disabled={disabled}
-                status={formStatus.studentStatus}
-                placeholder="Selecciona alumnos"
-                value={selectedItems}
-                onChange={setSelectedItems}
-                style={{
-                  width: '100%',
-                }}
-                options={filteredStudents.map((item) => ({
-                  value: item.id,
-                  label: item.username,
-                }))}
-              />
-            </label>
-            <label>
-              <DatePicker
-                status={formStatus.dateStatus}
-                disabled={!checked[1]}
-                onChange={changeDate}
-                placeholder='fecha de finalización'
-              />
-            </label>
-          </div>
-          <div className='checkboxes'>
-            <label>
-              <Checkbox
-                checked={checked[0]}
-                onChange={checkboxStudentsChanged}
-                style={{ color: colors.text }}
-              >
-                Seleccionar toda la clase
-              </Checkbox>
-            </label>
-            <label>
-              <Checkbox
-                checked={checked[1]}
-                onChange={(e) => setChecked(prevState => [prevState[0], e.target.checked])}
-                style={{ color: colors.text }}
-              >
-                Actividad evaluada
-              </Checkbox>
-            </label>
-          </div>
-          <span className='buttons'>
-            <Button htmlType='submit'>Actualizar actividad</Button>
-          </span>
-        </form>
-      </div>
-    )
-  }
-
   return (
-    <div className='add-activity-form' style={{ background: colors.primaryColor }}>
-      <span className='workUnitName' style={{ color: colors.text }}>Nueva actividad</span>
-      <form onSubmit={handleCreate} className='activity-form'>
-        <div className='selects'>
-          <label>
-            <Select
-              showSearch
-              status={formStatus.caseStatus}
-              placeholder="Selecciona un caso"
-              optionFilterProp="children"
-              onChange={(value) => setSelectedCase(value)}
-              filterOption={filterOption}
-              style={{
-                width: '100%',
-              }}
-              options={allCases}
-            />
-          </label>
-
-          <label>
-            <Select
-              mode="multiple"
-              disabled={disabled}
-              status={formStatus.studentStatus}
-              placeholder="Selecciona alumnos"
-              value={selectedItems}
-              onChange={setSelectedItems}
-              style={{
-                width: '100%',
-              }}
-              options={filteredStudents.map((item) => ({
-                value: item.id,
-                label: item.username,
-              }))}
-            />
-          </label>
-          <label>
-            <DatePicker
-              status={formStatus.dateStatus}
-              disabled={!checked[1]}
-              onChange={changeDate}
-              placeholder='fecha de finalización'
-            />
-          </label>
+    <>
+      <Affix style={{ position: 'fixed', bottom: 20, right: 20 }}>
+        <Button
+          className="floating-button"
+          type="primary"
+          shape="circle"
+          icon={<PlusOutlined />}
+          size="large"
+          onClick={() => setIsModalVisible(true)}
+        />
+      </Affix>
+      <Button onClick={() => setIsModalVisible(true)}>Abrir formulario</Button>
+      <Modal
+        title={isUpdateForm ? "Actualizar actividad" : "Nueva actividad"}
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null} 
+      >
+        <div className='update-activity-form'>
+          <form onSubmit={isUpdateForm ? handleUpdate : handleCreate} className='activity-form'>
+            <div className='selects'>
+              <label>
+                <Select
+                  showSearch
+                  status={formStatus.caseStatus}
+                  placeholder="Selecciona un caso"
+                  optionFilterProp="children"
+                  onChange={(value) => setSelectedCase(value)}
+                  filterOption={filterOption}
+                  style={{
+                    width: '100%',
+                  }}
+                  options={allCases}
+                />
+              </label>
+              <label>
+                <Select
+                  mode="multiple"
+                  disabled={disabled}
+                  status={formStatus.studentStatus}
+                  placeholder="Selecciona alumnos"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  style={{
+                    width: '100%',
+                  }}
+                  options={filteredStudents.map((item) => ({
+                    value: item.id,
+                    label: item.username,
+                  }))}
+                />
+              </label>
+              <label>
+                <DatePicker
+                  status={formStatus.dateStatus}
+                  disabled={!checked[1]}
+                  onChange={changeDate}
+                  placeholder='fecha de finalización'
+                />
+              </label>
+            </div>
+            <div className='checkboxes'>
+              <label>
+                <Checkbox
+                  checked={checked[0]}
+                  onChange={checkboxStudentsChanged}
+                >
+                  Seleccionar toda la clase
+                </Checkbox>
+              </label>
+              <label>
+                <Checkbox
+                  checked={checked[1]}
+                  onChange={(e) => setChecked(prevState => [prevState[0], e.target.checked])}
+                >
+                  Actividad evaluada
+                </Checkbox>
+              </label>
+            </div>
+            <span className='buttons'>
+              <Button htmlType='submit'>{isUpdateForm ? 'Actualizar actividad' : 'Agregar actividad'}</Button>
+            </span>
+          </form>
         </div>
-        <div className='checkboxes'>
-          <label>
-            <Checkbox
-              checked={checked[0]}
-              onChange={checkboxStudentsChanged}
-              style={{ color: colors.text }}
-            >
-              Seleccionar toda la clase
-            </Checkbox>
-          </label>
-          <label>
-            <Checkbox
-              checked={checked[1]}
-              onChange={(e) => setChecked(prevState => [prevState[0], e.target.checked])}
-              style={{ color: colors.text }}
-            >
-              Actividad evaluada
-            </Checkbox>
-          </label>
-        </div>
-        <span className='buttons'>
-          <Button htmlType='submit'>Agregar actividad</Button>
-        </span>
-      </form>
-    </div>
-  )
+      </Modal>
+    </>
+  );
 }
 
 export default ActivityForm;
