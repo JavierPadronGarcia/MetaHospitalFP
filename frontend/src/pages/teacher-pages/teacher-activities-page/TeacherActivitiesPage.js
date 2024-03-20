@@ -34,8 +34,8 @@ function TeacherActivitiesPage() {
     getAllExercises();
   }, [])
 
-  const handleDelete = (activityId, assigned, finishDate) => {
-    exercisesService.deleteExercise(id, workUnitId, activityId, assigned, finishDate).then(response => {
+  const handleDelete = (activityId) => {
+    exercisesService.deleteExercise(activityId).then(response => {
       message.success('Actividad eliminada correctamente', 2);
       getAllExercises();
     }).catch(err => {
@@ -53,13 +53,14 @@ function TeacherActivitiesPage() {
     assignedExercises.map(exercise => {
       return (
         <ActivityCard
-          key={exercise.id}
+          key={exercise.exerciseId}
           edit={true}
-          id={exercise.id}
+          caseId={exercise.id}
+          activityId={exercise.exerciseId}
           title={exercise.name}
           description={exercise.finishDate}
           assigned={true}
-          notifyDelete={(activityId, finishDate) => handleDelete(activityId, true, finishDate)}
+          notifyDelete={(activityId) => handleDelete(activityId)}
           notifyUpdateInfo={() => getAllExercises()}
         />
       )
@@ -70,12 +71,13 @@ function TeacherActivitiesPage() {
     unAssignedExercises.map(exercise => {
       return (
         <ActivityCard
-          key={exercise.id}
+          key={exercise.exerciseId}
           edit={true}
-          id={exercise.id}
+          caseId={exercise.id}
+          activityId={exercise.exerciseId}
           title={exercise.name}
           assigned={false}
-          notifyDelete={(activityId) => handleDelete(activityId, false)}
+          notifyDelete={(activityId) => handleDelete(activityId)}
           notifyUpdateInfo={() => getAllExercises()}
         />
       )
