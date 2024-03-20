@@ -8,8 +8,6 @@ const {
   addItemPlayerRoles
 } = require("../utils/seederUtils");
 
-const { itemCase } = require('../models')
-
 function setupData() {
   const cases = addCases(10);
   const items = addItems();
@@ -38,22 +36,12 @@ module.exports = {
 
     console.log('first stage completed...\n');
 
-    try {
-
-      for (const objeto of itemCases) {
-        const itemCreado = await itemCase.create(objeto);
-        console.log('Item creado:', itemCreado);
-      }
-
-      console.log('Inserciones completadas.');
-    } catch (error) {
-      console.error('Error al realizar las inserciones:', error);
-    }
-
     await Promise.all([
-      // queryInterface.bulkInsert('itemCases', itemCases),
+      queryInterface.bulkInsert('itemCases', itemCases),
       queryInterface.bulkInsert('ItemPlayerRoles', itemPlayerRoles)
     ]);
+
+    console.log('migration completed...\n');
 
   },
 

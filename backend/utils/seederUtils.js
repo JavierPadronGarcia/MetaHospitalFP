@@ -285,7 +285,7 @@ exports.addItemPlayerRoles = () => {
 exports.addItemCases = () => {
   const allCases = getCases(10);
 
-  return allCases.flatMap(({ id, Items }) =>
+  const allItemCases = allCases.flatMap(({ id, Items }) =>
     Items.map((itemId) => {
       const ItemID = Number(itemId) + 1;
       return {
@@ -296,4 +296,21 @@ exports.addItemCases = () => {
       }
     })
   );
+
+  return filterItemCasesDuplicates(allItemCases);
+}
+
+function filterItemCasesDuplicates(jsonArray) {
+  const uniqueSet = new Set();
+  const result = [];
+
+  jsonArray.forEach(obj => {
+    const key = obj.CaseID + '-' + obj.ItemID;
+    if (!uniqueSet.has(key)) {
+      result.push(obj);
+      uniqueSet.add(key);
+    }
+  });
+
+  return result;
 }
