@@ -1,5 +1,5 @@
 module.exports = app => {
-  const Messages = require('../../controllers/messages.controller');
+  const Messages = require('../../controllers/administration/messages.controller');
   const auth = require('../../controllers/roleManagement/auth');
 
   var router = require("express").Router();

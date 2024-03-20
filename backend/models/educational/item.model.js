@@ -5,13 +5,17 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    CaseID: {
-      type: Sequelize.INTEGER,
-    },
     name: {
       type: Sequelize.STRING,
       allowNull: false
     },
+    description: {
+      type: Sequelize.TEXT,
+    },
+    value: {
+      type: Sequelize.FLOAT,
+      default: 0
+    }
   })
   return Item;
 }

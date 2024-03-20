@@ -370,33 +370,9 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const { groupId, workUnitId, caseId, assigned, finishDate } = req.params;
-    const idsToDelete = [];
-    let formattedDate = null;
+    const { exerciseId } = req.params;
 
-    if (finishDate) formattedDate = dayjs(finishDate).format('YYYY-MM-DD HH:MM:SS');
-
-    const result = await db.sequelize.query(`
-      SELECT ex.id
-      FROM \`${Group.tableName}\` AS g
-      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id 
-      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
-      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
-      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
-      WHERE g.id = ${groupId} 
-      AND wku.id = ${workUnitId} 
-      AND ex.assigned = ${assigned}
-      AND ex.CaseID = ${caseId}
-      AND (ex.finishDate like '${formattedDate}' OR ex.finishDate IS NULL)
-    `, { type: db.Sequelize.QueryTypes.SELECT });
-
-    console.log(groupId, workUnitId, caseId, assigned, finishDate)
-
-    result.forEach(exercise => {
-      idsToDelete.push(exercise.id);
-    });
-
-    Exercise.destroy({ where: { id: idsToDelete } }).then(() => {
+    Exercise.destroy({ where: { id: exerciseId } }).then(() => {
       return res.send("Deletion Successful");
     }).catch(err => {
       return res.status(500).send({ error: err });

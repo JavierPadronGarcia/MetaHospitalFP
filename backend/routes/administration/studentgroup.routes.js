@@ -16,9 +16,6 @@ module.exports = app => {
   //retrieve the count of the students in a group
   router.get("/studentcount/group/:id", auth.isAuthenticated, studentGroup.getCountOfStudentsInGroup);
 
-  //retrieve all students ordered by group desc
-  router.get("/orderdesc", auth.isAuthenticated, studentGroup.findAllOrderedByGroupDesc);
-
   //retrieve all students not in this table
   router.get("/studentsnotinagroup", auth.isAuthenticated, studentGroup.findAllStudentsNotInAGroup);
 
@@ -31,5 +28,5 @@ module.exports = app => {
   //delete
   router.delete("/:userId/:groupId", auth.isAuthenticated, studentGroup.unAssignStudent);
 
-  app.use('/api/groupenrolement', router);
+  app.use('/api/studentgroup', router);
 }

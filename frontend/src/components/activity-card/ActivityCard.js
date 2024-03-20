@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 const { Meta } = Card;
 
-function ActivityCard({ edit, id, title, description, assigned, notifyDelete, notifyUpdateInfo }) {
+function ActivityCard({ edit, caseId, activityId, title, description, assigned, notifyDelete, notifyUpdateInfo }) {
   const [isOpen, setOpen] = useState(false);
   const params = useParams();
   const groupId = params.id;
@@ -16,7 +16,7 @@ function ActivityCard({ edit, id, title, description, assigned, notifyDelete, no
   if (edit) {
 
     const handleDelete = () => {
-      notifyDelete(id, description);
+      notifyDelete(activityId);
       setOpen(false);
     }
 
@@ -39,7 +39,7 @@ function ActivityCard({ edit, id, title, description, assigned, notifyDelete, no
           groupId={groupId}
           workUnitId={workUnitId}
           isUpdateForm={true}
-          updateFormContent={{ case: { id: id, name: title }, date: description, assigned: assigned }}
+          updateFormContent={{ case: { id: caseId, name: title }, date: description, assigned: assigned }}
           notifyUpdateInfo={() => notifyUpdateInfo()} />
       </div>
     )

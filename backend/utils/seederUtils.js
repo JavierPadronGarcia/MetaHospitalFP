@@ -1,3 +1,5 @@
+const { getCases, getItems } = require('./xslxReader');;
+
 exports.addRoles = (roles) => {
   const roleArray = roles.map((role, index) => ({
     id: index + 1,
@@ -102,6 +104,7 @@ exports.addStudentSchools = (dataArray) => {
     }))
   );
 };
+
 exports.getUserAccountsAndUserForRoles = (allUsers) => {
   const userAccounts = allUsers.map(user => ({
     id: user.id,
@@ -155,9 +158,9 @@ exports.replacePunctuationMarks = (str) => {
 };
 
 exports.addWorkUnits = (workUnits) => {
-  const workUnitsArray = workUnits.map((workUnit, index) => ({
-    id: index + 1,
-    name: workUnit,
+  const workUnitsArray = workUnits.map(workUnit => ({
+    id: workUnit.id,
+    name: workUnit.name,
     createdAt: new Date(),
     updatedAt: new Date()
   }));
@@ -194,18 +197,17 @@ exports.addWorkUnitGroups = (workUnitGroups) => {
   return workUnitGroupsArray;
 }
 
-exports.addCases = (data) => {
-  let idCounter = 1;
-  return data.flatMap(({ cases, workUnitID }) =>
-    cases.map((name, index) => ({
-      id: idCounter++,
-      WorkUnitID: workUnitID,
-      name,
-      caseNumber: index + 1,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }))
-  );
+exports.addCases = (workUnitId) => {
+  const casesFromExcel = getCases(workUnitId);
+
+  return casesFromExcel.map((eachCase, index) => ({
+    id: ++index,
+    WorkUnitID: eachCase.workUnitID,
+    name: eachCase.name,
+    caseNumber: eachCase.caseNumber,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }))
 };
 
 exports.addExercises = (exercises) => {
@@ -230,17 +232,16 @@ exports.addParticipations = (participations) => {
   return participationsArray;
 }
 
-exports.addItems = (data) => {
-  let idCounter = 1;
-  return data.flatMap(({ items, CaseId }) =>
-    items.map((item) => ({
-      id: idCounter++,
-      CaseID: CaseId,
-      name: item,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }))
-  );
+exports.addItems = () => {
+  const items = getItems();
+  return items.map(item => ({
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    value: item.value,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }))
 };
 
 exports.addGrades = (data) => {
@@ -258,25 +259,58 @@ exports.addGrades = (data) => {
 };
 
 exports.addPlayerRoles = (playerRoles) => {
-  const playerRoleArray = playerRoles.map((playerRole, index) => ({
-    id: index + 1,
+  return playerRoles.map((playerRole, index) => ({
+    id: ++index,
     name: playerRole,
     createdAt: new Date(),
     updatedAt: new Date()
   }));
-  return playerRoleArray;
 }
 
-exports.addItemPlayerRoles = (data) => {
-  let idCounter = 1;
+exports.addItemPlayerRoles = () => {
+  const allItems = getItems();
+  let index = 1;
 
-  return data.flatMap(({ playerRoles, ItemID }) =>
-    playerRoles.map((playerRoleId) => ({
-      id: idCounter++,
-      ItemID: ItemID,
+  return allItems.flatMap(({ id, roles }) =>
+    roles.map((playerRoleId) => ({
+      id: index++,
+      ItemID: id,
       PlayerRoleID: playerRoleId,
       createdAt: new Date(),
       updatedAt: new Date()
     }))
   );
+}
+
+exports.addItemCases = () => {
+  const allCases = getCases(10);
+
+  const allItemCases = allCases.flatMap(({ id, Items }) =>
+    Items.map((itemId) => {
+      const ItemID = Number(itemId) + 1;
+      return {
+        CaseID: id,
+        ItemID: ItemID,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    })
+  );
+
+  return filterItemCasesDuplicates(allItemCases);
+}
+
+function filterItemCasesDuplicates(jsonArray) {
+  const uniqueSet = new Set();
+  const result = [];
+
+  jsonArray.forEach(obj => {
+    const key = obj.CaseID + '-' + obj.ItemID;
+    if (!uniqueSet.has(key)) {
+      result.push(obj);
+      uniqueSet.add(key);
+    }
+  });
+
+  return result;
 }
