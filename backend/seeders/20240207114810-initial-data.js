@@ -49,7 +49,7 @@ function setupData() {
 
   const applications = addApplications(['Metahospital']);
 
-  const schools = addSchools(['IES Los Gladiolos']);
+  const schools = addSchools(['CIFP Los Gladiolos']);
 
   const allusers = setAllUsers();
 

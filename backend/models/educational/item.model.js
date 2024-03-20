@@ -9,6 +9,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
+    description: {
+      type: Sequelize.TEXT,
+    },
+    value: {
+      type: Sequelize.FLOAT,
+      default: 0
+    }
   })
   return Item;
 }
