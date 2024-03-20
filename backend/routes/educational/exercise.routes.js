@@ -37,7 +37,7 @@ module.exports = app => {
   router.put("/updateExercises", auth.isAuthenticated, exercises.update);
 
   //delete an exercise with given id and filtered with assigned
-  router.delete("/:groupId/:workUnitId/:caseId/:assigned/:finishDate", auth.isAuthenticated, exercises.delete);
+  router.delete("/:exerciseId", auth.isAuthenticated, exercises.delete);
 
   app.use('/api/exercises', router);
 };
