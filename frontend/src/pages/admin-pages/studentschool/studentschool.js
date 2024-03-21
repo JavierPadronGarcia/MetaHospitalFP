@@ -131,7 +131,7 @@ function StudentSchools() {
         <Menu2 />
         <Tag name="Estudiantes" />
         <BasicList items={students} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} />
-        <FloatingExcelButton data={students}></FloatingExcelButton>
+        <FloatingExcelButton data={students} name='studentReport'></FloatingExcelButton>
         <PopForm renderInputs={renderSchoolImputs} cancel={cancel} onSubmit={onSubmit} />
       </div>
       <div className='container-right'>
