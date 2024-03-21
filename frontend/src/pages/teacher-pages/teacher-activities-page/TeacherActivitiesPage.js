@@ -1,6 +1,6 @@
 import './TeacherActivitiesPage.css';
 import { useParams } from 'react-router-dom';
-import Add from '../../../components/add/Add';
+import ActivityForm from '../../../components/activity-form/ActivityForm';
 import ActivityCard from '../../../components/activity-card/ActivityCard';
 import { useEffect, useState } from 'react';
 import exercisesService from '../../../services/exercises.service';
@@ -34,8 +34,8 @@ function TeacherActivitiesPage() {
     getAllExercises();
   }, [])
 
-  const handleDelete = (activityId, assigned, finishDate) => {
-    exercisesService.deleteExercise(id, workUnitId, activityId, assigned, finishDate).then(response => {
+  const handleDelete = (activityId) => {
+    exercisesService.deleteExercise(activityId).then(response => {
       message.success('Actividad eliminada correctamente', 2);
       getAllExercises();
     }).catch(err => {
@@ -53,13 +53,14 @@ function TeacherActivitiesPage() {
     assignedExercises.map(exercise => {
       return (
         <ActivityCard
-          key={exercise.id}
+          key={exercise.exerciseId}
           edit={true}
-          id={exercise.id}
+          caseId={exercise.id}
+          activityId={exercise.exerciseId}
           title={exercise.name}
           description={exercise.finishDate}
           assigned={true}
-          notifyDelete={(activityId, finishDate) => handleDelete(activityId, true, finishDate)}
+          notifyDelete={(activityId) => handleDelete(activityId)}
           notifyUpdateInfo={() => getAllExercises()}
         />
       )
@@ -70,12 +71,13 @@ function TeacherActivitiesPage() {
     unAssignedExercises.map(exercise => {
       return (
         <ActivityCard
-          key={exercise.id}
+          key={exercise.exerciseId}
           edit={true}
-          id={exercise.id}
+          caseId={exercise.id}
+          activityId={exercise.exerciseId}
           title={exercise.name}
           assigned={false}
-          notifyDelete={(activityId) => handleDelete(activityId, false)}
+          notifyDelete={(activityId) => handleDelete(activityId)}
           notifyUpdateInfo={() => getAllExercises()}
         />
       )
@@ -89,10 +91,6 @@ function TeacherActivitiesPage() {
         <div style={{ background: colors.primaryColor }} className='activity-section'>
           <header>
             <span className='workUnitName' style={{ color: colors.text }}>{workUnitName}</span>
-            <Add
-              link={`./add`}
-              colors={{ background: colors.secondaryColor, text: colors.text }}
-            />
           </header>
           <main>
 
@@ -116,6 +114,7 @@ function TeacherActivitiesPage() {
 
           </main>
         </div>
+        <ActivityForm groupId={id} workUnitId={workUnitId} />
       </div>
     </div>
   );

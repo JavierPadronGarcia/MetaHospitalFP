@@ -1,17 +1,21 @@
-import ProfileHeader from "../../components/profileheader/profileheader";
-import { useRef, useState, useEffect } from "react";
+import { Button, Input, notification } from "antd";
+import dayjs from "dayjs";
 import { jwtDecode } from 'jwt-decode';
-import usersService from '../../services/users.service';
-import { Input, Button, notification } from "antd";
-import AuthCodeGenerator from "../../components/auth-code-generator/AuthCodeGenerator";
-import "./profile.css";
+import { useEffect, useRef, useState } from "react";
+import ProfileHeader from "../../components/profileheader/profileheader";
 import authService from "../../services/auth.service";
+import usersService from '../../services/users.service';
 import { errorMessage, noConnectionError } from '../../utils/shared/errorHandler';
+import "./profile.css";
 
 const UserProfilePage = () => {
   const passwordRef = useRef(null);
   const [user, setUser] = useState(null);
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const handleChangePassword = (e) => {
     e.preventDefault();
@@ -25,12 +29,19 @@ const UserProfilePage = () => {
     });
   };
 
+  const generateCode = () => {
+    usersService.assignCode().then(newCode => {
+      getUserInfo();
+    });
+  };
+
   const getUserInfo = async () => {
     try {
       const token = localStorage.getItem('token');
       const tokenDecoded = jwtDecode(token);
-      const user = await usersService.getUserById(tokenDecoded.id);
-      setUser(user);
+      const newUser = await usersService.getUserById(tokenDecoded.id);
+      setUser(newUser);
+
     } catch (err) {
       if (!err.response) {
         noConnectionError();
@@ -42,10 +53,6 @@ const UserProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
   return (
     <>
       <ProfileHeader user={user} updateUserInfo={getUserInfo} />
@@ -53,7 +60,16 @@ const UserProfilePage = () => {
         <div className="username">{user?.name}</div>
         <div className="floating-container">
           <div className="auth-code-header">Código de autentificación</div>
-          <AuthCodeGenerator />
+          <div className="auth-code-container">
+            {(user && user.code) && <>
+              <div>Codigo: {user.code}</div>
+              {user.codeExpirationDate && <div>Expiración: {dayjs(user.codeExpirationDate).format('DD-MM-YYYY')}</div>}
+            </>}
+            {(user && !user.code) && <>
+              <div>No hay codigo generado</div>
+              <Button onClick={generateCode} type="primary" className="generate-button">Generar codigo</Button>
+            </>}
+          </div>
           <form className="form-container" onSubmit={handleChangePassword}>
             <h2>Cambiar contraseña</h2>
             <div className="input-password">

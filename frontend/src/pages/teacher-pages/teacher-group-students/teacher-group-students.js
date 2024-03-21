@@ -15,7 +15,7 @@ const TeacherGroupStudents = () => {
     const [studentsInGroup, setstudentsInGroup] = useState({});
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedStudentId, setSelectedStudentId] = useState(null);
-    const Headlines = ['Nombre'];
+    const Headlines = ['Nombre', 'Codigo'];
 
     const getStudents = async () => {
         try {
@@ -37,6 +37,7 @@ const TeacherGroupStudents = () => {
 
     useEffect(() => {
         getStudentsInGroup();
+        console.log(studentsInGroup);
         getStudents();
     }, []);
 
@@ -69,6 +70,7 @@ const TeacherGroupStudents = () => {
     const renderStudentsRow = (student) => (
         <>
             <td>{student.name}</td>
+            <td>{student.UserAccount.code}</td>
         </>
     );
 
@@ -117,7 +119,7 @@ const TeacherGroupStudents = () => {
     return (
         <div>
             <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
-            <BasicList items={studentsInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} />
+            <BasicList items={studentsInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} password={true} />
             <PopForm renderInputs={renderSchoolInputs} onSubmit={onSubmit} cancel={Cancel} />
         </div>
     );
