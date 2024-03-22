@@ -64,6 +64,40 @@ exports.addStudentToSchool = async (req, res) => {
   }
 };
 
+exports.AssignStudentToSchool = async (schoolId, studentId, res) => {
+  try {
+    const student = await Student.findOne({
+      where: {
+        id: studentId,
+      },
+    });
+
+    if (!student) {
+      return res.status(404).send({ error: true, message: "Usuario no encontrado" });
+    }
+
+    const newStudent = await StudentSchool.create({
+      StudentID: studentId,
+      SchoolID: schoolId
+    });
+
+    if (res && res.send) {
+      return res.send(newStudent);
+    } else {
+      console.log("Response object not properly defined");
+    }
+  } catch (error) {
+    console.error(error);
+    if (res && res.status && res.send) {
+      return res.status(500).send({ error: true, message: "Error del servidor. No se pudo agregar al estudiante a la escuela." });
+    } else {
+      console.log("Response object not properly defined");
+    }
+  }
+};
+
+
+
 exports.deleteStudentFromSchool = async (req, res) => {
   const userId = req.params.userId;
   const schoolId = req.params.schoolId;

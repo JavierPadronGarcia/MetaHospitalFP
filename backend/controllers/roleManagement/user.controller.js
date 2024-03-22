@@ -16,54 +16,7 @@ const path = require('path');
 const teacherController = require('./teacher.controller');
 const studentController = require('./student.controller');
 const adminController = require('./admin.controller');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    type: "OAuth2",
-    user: process.env.USER_MAIL,
-    clientId: process.env.CLIENT_ID_MAIL,
-    clientSecret: process.env.CLIENT_SECRET_MAIL,
-    refreshToken: process.env.REFRESH_TOKEN_MAIL,
-  }
-});
-
-function enviarCorreo(destinatario, asunto) {
-
-  const rutaArchivoHTML = path.join(__dirname, '..', 'mail', 'mail.html');
-
-  fs.readFile(rutaArchivoHTML, 'utf8', function (err, data) {
-    if (err) {
-      console.error('Error al leer el archivo HTML:', err);
-      return;
-    }
-
-    const htmlContent = data.replace('{{destinatario}}', destinatario);
-
-    const mailOptions = {
-      from: 'pruebas.jcll@gmail.com',
-      to: destinatario,
-      subject: asunto,
-      html: htmlContent,
-      attachments: [
-        {
-          filename: 'Icon.png',
-          path: 'controllers/mail/Icon.png',
-          cid: 'Icon'
-        }
-      ]
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.error('Error al enviar el correo:', error);
-      } else {
-        console.log('Correo enviado:', info.response);
-      }
-    });
-  });
-}
+const enviarCorreo = require('../mail/mail.controller');
 
 exports.create = async (req, res) => {
 
@@ -118,7 +71,7 @@ exports.create = async (req, res) => {
         break;
     }
 
-    enviarCorreo(user.username,'Se le Ha dado de alta en MetaHospitalFP','Bienvenido a MetaHospitalFP tu contraseña es metahospitalfp, para cambiar contraseña puedes entrar y desde tu perfil cambiarla');
+    // enviarCorreo(user.username,'Se le Ha dado de alta en MetaHospitalFP');
 
   } else {
     return res.status(500).send({
