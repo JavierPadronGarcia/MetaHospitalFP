@@ -5,20 +5,30 @@ const excelFilePath = path.join(__dirname, 'Ejercicios UT 10.xlsx');
 
 const workbook = XLSX.readFile(excelFilePath);
 
-function getWorkSheet(index) {
-  const workSheetName = workbook.SheetNames[index];
-  return XLSX.utils.sheet_to_json(workbook.Sheets[workSheetName]);
+function getWorkSheet(index, wb = workbook) {
+  const workSheetName = wb.SheetNames[index];
+  return XLSX.utils.sheet_to_json(wb.Sheets[workSheetName]);
 }
 
-exports.getItems = () => {
+exports.getItems = (workUnitId) => {
 
-  const interactions = getWorkSheet(1);
+  let interactions;
+
+  if (workUnitId === 10) {
+    const excelFilePathU10 = path.join(__dirname, 'Ejercicios UT 10.xlsx');
+    const wb = XLSX.readFile(excelFilePathU10);
+    interactions = getWorkSheet(1, wb);
+  } else if (workUnitId === 6) {
+    const excelFilePathU6 = path.join(__dirname, 'Ejercicios UT 6.xlsx');
+    const wb = XLSX.readFile(excelFilePathU6);
+    interactions = getWorkSheet(1, wb);
+  }
 
   return interactions.map(interaction => ({
-    id: Number(interaction.ID.replace('int', '')) + 1,
-    name: interaction.Interacciones,
+    name: interaction.Interacciones || interaction.Interaccion,
     value: interaction.Nota,
-    description: interaction['Descripción'],
+    itemNumber: Number(interaction.ID.replace('int', '')) + 1,
+    description: interaction['Descripción'] || interaction['Descripcion'],
     roles: parseRoles((interaction.Rol.toString()).split('_'))
   }))
 

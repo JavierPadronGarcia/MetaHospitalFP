@@ -96,6 +96,9 @@ db.groups.hasMany(db.workUnitGroup, { foreignKey: 'GroupID' });
 db.workUnit.hasMany(db.workUnitGroup, { foreignKey: 'WorkUnitID' });
 db.workUnit.hasMany(db.case, { foreignKey: 'WorkUnitID' });
 
+db.workUnit.hasMany(db.item, {foreignKey:'WorkUnitID'});
+db.item.belongsTo(db.workUnit, {foreignKey: 'WorkUnitID'});
+
 db.workUnitGroup.belongsTo(db.workUnit, { foreignKey: 'WorkUnitID' });
 
 db.color.hasMany(db.workUnitColor, { foreignKey: 'ColorID' });

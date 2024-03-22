@@ -1,4 +1,4 @@
-const { getCases, getItems } = require('./xslxReader');;
+const { getCases, getItems } = require('./xslxReader');
 
 exports.addRoles = (roles) => {
   const roleArray = roles.map((role, index) => ({
@@ -233,13 +233,14 @@ exports.addParticipations = (participations) => {
   return participationsArray;
 }
 
-exports.addItems = () => {
-  const items = getItems();
+exports.addItems = (workUnitId) => {
+  const items = getItems(workUnitId);
   return items.map(item => ({
-    id: item.id,
     name: item.name,
+    itemNumber: item.itemNumber,
     description: item.description,
     value: item.value,
+    WorkUnitID: workUnitId,
     createdAt: new Date(),
     updatedAt: new Date()
   }))
@@ -269,7 +270,7 @@ exports.addPlayerRoles = (playerRoles) => {
 }
 
 exports.addItemPlayerRoles = () => {
-  const allItems = getItems();
+  const allItems = getItems(10);
   let index = 1;
 
   return allItems.flatMap(({ id, roles }) =>
