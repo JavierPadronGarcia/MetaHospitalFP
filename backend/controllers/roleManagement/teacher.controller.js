@@ -7,9 +7,10 @@ const Teacher = db.teacher;
 const TeacherGroup = db.teacherGroup;
 const UserAccount = db.userAccounts;
 const Op = db.Sequelize.Op;
+const TeacherToSchool = require("../administration/teacherschool.controller")
 
 exports.create = (req, res) => {
-  const { userId, name, age, isDirector } = req.body;
+  const { userId, name, age, isDirector, schoolId } = req.body;
 
   if (!userId || !name) {
     return res.status(400).send({
@@ -26,6 +27,7 @@ exports.create = (req, res) => {
   }
 
   Teacher.create(newTeacher).then(teacher => {
+    TeacherToSchool.AssignTeacherToSchool(userId, schoolId)
     return res.send(teacher);
   }).catch(err => {
     return res.status(500).send({
@@ -36,7 +38,6 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-
   Teacher.findAll({
     include: [
       { model: TeacherGroup },
