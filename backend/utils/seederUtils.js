@@ -201,8 +201,7 @@ exports.addWorkUnitGroups = (workUnitGroups) => {
 exports.addCases = (workUnitId) => {
   const casesFromExcel = getCases(workUnitId);
 
-  return casesFromExcel.map((eachCase, index) => ({
-    id: ++index,
+  return casesFromExcel.map((eachCase) => ({
     WorkUnitID: eachCase.workUnitID,
     name: eachCase.name,
     caseNumber: eachCase.caseNumber,
@@ -284,30 +283,29 @@ exports.addItemPlayerRoles = () => {
   );
 }
 
-exports.addItemCases = () => {
-  const allCases = getCases(10);
+exports.addItemNumberCaseNumbers = (workUnitId) => {
+  const allCases = getCases(workUnitId);
 
-  const allItemCases = allCases.flatMap(({ id, Items }) =>
-    Items.map((itemId) => {
-      const ItemID = Number(itemId) + 1;
+  const allItemNumberCaseNumbers = allCases.flatMap(({ caseNumber, Items }) =>
+    Items.map((itemNumber) => {
       return {
-        CaseID: id,
-        ItemID: ItemID,
+        caseNumber: Number(caseNumber),
+        itemNumber: Number(itemNumber) + 1,
         createdAt: new Date(),
         updatedAt: new Date()
       }
     })
   );
 
-  return filterItemCasesDuplicates(allItemCases);
+  return filterItemNumberCaseNumbersDuplicates(allItemNumberCaseNumbers);
 }
 
-function filterItemCasesDuplicates(jsonArray) {
+function filterItemNumberCaseNumbersDuplicates(jsonArray) {
   const uniqueSet = new Set();
   const result = [];
 
   jsonArray.forEach(obj => {
-    const key = obj.CaseID + '-' + obj.ItemID;
+    const key = obj.caseNumber + '-' + obj.itemNumber;
     if (!uniqueSet.has(key)) {
       result.push(obj);
       uniqueSet.add(key);

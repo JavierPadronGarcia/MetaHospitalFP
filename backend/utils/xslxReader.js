@@ -10,19 +10,22 @@ function getWorkSheet(index, wb = workbook) {
   return XLSX.utils.sheet_to_json(wb.Sheets[workSheetName]);
 }
 
+function readFile(workUnitId) {
+  switch (workUnitId) {
+    case 10:
+      const excelFilePathU10 = path.join(__dirname, 'Ejercicios UT 10.xlsx');
+      return XLSX.readFile(excelFilePathU10);
+    case 6:
+      const excelFilePathU6 = path.join(__dirname, 'Ejercicios UT 6.xlsx');
+      return XLSX.readFile(excelFilePathU6);
+    default:
+      return;
+  }
+}
 exports.getItems = (workUnitId) => {
 
-  let interactions;
-
-  if (workUnitId === 10) {
-    const excelFilePathU10 = path.join(__dirname, 'Ejercicios UT 10.xlsx');
-    const wb = XLSX.readFile(excelFilePathU10);
-    interactions = getWorkSheet(1, wb);
-  } else if (workUnitId === 6) {
-    const excelFilePathU6 = path.join(__dirname, 'Ejercicios UT 6.xlsx');
-    const wb = XLSX.readFile(excelFilePathU6);
-    interactions = getWorkSheet(1, wb);
-  }
+  const wb = readFile(workUnitId);
+  const interactions = getWorkSheet(1, wb);
 
   return interactions.map(interaction => ({
     name: interaction.Interacciones || interaction.Interaccion,
@@ -42,7 +45,9 @@ exports.getItems = (workUnitId) => {
 }
 
 exports.getCases = (workUnitId) => {
-  const cases = getWorkSheet(0);
+
+  const wb = readFile(workUnitId);
+  const cases = getWorkSheet(0, wb);
 
   return cases.map((eachCase, index) => {
     let items = '';
@@ -63,7 +68,6 @@ exports.getCases = (workUnitId) => {
     eachCase['Items'] = (items.slice(0, -1)).split('_');
 
     return {
-      id: ++index,
       name: eachCase.Ejercicio,
       workUnitID: workUnitId,
       caseNumber: eachCase.ID,
