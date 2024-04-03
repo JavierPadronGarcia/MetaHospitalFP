@@ -5,9 +5,10 @@ const Role = db.role;
 const UserRole = db.userRole;
 const Student = db.student;
 const Op = db.Sequelize.Op;
+const StudentToSchool = require("../administration/studentschool.controller");
 
 exports.create = (req, res) => {
-  const { userId, name, age } = req.body;
+  const { userId, name, age, schoolId } = req.body;
 
   if (!userId || !name) {
     return res.status(400).send({
@@ -19,10 +20,11 @@ exports.create = (req, res) => {
   const newStudent = {
     id: userId,
     name: name,
-    age: age || null
+    age: age || null,
   }
 
   Student.create(newStudent).then(student => {
+    StudentToSchool.AssignStudentToSchool(schoolId, userId);
     return res.send(student);
   }).catch(err => {
     return res.status(500).send({
@@ -30,6 +32,7 @@ exports.create = (req, res) => {
       message: 'error creating a new student'
     })
   })
+
 }
 
 exports.findAll = (req, res) => {

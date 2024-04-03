@@ -19,6 +19,7 @@ function UserAdmin() {
   const [Id, setId] = useState('');
   const [role, setRole] = useState('student');
   const Headlines = ['Imagen', 'Nombre', 'Email', 'Escuela', 'Identificador'];
+  const [schoolId,setSchoolId] = useState();
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
