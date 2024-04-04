@@ -163,11 +163,12 @@ async function updateUserWithImage(newUsername, newImage, prevImageName) {
 }
 
 
-async function updateUserWithoutImage(newUsername, userId, newUserRole, newName) {
+async function updateUserWithoutImage(newUsername, userId, newUserRole, newName, newSchoolId) {
   try {
     if (!newUsername) newUserRole = ''
     if (!newUserRole) newUserRole = ''
     if (!newName) newName = ''
+    if (!newSchoolId) newSchoolId = ''
 
     const token = localStorage.getItem('token');
 
@@ -175,6 +176,7 @@ async function updateUserWithoutImage(newUsername, userId, newUserRole, newName)
     body.append('username', newUsername);
     body.append('role', newUserRole);
     body.append('name', newName);
+    body.append('schoolId', newSchoolId);
 
     const response = await axios.put(`${backendUsersEndpoint}/noimage/${userId}`,
       body,
