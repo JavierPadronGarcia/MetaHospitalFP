@@ -96,7 +96,27 @@ exports.AssignStudentToSchool = async (schoolId, studentId, res) => {
   }
 };
 
+exports.updateStudentSchoolById = async (studentId, schoolId) => {
+  try {
+    if (schoolId === '') {
+      await StudentSchool.destroy({ where: { StudentID: studentId } });
 
+    } else {
+      let studentSchool = await StudentSchool.findOne({ where: { StudentID: studentId } });
+
+      if (!studentSchool) {
+        await StudentSchool.create({ StudentID: studentId, SchoolID: schoolId });
+      } else {
+        await StudentSchool.update(
+          { SchoolID: schoolId },
+          { where: { StudentID: studentId } }
+        );
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 exports.deleteStudentFromSchool = async (req, res) => {
   const userId = req.params.userId;

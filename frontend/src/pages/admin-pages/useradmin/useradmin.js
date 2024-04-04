@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BasicList from '../../../components/basiclist/basiclist';
 import usersService from '../../../services/users.service';
+import schoolService from '../../../services/schools.service'
 import Menu from '../../../components/menu/menu';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
 import { Input, Select, Avatar, message } from 'antd';
@@ -14,19 +15,23 @@ import { noConnectionError } from '../../../utils/shared/errorHandler';
 
 function UserAdmin() {
   const [users, setUsers] = useState([]);
+  const [schools, setSchools] = useState([]);
+  const [selectedSchool, setSelectedSchool] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [Id, setId] = useState('');
   const [role, setRole] = useState('student');
   const Headlines = ['Imagen', 'Nombre', 'Email', 'Escuela', 'Identificador'];
-  const [schoolId,setSchoolId] = useState();
+  const [schoolId, setSchoolId] = useState();
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
 
+  const { Option } = Select;
 
   useEffect(() => {
     getUsers();
+    getSchools();
   }, []);
 
   const optionRole = [
@@ -50,9 +55,24 @@ function UserAdmin() {
     }
   };
 
+  const getSchools = async () => {
+    try {
+      const schoolsResponse = await schoolService.getSchools();
+      setSchools(schoolsResponse);
+      console.log(schoolsResponse);
+    } catch (err) {
+      console.log("Error fetching schools:", err);
+    }
+  }
+
   const navigateSchool = (id, name) => {
     localStorage.setItem('schoolId', id);
     localStorage.setItem('schoolName', name)
+  }
+
+  const getSchoolsname = (id) => {
+    const school = schools.find(school => school.id === id);
+    return school ? school.name : '---';
   }
 
   const renderUserRow = (user) => (
@@ -61,13 +81,28 @@ function UserAdmin() {
         src={`${process.env.REACT_APP_BACKEND_URL}/images/${user.filename}`} alt="avatar" /></td>
       <td>{user.name}</td>
       <td>{user.username}</td>
-      {user.schoolId
-        ? <td><Link onClick={() => navigateSchool(user.schoolId, user.schoolName)} to='/admin/school' >{user.schoolName}</Link></td>
-        : <td>---</td>
-      }
+      {user.schoolId ? (
+        <td>
+          <Link onClick={() => navigateSchool(user.schoolId, user.schoolName)} to='/admin/school'>
+            {user.schoolName}
+          </Link>
+        </td>
+      ) : user.Admin && user.Admin.SchoolID ? (
+        <td>
+          <Link onClick={() => navigateSchool(user.Admin.SchoolID, user.schoolName)} to='/admin/school'>
+            {getSchoolsname(user.Admin.SchoolID)}
+          </Link>
+        </td>
+      ) : (
+        <td>---</td>
+      )}
       <td>{user.role}</td>
     </>
   );
+
+  const handleSchoolChange = (value) => {
+    setSelectedSchool(value);
+  }
 
   const renderUserImputs = () => (
     <>
@@ -86,6 +121,17 @@ function UserAdmin() {
         value={role}
         options={optionRole}
         onChange={handleChange} />
+      <p>School</p>
+      <Select
+        placeholder="Select School"
+        value={selectedSchool}
+        onChange={handleSchoolChange}
+      >
+        <Option value="">Select School</Option>
+        {schools.map(school => (
+          <Option key={school.id} value={school.id}>{school.name}</Option>
+        ))}
+      </Select>
     </>
   );
 
@@ -115,6 +161,7 @@ function UserAdmin() {
     setEmail(userToEdit.username);
     setRole(userToEdit.role);
     setMode(Consts.EDIT_MODE);
+    setSelectedSchool(userToEdit.schoolId);
   }
 
   const onSubmit = async () => {
@@ -125,13 +172,8 @@ function UserAdmin() {
       }
 
       if (mode === Consts.EDIT_MODE) {
-        const userToEdit = users.find(user => user.id === Id);
 
-        userToEdit.name = name;
-        userToEdit.username = email;
-        userToEdit.role = role;
-
-        await usersService.updateUserWithoutImage(email, Id, role, name);
+        await usersService.updateUserWithoutImage(email, Id, role, name, selectedSchool);
 
         message.success('Usuario actualizado correctamente');
         cleanInputs();
@@ -139,7 +181,7 @@ function UserAdmin() {
         getUsers();
       } else {
 
-        await usersService.createNewUser({ name: name, role: role, }, email);
+        await usersService.createNewUser({ name: name, role: role, schoolId: selectedSchool }, email);
 
         cleanInputs();
         message.success('Usuario creado correctamente');
@@ -161,6 +203,7 @@ function UserAdmin() {
     setEmail('');
     setName('');
     setRole('student');
+    setSelectedSchool('');
   }
 
   const Cancel = () => {
@@ -168,6 +211,7 @@ function UserAdmin() {
     setName('');
     setEmail('');
     setRole('Estudiante');
+    setSelectedSchool('');
   }
 
   return (
