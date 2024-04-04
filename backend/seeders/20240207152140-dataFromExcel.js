@@ -4,12 +4,14 @@ const db = require('../models');
 const Item = db.item;
 const Case = db.case;
 const WorkUnit = db.workUnit;
+const Role = db.role;
 const Op = db.Sequelize.Op;
 
 const {
   addCases,
   addItems,
   addItemNumberCaseNumbers,
+  addItemPlayerRolesNumbers,
   addPlayerRoles,
   addItemPlayerRoles,
 } = require("../utils/seederUtils");
@@ -32,6 +34,20 @@ async function getCasesAndItemsByWorkUnit() {
   return casesAndItemsByWorkUnit.map(result => result.get({ plain: true }));
 }
 
+async function getItemsByWorkUnit() {
+  const itemsByWorkUnit = await WorkUnit.findAll({
+    include: [
+      { model: Item, required: true }
+    ]
+  })
+  return itemsByWorkUnit.map(result => result.get({ plain: true }));
+}
+
+async function getRoles() {
+  const roles = await Role.findAll({});
+  return roles.map(result => result.get({ plain: true }));
+}
+
 async function buildItemCases() {
   const itemCases = [];
 
@@ -41,7 +57,6 @@ async function buildItemCases() {
   ];
 
   const itemsAndCasesByWorkUnit = await getCasesAndItemsByWorkUnit();
-  let testDAta = [];
 
   itemNumberCaseNumbers.forEach(data => {
     const itemAndCasesFound = itemsAndCasesByWorkUnit.find(element => element.id === data.workUnit);
@@ -51,7 +66,6 @@ async function buildItemCases() {
       itemCasesNumbers.forEach(({ caseNumber, itemNumber }) => {
         const itemFound = itemAndCasesFound.items.find(itemToFind => itemNumber === itemToFind.itemNumber);
         const caseFound = itemAndCasesFound.cases.find(caseToFind => caseNumber === caseToFind.caseNumber);
-        testDAta.push({ itemFound, caseFound });
         if (itemFound && caseFound) {
           itemCases.push({
             ItemID: itemFound.id,
@@ -66,6 +80,38 @@ async function buildItemCases() {
   return itemCases;
 }
 
+async function buildItemPlayerRoles() {
+  const itemPlayerRoles = [];
+  const itemPlayerRolesNumbers = [
+    { workUnit: 10, content: addItemPlayerRolesNumbers(10) }
+  ]
+
+  const itemsByWorkUnit = await getItemsByWorkUnit();
+  const allRoles = await getRoles();
+
+  itemPlayerRolesNumbers.forEach(data => {
+    const itemsFound = itemsByWorkUnit.items.find(element => element.id === data.workUnit);
+    const itemRolesNumbers = data.content;
+
+    if (itemsFound) {
+      itemRolesNumbers.forEach(({ itemNumber, roleNumber }) => {
+        const itemFound = itemRolesNumbers.items.find(itemToFind);
+        const roleFound = allRoles.find(role => role.id === roleNumber);
+
+        if (itemFound && roleFound) {
+          itemPlayerRoles.push({
+            ItemID: itemFound.id,
+            PlayerRoleID: roleFound.id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          })
+        }
+      })
+    }
+  })
+  return itemPlayerRoles;
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
 
@@ -73,11 +119,10 @@ module.exports = {
       cases,
       items,
       playerRoles,
-      itemPlayerRoles
     } = setupData();
 
     console.log('\ndata setup completed...\n');
-    
+
     await Promise.all([
       queryInterface.bulkInsert('items', items),
       queryInterface.bulkInsert('cases', cases),
@@ -87,12 +132,14 @@ module.exports = {
     console.log('first stage completed...\n');
 
     const itemCases = await buildItemCases();
-    await queryInterface.bulkInsert('itemCases', itemCases)
+    const itemPlayerRoles = await buildItemPlayerRoles();
 
-    // await Promise.all([
-    //   queryInterface.bulkInsert('itemCases', itemCases),
-    //   queryInterface.bulkInsert('ItemPlayerRoles', itemPlayerRoles)
-    // ]);
+    // await queryInterface.bulkInsert('itemCases', itemCases);
+
+    await Promise.all([
+      queryInterface.bulkInsert('itemCases', itemCases),
+      queryInterface.bulkInsert('ItemPlayerRoles', itemPlayerRoles)
+    ]);
 
     console.log('migration completed...\n');
 

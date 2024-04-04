@@ -300,6 +300,23 @@ exports.addItemNumberCaseNumbers = (workUnitId) => {
   return filterItemNumberCaseNumbersDuplicates(allItemNumberCaseNumbers);
 }
 
+exports.addItemPlayerRolesNumbers = (workUnitId) => {
+  const allItems = getItems(workUnitId);
+
+  const allItemPlayerRolesNumbers = allItems.flatMap(({ itemNumber, roles }) =>
+    roles.map((roleNumber => {
+      return {
+        itemNumber: Number(itemNumber),
+        roleNumber: Number(roleNumber),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    }))
+  )
+
+  return allItemPlayerRolesNumbers
+}
+
 function filterItemNumberCaseNumbersDuplicates(jsonArray) {
   const uniqueSet = new Set();
   const result = [];
