@@ -3,13 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: 'mail.s1969.sureserver.com',
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
-    type: "OAuth2",
     user: process.env.USER_MAIL,
-    clientId: process.env.CLIENT_ID_MAIL,
-    clientSecret: process.env.CLIENT_SECRET_MAIL,
-    refreshToken: process.env.REFRESH_TOKEN_MAIL,
+    pass: process.env.PASSWORD_MAIL
   }
 });
 
@@ -26,7 +26,7 @@ function enviarCorreo(destinatario, asunto) {
     const htmlContent = data.replace('{{destinatario}}', destinatario);
 
     const mailOptions = {
-      from: 'pruebas.jcll@gmail.com',
+      from: process.env.USER_MAIL,
       to: destinatario,
       subject: asunto,
       html: htmlContent,
