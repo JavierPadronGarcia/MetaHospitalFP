@@ -314,10 +314,10 @@ exports.update = async (req, res) => {
         }
         break;
       case 'teacher':
-        TeacherToSchool.updateTeacherSchoolById(userFound.id, req.body.schoolId);
+        await TeacherToSchool.updateTeacherSchoolById(userFound.id, req.body.schoolId);
         break;
       case 'student':
-        StudentToSchool.updateStudentSchoolById(userFound.id, req.body.schoolId);
+        await StudentToSchool.updateStudentSchoolById(userFound.id, req.body.schoolId);
         break;
     }
   }

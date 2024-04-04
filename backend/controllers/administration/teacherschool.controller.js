@@ -114,16 +114,11 @@ exports.deleteTeacherFromSchool = async (req, res) => {
   }
 };
 
-exports.updateTeacherSchoolById = async (teacherId, schoolId, res) => {
+exports.updateTeacherSchoolById = async (teacherId, schoolId, ) => {
   try {
     if (schoolId === '') {
       await TeacherSchool.destroy({ where: { TeacherID: teacherId } });
 
-      if (res && res.send) {
-        return res.send({ message: "Registro eliminado satisfactoriamente." });
-      } else {
-        console.log("Response object not properly defined");
-      }
     } else {
       let teacherSchool = await TeacherSchool.findOne({ where: { TeacherID: teacherId } });
 
@@ -135,20 +130,8 @@ exports.updateTeacherSchoolById = async (teacherId, schoolId, res) => {
           { where: { TeacherID: teacherId } }
         );
       }
-
-      if (res && res.send) {
-        return res.send(teacherSchool);
-      } else {
-        console.log("Response object not properly defined");
-      }
     }
   } catch (error) {
-
     console.error(error);
-    if (res && res.status && res.send) {
-      return res.status(500).send({ error: true, message: "Error del servidor. No se pudo actualizar la asignación del profesor." });
-    } else {
-      console.log("Response object not properly defined");
-    }
   }
 };
