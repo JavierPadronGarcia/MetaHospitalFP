@@ -113,3 +113,25 @@ exports.deleteTeacherFromSchool = async (req, res) => {
     res.status(500).send({ message: "Error del servidor. No se pudo eliminar al estudiante de la escuela." });
   }
 };
+
+exports.updateTeacherSchoolById = async (teacherId, schoolId, ) => {
+  try {
+    if (schoolId === '') {
+      await TeacherSchool.destroy({ where: { TeacherID: teacherId } });
+
+    } else {
+      let teacherSchool = await TeacherSchool.findOne({ where: { TeacherID: teacherId } });
+
+      if (!teacherSchool) {
+        await TeacherSchool.create({ TeacherID: teacherId, SchoolID: schoolId });
+      } else {
+        await TeacherSchool.update(
+          { SchoolID: schoolId },
+          { where: { TeacherID: teacherId } }
+        );
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

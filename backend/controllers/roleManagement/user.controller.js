@@ -17,6 +17,8 @@ const teacherController = require('./teacher.controller');
 const studentController = require('./student.controller');
 const adminController = require('./admin.controller');
 const enviarCorreo = require('../mail/mail.controller');
+const TeacherToSchool = require("../administration/teacherschool.controller");
+const StudentToSchool = require('../administration/studentschool.controller')
 
 exports.create = async (req, res) => {
 
@@ -71,7 +73,7 @@ exports.create = async (req, res) => {
         break;
     }
 
-    // enviarCorreo(user.username,'Se le Ha dado de alta en MetaHospitalFP');
+    enviarCorreo(user.username,'Se le Ha dado de alta en MetaHospitalFP');
 
   } else {
     return res.status(500).send({
@@ -268,6 +270,24 @@ exports.update = async (req, res) => {
     await userFound.save();
   }
 
+  if (req.body.schoolId !== null) {
+    switch (actualUserRole.Role.name) {
+      case 'admin':
+        const adminUser = await Admin.findOne({ where: { id: userFound.id } });
+        if(adminUser){
+          adminUser.SchoolID = req.body.schoolId;
+          await adminUser.save();
+        }
+        break;
+      case 'teacher':
+        await TeacherToSchool.updateTeacherSchoolById(userFound.id, req.body.schoolId);
+        break;
+      case 'student':
+        await StudentToSchool.updateStudentSchoolById(userFound.id, req.body.schoolId);
+        break;
+    }
+  }
+
   return res.send();
 
   async function deleteUserInTableRole(oldRoleName, oldUserInTableRole) {
@@ -300,22 +320,25 @@ exports.update = async (req, res) => {
         await Admin.create({
           id: oldUserInTableRole.id,
           name: oldUserInTableRole.name,
-          age: oldUserInTableRole.age
+          age: oldUserInTableRole.age,
+          SchoolID: req.body.schoolId
         })
         break;
       case 'teacher':
         await Teacher.create({
           id: oldUserInTableRole.id,
           name: oldUserInTableRole.name,
-          age: oldUserInTableRole.age
+          age: oldUserInTableRole.age,
         })
+        TeacherToSchool.updateTeacherSchoolById(oldUserInTableRole.id,req.body.schoolId);
         break;
       case 'student':
         await Student.create({
           id: oldUserInTableRole.id,
           name: oldUserInTableRole.name,
-          age: oldUserInTableRole.age
+          age: oldUserInTableRole.age,
         })
+        StudentToSchool.updateStudentSchoolById(oldUserInTableRole.id, req.body.schoolId);
         break;
     }
   }
