@@ -114,11 +114,19 @@ function Menu2() {
     },
   ];
 
+  const isSchoolAdmin = localStorage.getItem('isSchoolAdmin');
+
   return (
     <div className="menu2">
       <nav>
         <div className='logotype-container'>
-          <img src='/assets/imgs/Icon.png' alt="logotype" className="logotype" onClick={() => navigate('/admin/control-panel')} />
+          <img src='/assets/imgs/Icon.png' alt="logotype" className="logotype" style={{ cursor: (!isSchoolAdmin || isSchoolAdmin !== 'true') ? 'pointer' : '' }}
+            onClick={() => {
+              if (!isSchoolAdmin || isSchoolAdmin !== 'true') {
+                navigate('/admin/control-panel');
+              }
+            }}
+          />
         </div>
         <ul className="menuItems">
           <li>

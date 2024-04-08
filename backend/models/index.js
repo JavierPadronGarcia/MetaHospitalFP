@@ -70,6 +70,9 @@ db.student.belongsTo(db.userAccounts, { foreignKey: 'id' });
 db.teacher.belongsTo(db.userAccounts, { foreignKey: 'id' });
 db.admin.belongsTo(db.userAccounts, { foreignKey: 'id' });
 
+// add admin-school relation
+db.admin.belongsTo(db.school, { through: "SchoolID" });
+
 // Administration relations
 db.student.hasMany(db.studentSchool, { foreignKey: 'StudentID' });
 db.student.hasMany(db.studentGroup, { foreignKey: 'StudentID' });

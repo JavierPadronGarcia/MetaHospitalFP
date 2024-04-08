@@ -34,7 +34,12 @@ function LoginBox() {
         content: `Sesión iniciada correctamente`,
         duration: 1,
       })
-      authService.navigateByRole(user.role, navigate);
+      if (user.schoolId) {
+        authService.navigateToSchool(user, navigate);
+      } else {
+        authService.navigateByRole(user.role, navigate);
+      }
+
       setLoading(false);
     }).catch((err) => {
       loginErrors(err);
@@ -148,7 +153,7 @@ function LoginBox() {
                 </label>
               </div>
               <label className='buttons-container'>
-                <Button className='button' htmlType='submit'>Iniciar sesion</Button>
+                <Button className='button' htmlType='submit' loading={loading}>Iniciar sesion</Button>
                 <a href="/assets/help/Ayuda.html">Ayuda</a>
               </label>
             </form>

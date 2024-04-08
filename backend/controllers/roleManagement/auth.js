@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 const db = require("../../models");
 const User = db.userAccounts;
 const UserRole = db.userRole;
+const Admin = db.admin;
+const School = db.school;
 const Role = db.role;
 const TokenJWT = db.tokenJWT;
 
@@ -23,9 +25,15 @@ exports.signin = (req, res) => {
     const result = bcrypt.compareSync(pwd, data.password);
     if (!result) return res.status(401).send('Password not valid!');
 
-    getRole(data).then((role) => {
+    getRole(data).then(async (role) => {
       const userObj = utils.getCleanUser(data);
       userObj.role = role.name;
+
+      if (userObj.role === 'admin') {
+        const adminData = await Admin.findByPk(userObj.id, { include: [{ model: School }] });
+        userObj.schoolId = adminData.SchoolID;
+        userObj.school = adminData.School;
+      }
 
       getToken(userObj).then(token => {
         return res.json({ user: userObj, access_token: token })
