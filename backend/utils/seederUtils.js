@@ -268,8 +268,8 @@ exports.addPlayerRoles = (playerRoles) => {
   }));
 }
 
-exports.addItemPlayerRoles = () => {
-  const allItems = getItems(10);
+exports.addItemPlayerRoles = (workUnitId) => {
+  const allItems = getItems(workUnitId);
   let index = 1;
 
   return allItems.flatMap(({ id, roles }) =>
