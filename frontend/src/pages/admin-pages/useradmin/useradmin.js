@@ -171,6 +171,10 @@ function UserAdmin() {
         throw new Error('Rellena todos los campos');
       }
 
+      if ((role === 'student' && selectedSchool === '')||(role === 'teacher' && selectedSchool === '')) {
+        throw new Error('Es necesario para estudiantes como profesores seleccionar Escuela')
+      }
+
       if (mode === Consts.EDIT_MODE) {
 
         await usersService.updateUserWithoutImage(email, Id, role, name, selectedSchool);
@@ -193,7 +197,9 @@ function UserAdmin() {
         noConnectionError();
       } else if (error.message === 'Rellena todos los campos') {
         message.error(error.message);
-      } else {
+      } else if (error.message === 'Es necesario para estudiantes como profesores seleccionar Escuela') {
+        message.error(error.message);
+      }else {
         message.error('No se ha podido crear/actualizar el usuario');
       }
     }
