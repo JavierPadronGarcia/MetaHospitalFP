@@ -114,7 +114,7 @@ function TeacherActivitiesPage() {
 
           </main>
         </div>
-        <ActivityForm groupId={id} workUnitId={workUnitId} />
+        <ActivityForm groupId={id} workUnitId={workUnitId} notifyUpdateInfo={getAllExercises} />
       </div>
     </div>
   );
