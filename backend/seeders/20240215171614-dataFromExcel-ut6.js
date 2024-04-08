@@ -12,16 +12,14 @@ const {
   addItems,
   addItemNumberCaseNumbers,
   addItemPlayerRolesNumbers,
-  addPlayerRoles,
   addItemPlayerRoles,
 } = require("../utils/seederUtils");
 
 function setupData() {
-  const cases = [...addCases(10), ...addCases(6)];
-  const items = [...addItems(10), ...addItems(6)];
-  const playerRoles = addPlayerRoles(['Auxiliar', 'Enfermero', 'Médico']);
+  const cases = [...addCases(6)];
+  const items = [...addItems(6)];
   const itemPlayerRoles = addItemPlayerRoles();
-  return { cases, items, playerRoles, itemPlayerRoles };
+  return { cases, items, itemPlayerRoles };
 }
 
 async function getCasesAndItemsByWorkUnit() {
@@ -44,7 +42,7 @@ async function getItemsByWorkUnit() {
 }
 
 async function getRoles() {
-  const roles = await Role.findAll({});
+  const roles = await Role.findAll();
   return roles.map(result => result.get({ plain: true }));
 }
 
@@ -52,8 +50,7 @@ async function buildItemCases() {
   const itemCases = [];
 
   const itemNumberCaseNumbers = [
-    { workUnit: 10, content: addItemNumberCaseNumbers(10) },
-    { workUnit: 6, content: addItemNumberCaseNumbers(6) }
+    { workUnit: 6, content: addItemNumberCaseNumbers(6) },
   ];
 
   const itemsAndCasesByWorkUnit = await getCasesAndItemsByWorkUnit();
@@ -83,19 +80,19 @@ async function buildItemCases() {
 async function buildItemPlayerRoles() {
   const itemPlayerRoles = [];
   const itemPlayerRolesNumbers = [
-    { workUnit: 10, content: addItemPlayerRolesNumbers(10) }
+    { workUnit: 6, content: addItemPlayerRolesNumbers(6) }
   ]
 
   const itemsByWorkUnit = await getItemsByWorkUnit();
   const allRoles = await getRoles();
 
   itemPlayerRolesNumbers.forEach(data => {
-    const itemsFound = itemsByWorkUnit.items.find(element => element.id === data.workUnit);
+    const itemsFound = itemsByWorkUnit.find(element => element.id === data.workUnit);
     const itemRolesNumbers = data.content;
 
     if (itemsFound) {
       itemRolesNumbers.forEach(({ itemNumber, roleNumber }) => {
-        const itemFound = itemRolesNumbers.items.find(itemToFind);
+        const itemFound = itemsFound.items.find(itemToFind => itemNumber === itemToFind.itemNumber);
         const roleFound = allRoles.find(role => role.id === roleNumber);
 
         if (itemFound && roleFound) {
@@ -118,7 +115,6 @@ module.exports = {
     const {
       cases,
       items,
-      playerRoles,
     } = setupData();
 
     console.log('\ndata setup completed...\n');
@@ -126,7 +122,6 @@ module.exports = {
     await Promise.all([
       queryInterface.bulkInsert('items', items),
       queryInterface.bulkInsert('cases', cases),
-      queryInterface.bulkInsert('PlayerRoles', playerRoles),
     ]);
 
     console.log('first stage completed...\n');
@@ -135,6 +130,7 @@ module.exports = {
     const itemPlayerRoles = await buildItemPlayerRoles();
 
     // await queryInterface.bulkInsert('itemCases', itemCases);
+
 
     await Promise.all([
       queryInterface.bulkInsert('itemCases', itemCases),
