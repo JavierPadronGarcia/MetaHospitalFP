@@ -43,19 +43,19 @@ function setupData() {
 module.exports = {
   async up(queryInterface, Sequelize) {
 
-    const {
-      exercises,
-      grades,
-      participations
-    } = setupData();
+    // const {
+    //   exercises,
+    //   grades,
+    //   participations
+    // } = setupData();
 
-    console.log('\ndata setup completed...\n');
+    // console.log('\ndata setup completed...\n');
 
-    await queryInterface.bulkInsert('exercises', exercises);
-    await queryInterface.bulkInsert('participations', participations);
-    await queryInterface.bulkInsert('grades', grades);
+    // await queryInterface.bulkInsert('exercises', exercises);
+    // await queryInterface.bulkInsert('participations', participations);
+    // await queryInterface.bulkInsert('grades', grades);
 
-    console.log('\nseeder completed...\n');
+    // console.log('\nseeder completed...\n');
   },
 
   async down(queryInterface, Sequelize) {
