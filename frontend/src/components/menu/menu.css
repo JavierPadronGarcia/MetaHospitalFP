@@ -82,6 +82,7 @@
 .menu1 .logotype {
     width: 99px;
     margin-right: 25px;
+    cursor: pointer;
 }
 
 .menu1 .menuItems a.active {

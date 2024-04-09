@@ -78,6 +78,13 @@ const navigateByRole = (role, navigate) => {
   }
 }
 
+const navigateToSchool = (user, navigate) => {
+  localStorage.setItem('schoolId', user.schoolId);
+  localStorage.setItem('schoolName', user.school.name);
+  localStorage.setItem('isSchoolAdmin', 'true');
+  navigate('/admin/school');
+}
+
 const changePassword = async (password) => {
   try {
     const response = await axios.put(
@@ -111,5 +118,6 @@ export default {
   getMyRole,
   changePassword,
   resetPassword,
-  navigateByRole
+  navigateByRole,
+  navigateToSchool
 }
