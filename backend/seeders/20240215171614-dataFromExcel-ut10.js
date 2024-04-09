@@ -141,14 +141,34 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await Promise.all([
-      queryInterface.bulkDelete('itemCases'),
-      queryInterface.bulkDelete('ItemPlayerRoles'),
-    ]);
+    const workUnitIdToDelete = 10;
 
-    await Promise.all([
-      queryInterface.bulkDelete('items'),
-      queryInterface.bulkDelete('cases'),
-    ]);
+    const transaction = await queryInterface.sequelize.transaction();
+
+    try {
+      await Promise.all([
+        queryInterface.bulkDelete('ItemPlayerRoles', {
+          ItemID: {
+            [Sequelize.Op.in]: Sequelize.literal(`(SELECT id FROM items WHERE WorkUnitID = ${workUnitIdToDelete})`)
+          }
+        }, { transaction }),
+        queryInterface.bulkDelete('itemCases', {
+          ItemID: {
+            [Sequelize.Op.in]: Sequelize.literal(`(SELECT id FROM items WHERE WorkUnitID = ${workUnitIdToDelete})`)
+          }
+        }, { transaction })
+      ]);
+
+      await Promise.all([
+        queryInterface.bulkDelete('items', { WorkUnitID: workUnitIdToDelete }, { transaction }),
+        queryInterface.bulkDelete('cases', { WorkUnitID: workUnitIdToDelete }, { transaction }),
+      ]);
+
+      await transaction.commit();
+      console.log("Revert successfull");
+    } catch (error) {
+      await transaction.rollback();
+      console.error("Rollback error:", error);
+    }
   }
 };
