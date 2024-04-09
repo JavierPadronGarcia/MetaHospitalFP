@@ -1,4 +1,4 @@
-const { getCases, getItems } = require('./xslxReader');;
+const { getCases, getItems } = require('./xslxReader');
 
 exports.addRoles = (roles) => {
   const roleArray = roles.map((role, index) => ({
@@ -201,8 +201,7 @@ exports.addWorkUnitGroups = (workUnitGroups) => {
 exports.addCases = (workUnitId) => {
   const casesFromExcel = getCases(workUnitId);
 
-  return casesFromExcel.map((eachCase, index) => ({
-    id: ++index,
+  return casesFromExcel.map((eachCase) => ({
     WorkUnitID: eachCase.workUnitID,
     name: eachCase.name,
     caseNumber: eachCase.caseNumber,
@@ -233,13 +232,14 @@ exports.addParticipations = (participations) => {
   return participationsArray;
 }
 
-exports.addItems = () => {
-  const items = getItems();
+exports.addItems = (workUnitId) => {
+  const items = getItems(workUnitId);
   return items.map(item => ({
-    id: item.id,
     name: item.name,
+    itemNumber: item.itemNumber,
     description: item.description,
     value: item.value,
+    WorkUnitID: workUnitId,
     createdAt: new Date(),
     updatedAt: new Date()
   }))
@@ -268,8 +268,8 @@ exports.addPlayerRoles = (playerRoles) => {
   }));
 }
 
-exports.addItemPlayerRoles = () => {
-  const allItems = getItems();
+exports.addItemPlayerRoles = (workUnitId) => {
+  const allItems = getItems(workUnitId);
   let index = 1;
 
   return allItems.flatMap(({ id, roles }) =>
@@ -283,30 +283,46 @@ exports.addItemPlayerRoles = () => {
   );
 }
 
-exports.addItemCases = () => {
-  const allCases = getCases(10);
+exports.addItemNumberCaseNumbers = (workUnitId) => {
+  const allCases = getCases(workUnitId);
 
-  const allItemCases = allCases.flatMap(({ id, Items }) =>
-    Items.map((itemId) => {
-      const ItemID = Number(itemId) + 1;
+  const allItemNumberCaseNumbers = allCases.flatMap(({ caseNumber, Items }) =>
+    Items.map((itemNumber) => {
       return {
-        CaseID: id,
-        ItemID: ItemID,
+        caseNumber: Number(caseNumber),
+        itemNumber: Number(itemNumber) + 1,
         createdAt: new Date(),
         updatedAt: new Date()
       }
     })
   );
 
-  return filterItemCasesDuplicates(allItemCases);
+  return filterItemNumberCaseNumbersDuplicates(allItemNumberCaseNumbers);
 }
 
-function filterItemCasesDuplicates(jsonArray) {
+exports.addItemPlayerRolesNumbers = (workUnitId) => {
+  const allItems = getItems(workUnitId);
+
+  const allItemPlayerRolesNumbers = allItems.flatMap(({ itemNumber, roles }) =>
+    roles.map((roleNumber => {
+      return {
+        itemNumber: Number(itemNumber),
+        roleNumber: Number(roleNumber),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    }))
+  )
+
+  return allItemPlayerRolesNumbers
+}
+
+function filterItemNumberCaseNumbersDuplicates(jsonArray) {
   const uniqueSet = new Set();
   const result = [];
 
   jsonArray.forEach(obj => {
-    const key = obj.CaseID + '-' + obj.ItemID;
+    const key = obj.caseNumber + '-' + obj.itemNumber;
     if (!uniqueSet.has(key)) {
       result.push(obj);
       uniqueSet.add(key);

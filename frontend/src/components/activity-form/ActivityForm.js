@@ -137,6 +137,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         setChecked(false);
         setDisabled(false);
         setIsModalVisible(false);
+        notifyUpdateInfo();
       }).catch(err => {
         if (!err.response) noConnectionError();
         if (err.response && err.code == 500) {
@@ -144,6 +145,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         };
       });
     }
+    
   }
 
   const handleUpdate = (e) => {
@@ -217,7 +219,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
 
   return (
     <>
-      <Affix style={{ position: 'fixed', bottom: 20, right: 20 }}>
+      {!isUpdateForm && <Affix style={{ position: 'fixed', bottom: 20, right: 20 }}>
         <Button
           className="floating-button"
           type="primary"
@@ -226,8 +228,8 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
           size="large"
           onClick={() => setIsModalVisible(true)}
         />
-      </Affix>
-      <Button onClick={() => setIsModalVisible(true)}>Abrir formulario</Button>
+      </Affix>}
+      {isUpdateForm && <Button onClick={() => setIsModalVisible(true)}>Abrir formulario</Button>}
       <Modal
         title={isUpdateForm ? "Actualizar actividad" : "Nueva actividad"}
         visible={isModalVisible}

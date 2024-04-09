@@ -1,6 +1,10 @@
 'use strict';
 
 const Sequelize = require("sequelize");
+const cls = require('cls-hooked');
+
+const namespace = cls.createNamespace('model-transactions');
+Sequelize.useCLS(namespace);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/db.config.js')[env];
 const db = {};
@@ -66,6 +70,9 @@ db.student.belongsTo(db.userAccounts, { foreignKey: 'id' });
 db.teacher.belongsTo(db.userAccounts, { foreignKey: 'id' });
 db.admin.belongsTo(db.userAccounts, { foreignKey: 'id' });
 
+// add admin-school relation
+db.admin.belongsTo(db.school, { foreignKey: "SchoolID" });
+
 // Administration relations
 db.student.hasMany(db.studentSchool, { foreignKey: 'StudentID' });
 db.student.hasMany(db.studentGroup, { foreignKey: 'StudentID' });
@@ -96,6 +103,9 @@ db.groups.hasMany(db.workUnitGroup, { foreignKey: 'GroupID' });
 db.workUnit.hasMany(db.workUnitGroup, { foreignKey: 'WorkUnitID' });
 db.workUnit.hasMany(db.case, { foreignKey: 'WorkUnitID' });
 
+db.workUnit.hasMany(db.item, { foreignKey: 'WorkUnitID' });
+db.item.belongsTo(db.workUnit, { foreignKey: 'WorkUnitID' });
+
 db.workUnitGroup.belongsTo(db.workUnit, { foreignKey: 'WorkUnitID' });
 
 db.color.hasMany(db.workUnitColor, { foreignKey: 'ColorID' });
@@ -108,7 +118,7 @@ db.item.hasMany(db.itemPlayerRole, { foreignKey: 'ItemID' });
 db.playerRole.hasMany(db.itemPlayerRole, { foreignKey: 'PlayerRoleID' });
 
 
-db.itemPlayerRole.belongsTo(db.playerRole, {foreignKey: 'PlayerRoleID'});
+db.itemPlayerRole.belongsTo(db.playerRole, { foreignKey: 'PlayerRoleID' });
 db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
 
 db.item.hasMany(db.itemCase, { foreignKey: 'ItemID' });

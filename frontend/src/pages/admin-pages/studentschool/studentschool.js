@@ -4,21 +4,24 @@ import StudentSchoolsService from '../../../services/studentschool.service';
 import usersService from '../../../services/users.service';
 import Menu2 from '../../../components/menu2/menu2';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
-import { Input, List, message } from 'antd';
+import { Input, message } from 'antd';
 import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './studentschool.css';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
+import { noConnectionError } from '../../../utils/shared/errorHandler';
 
 function StudentSchools() {
   const [students, setStudents] = useState([]);
   const [users, setUsers] = useState([]);
+  const [Id, setId] = useState('');
   const [name, setName] = useState('');
-  const [userId, setUserId] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const Headlines = ['Nombre'];
+  const [email, setEmail] = useState('');
+  const [showPop, setShowPop] = useState(false);
+  const [mode, setMode] = useState(Consts.ADD_MODE);
+  const Headlines = ['Nombre','Email'];
   const location = useLocation();
 
   const getStudents = async () => {
@@ -34,11 +37,12 @@ function StudentSchools() {
 
   const getUsers = async () => {
     try {
-      const response = await usersService.getStudents();
-      console.log(response)
-      setUsers(response);
+      const response = await usersService.getUsers();
+      const userList = response;
+      setUsers(userList);
     } catch (error) {
-      message.error('No se pudo obtener usuarios')
+      console.error('Error fetching users:', error);
+      message.error(error.message)
     }
   };
 
@@ -47,82 +51,101 @@ function StudentSchools() {
     getUsers();
   }, []);
 
-  const filterUsers = (value) => {
-    const filteredUsers = users.filter((user) => user.username.toLowerCase().includes(value.toLowerCase()));
-    setSearchResults(filteredUsers.slice(0, 3));
-  };
-
   const renderSchoolRow = (student) => (
     <>
       <td>{student.name}</td>
+      <td>{student.username}</td>
     </>
   );
-
-  const changeName = (name, id) => {
-    setName(name);
-    setUserId(id);
-  }
 
   const renderSchoolImputs = () => (
     <>
       <h1>{String(Consts.ADD_MODE)}</h1>
       <p>Name</p>
-      <Input.Search
-        placeholder="Buscar estudiantes"
+      <Input placeholder="Name"
         value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-          filterUsers(e.target.value);
-        }}
-      />
-      <List
-        bordered
-        dataSource={searchResults}
-        renderItem={(user) => (
-          <List.Item onClick={() => changeName(user.name, user.id)} className='list-item'>
-            {user.name}
-          </List.Item>
-        )}
-      />
+        onChange={(e) => setName(e.target.value)} />
+      <p>Email</p>
+      <Input placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)} />
     </>
   );
 
-
-  const onDelete = (id) => {
+  const onDelete = async (id) => {
     try {
-      console.log(id)
+      await usersService.deleteUser(id);
+      message.success("Usuario eliminado correctamente");
       getStudents();
-      StudentSchoolsService.deleteStudentFromSchool(localStorage.getItem('schoolId'), id);
-      message.error('Estudiante eliminado correctamente');
-      getStudents();
+      getUsers();
     } catch (error) {
-      message.error('No se ha podido eliminar al estudiante');
+      console.error(error)
+      message.error('Error al eliminar al usuario')
     }
-  };
+  }
+
+  const Edit = (id, editType) => {
+    const userToEdit = users.find(user => user.id === id);
+
+    setId(id);
+
+    if (editType === 'popform') {
+      setShowPop(true);
+    } else {
+      setShowPop(false);
+    }
+
+    setName(userToEdit.name);
+    setEmail(userToEdit.username);
+    setMode(Consts.EDIT_MODE);
+  }
 
   const onSubmit = async () => {
     try {
 
-      if (!userId) {
-        console.error('Error: UserId is not defined.');
-        return;
+      if (!name || !email) {
+        throw new Error('Rellena todos los campos');
       }
 
-      const student = {
-        studentId: userId,
-      };
+      if (mode === Consts.EDIT_MODE) {
 
-      await StudentSchoolsService.createNewStudent(localStorage.getItem('schoolId'), student);
-      message.success('Estudiante agregado correctamente');
-      cancel();
-      getStudents();
+        await usersService.updateUserWithoutImage(email, Id, 'student', name, localStorage.getItem('schoolId'));
+
+        message.success('Usuario actualizado correctamente');
+        cleanInputs();
+        setMode(Consts.ADD_MODE);
+        getStudents();
+        getUsers();
+      } else {
+
+        await usersService.createNewUser({ name: name, role: 'student', schoolId: localStorage.getItem('schoolId') }, email);
+
+        cleanInputs();
+        message.success('Usuario creado correctamente');
+        getStudents();
+        getUsers();
+      }
     } catch (error) {
-      message.error('No se ha podido agregar al usuario, intentalo de nuevo');
-    }
-  };
 
-  const cancel = () => {
+      if (error.message === 'Network Error') {
+        noConnectionError();
+      } else if (error.message === 'Rellena todos los campos') {
+        message.error(error.message);
+      } else {
+        message.error('No se ha podido crear/actualizar el usuario');
+      }
+    }
+  }
+
+  const cleanInputs = () => {
+    setEmail('');
     setName('');
+  }
+
+  const Cancel = () => {
+    setMode(Consts.ADD_MODE);
+    setName('');
+    setEmail('');
   }
 
   return (
@@ -130,12 +153,12 @@ function StudentSchools() {
       <div className='container-left'>
         <Menu2 />
         <Tag name="Estudiantes" />
-        <BasicList items={students} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} />
-        <FloatingExcelButton data={students} name='studentReport'></FloatingExcelButton>
-        <PopForm renderInputs={renderSchoolImputs} cancel={cancel} onSubmit={onSubmit} />
+        <BasicList items={students} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <FloatingExcelButton data={students}></FloatingExcelButton>
+        <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
-        <Rightmenu renderImputs={renderSchoolImputs} onSubmit={onSubmit} currentRoute={location.pathname} />
+        <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
       </div>
     </div>
   );

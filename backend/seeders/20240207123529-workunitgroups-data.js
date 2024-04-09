@@ -20,15 +20,24 @@ function setUpData() {
   ]);
 
   const workUnitGroups = addWorkUnitGroups([
+
     { GroupID: 1, WorkUnitID: 10, visibility: 1 },
     { GroupID: 2, WorkUnitID: 10, visibility: 1 },
     { GroupID: 3, WorkUnitID: 10, visibility: 1 },
     { GroupID: 4, WorkUnitID: 10, visibility: 1 },
     { GroupID: 5, WorkUnitID: 10, visibility: 1 },
     { GroupID: 6, WorkUnitID: 10, visibility: 1 },
+
+    { GroupID: 1, WorkUnitID: 6, visibility: 1 },
+    { GroupID: 2, WorkUnitID: 6, visibility: 1 },
+    { GroupID: 3, WorkUnitID: 6, visibility: 1 },
+    { GroupID: 4, WorkUnitID: 6, visibility: 1 },
+    { GroupID: 5, WorkUnitID: 6, visibility: 1 },
+    { GroupID: 6, WorkUnitID: 6, visibility: 1 },
   ]);
 
   const workUnitColors = addWorkUnitColors([
+    // ut10
     { WorkUnitGroupID: 1, ColorID: 1, visibility: 1 },
     { WorkUnitGroupID: 1, ColorID: 2, visibility: 0 },
     { WorkUnitGroupID: 2, ColorID: 1, visibility: 1 },
@@ -41,6 +50,20 @@ function setUpData() {
     { WorkUnitGroupID: 5, ColorID: 2, visibility: 0 },
     { WorkUnitGroupID: 6, ColorID: 1, visibility: 1 },
     { WorkUnitGroupID: 6, ColorID: 2, visibility: 0 },
+
+    // ut6
+    { WorkUnitGroupID: 7, ColorID: 3, visibility: 1 },
+    { WorkUnitGroupID: 7, ColorID: 4, visibility: 0 },
+    { WorkUnitGroupID: 8, ColorID: 3, visibility: 1 },
+    { WorkUnitGroupID: 8, ColorID: 4, visibility: 0 },
+    { WorkUnitGroupID: 9, ColorID: 3, visibility: 1 },
+    { WorkUnitGroupID: 9, ColorID: 4, visibility: 0 },
+    { WorkUnitGroupID: 10, ColorID: 3, visibility: 1 },
+    { WorkUnitGroupID: 10, ColorID: 4, visibility: 0 },
+    { WorkUnitGroupID: 11, ColorID: 3, visibility: 1 },
+    { WorkUnitGroupID: 11, ColorID: 4, visibility: 0 },
+    { WorkUnitGroupID: 12, ColorID: 3, visibility: 1 },
+    { WorkUnitGroupID: 12, ColorID: 4, visibility: 0 },
   ])
 
   return {

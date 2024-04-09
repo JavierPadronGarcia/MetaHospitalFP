@@ -5,6 +5,7 @@ const Exercise = db.exercise;
 const Case = db.case;
 const ItemPlayerRole = db.itemPlayerRole;
 const PlayerRole = db.playerRole;
+const Item = db.item;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -80,6 +81,8 @@ exports.submitGrade = async (req, res) => {
   const { finalGrade, role, submittedTime, userId, exerciseId, items, UT } = req.body;
   const handWash = [req.body.handWashInit, req.body.handWashEnd];
 
+  const transaction = await db.sequelize.transaction();
+
   try {
     const participation = await Participation.findOne({
       where: {
@@ -92,14 +95,16 @@ exports.submitGrade = async (req, res) => {
           model: Case,
           required: true,
           where: {
-            caseNumber: exerciseId,
+            caseNumber: exerciseId + 1,
             WorkUnitID: UT
           }
         }
-      }
+      },
+      transaction
     });
 
     if (!participation) {
+      await transaction.rollback();
       return res.status(500).send({ error: true, message: "No such participation found!" });
     }
 
@@ -111,13 +116,22 @@ exports.submitGrade = async (req, res) => {
       participation.FinalGrade = finalGrade;
       participation.Role = role;
       participation.SubmittedAt = submittedTime;
-      participation.save();
-      
+      await participation.save({ transaction });
+
+      const allItemsInWorkUnit = await Item.findAll({
+        where: {
+          WorkUnitID: UT
+        },
+        transaction
+      });
+
       const grades = [];
       for (let i = 0; i < items.length; i++) {
+
+        const itemFound = allItemsInWorkUnit.find(item => item.itemNumber === items[i].itemId);
         const itemPlayerRole = await ItemPlayerRole.findOne({
           where: {
-            ItemID: items[i].itemId
+            ItemID: itemFound.id
           },
           include: {
             model: PlayerRole,
@@ -125,7 +139,8 @@ exports.submitGrade = async (req, res) => {
               name: role
             },
             attributes: []
-          }
+          },
+          transaction
         });
 
         grades.push({
@@ -148,28 +163,34 @@ exports.submitGrade = async (req, res) => {
         ParticipationID: participationId
       })
       try {
-        await Grade.bulkCreate(grades);
+        await Grade.bulkCreate(grades, { transaction });
+
+        await transaction.commit();
 
         return res.send({
           message: 'grades added successfully',
         })
       } catch (error) {
+        await transaction.rollback();
         return res.status(500).send(
           { error: true, message: "Error adding the grading information to the database!: " + error }
         )
       }
 
     } else {
+      await transaction.rollback();
       return res.status(500).send({ error: true, message: "No item grades found" })
     }
 
   } catch (error) {
+    await transaction.rollback();
     return res.status(500).send({
       error: true,
-      message: error.message || "Error when trying to update the final grade!"
+      message: error.message || "Error when trying to update the final grade!",
     })
   }
 }
+
 
 exports.delete = (req, res) => {
   const id = req.params.id;
