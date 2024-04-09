@@ -18,8 +18,7 @@ const {
 function setupData() {
   const cases = [...addCases(6)];
   const items = [...addItems(6)];
-  const itemPlayerRoles = addItemPlayerRoles();
-  return { cases, items, itemPlayerRoles };
+  return { cases, items };
 }
 
 async function getCasesAndItemsByWorkUnit() {
@@ -150,7 +149,6 @@ module.exports = {
     await Promise.all([
       queryInterface.bulkDelete('items'),
       queryInterface.bulkDelete('cases'),
-      queryInterface.bulkDelete('PlayerRoles'),
     ]);
   }
 };
