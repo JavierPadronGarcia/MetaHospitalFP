@@ -179,7 +179,7 @@ exports.submitGrade = async (req, res) => {
 
     } else {
       await transaction.rollback();
-      return res.status(500).send({ error: true, message: "No item grades found" })
+      return res.status(200).send({ message: "No item grades found" })
     }
 
   } catch (error) {
