@@ -18,8 +18,7 @@ const {
 function setupData() {
   const cases = [...addCases(6)];
   const items = [...addItems(6)];
-  const itemPlayerRoles = addItemPlayerRoles();
-  return { cases, items, itemPlayerRoles };
+  return { cases, items };
 }
 
 async function getCasesAndItemsByWorkUnit() {
@@ -129,9 +128,6 @@ module.exports = {
     const itemCases = await buildItemCases();
     const itemPlayerRoles = await buildItemPlayerRoles();
 
-    // await queryInterface.bulkInsert('itemCases', itemCases);
-
-
     await Promise.all([
       queryInterface.bulkInsert('itemCases', itemCases),
       queryInterface.bulkInsert('ItemPlayerRoles', itemPlayerRoles)
@@ -142,15 +138,35 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await Promise.all([
-      queryInterface.bulkDelete('itemCases'),
-      queryInterface.bulkDelete('ItemPlayerRoles'),
-    ]);
+    const workUnitIdToDelete = 6;
 
-    await Promise.all([
-      queryInterface.bulkDelete('items'),
-      queryInterface.bulkDelete('cases'),
-      queryInterface.bulkDelete('PlayerRoles'),
-    ]);
+    const transaction = await queryInterface.sequelize.transaction();
+
+    try {
+      await Promise.all([
+        queryInterface.bulkDelete('ItemPlayerRoles', {
+          ItemID: {
+            [Sequelize.Op.in]: Sequelize.literal(`(SELECT id FROM items WHERE WorkUnitID = ${workUnitIdToDelete})`)
+          }
+        }, { transaction }),
+        queryInterface.bulkDelete('itemCases', {
+          ItemID: {
+            [Sequelize.Op.in]: Sequelize.literal(`(SELECT id FROM items WHERE WorkUnitID = ${workUnitIdToDelete})`)
+          }
+        }, { transaction })
+      ]);
+
+      await Promise.all([
+        queryInterface.bulkDelete('items', { WorkUnitID: workUnitIdToDelete }, { transaction }),
+        queryInterface.bulkDelete('cases', { WorkUnitID: workUnitIdToDelete }, { transaction }),
+      ]);
+
+      await transaction.commit();
+      console.log("Revert successfull");
+    } catch (error) {
+      await transaction.rollback();
+      console.error("Rollback error:", error);
+    }
   }
+
 };

@@ -16,8 +16,8 @@ const {
 } = require("../utils/seederUtils");
 // , ...addCases(6) , ...addItems(6)
 function setupData() {
-  const cases = [...addCases(10)];
-  const items = [...addItems(10)];
+  const cases = [...addCases(7)];
+  const items = [...addItems(7)];
   return { cases, items };
 }
 
@@ -49,7 +49,7 @@ async function buildItemCases() {
   const itemCases = [];
 
   const itemNumberCaseNumbers = [
-    { workUnit: 10, content: addItemNumberCaseNumbers(10) },
+    { workUnit: 7, content: addItemNumberCaseNumbers(7) },
   ];
 
   const itemsAndCasesByWorkUnit = await getCasesAndItemsByWorkUnit();
@@ -79,7 +79,7 @@ async function buildItemCases() {
 async function buildItemPlayerRoles() {
   const itemPlayerRoles = [];
   const itemPlayerRolesNumbers = [
-    { workUnit: 10, content: addItemPlayerRolesNumbers(10) }
+    { workUnit: 7, content: addItemPlayerRolesNumbers(7) }
   ]
 
   const itemsByWorkUnit = await getItemsByWorkUnit();
@@ -128,9 +128,6 @@ module.exports = {
     const itemCases = await buildItemCases();
     const itemPlayerRoles = await buildItemPlayerRoles();
 
-    // await queryInterface.bulkInsert('itemCases', itemCases);
-
-
     await Promise.all([
       queryInterface.bulkInsert('itemCases', itemCases),
       queryInterface.bulkInsert('ItemPlayerRoles', itemPlayerRoles)
@@ -141,7 +138,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    const workUnitIdToDelete = 10;
+    const workUnitIdToDelete = 7;
 
     const transaction = await queryInterface.sequelize.transaction();
 
