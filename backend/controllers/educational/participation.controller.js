@@ -127,8 +127,7 @@ exports.submitGrade = async (req, res) => {
 
       const grades = [];
       for (let i = 0; i < items.length; i++) {
-
-        const itemFound = allItemsInWorkUnit.find(item => item.itemNumber === items[i].itemId);
+        const itemFound = allItemsInWorkUnit.find(item => item.itemNumber === items[i].itemId + 1);
         const itemPlayerRole = await ItemPlayerRole.findOne({
           where: {
             ItemID: itemFound.id
@@ -140,6 +139,7 @@ exports.submitGrade = async (req, res) => {
             },
             attributes: []
           },
+          raw: true,
           transaction
         });
 
@@ -187,6 +187,7 @@ exports.submitGrade = async (req, res) => {
     return res.status(500).send({
       error: true,
       message: error.message || "Error when trying to update the final grade!",
+      stack: error.stack
     })
   }
 }
