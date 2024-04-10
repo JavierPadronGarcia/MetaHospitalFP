@@ -1,11 +1,7 @@
 const XLSX = require('xlsx');
 const path = require('path');
 
-const excelFilePath = path.join(__dirname, 'Ejercicios UT 10.xlsx');
-
-const workbook = XLSX.readFile(excelFilePath);
-
-function getWorkSheet(index, wb = workbook) {
+function getWorkSheet(index, wb) {
   const workSheetName = wb.SheetNames[index];
   return XLSX.utils.sheet_to_json(wb.Sheets[workSheetName]);
 }
@@ -18,6 +14,9 @@ function readFile(workUnitId) {
     case 6:
       const excelFilePathU6 = path.join(__dirname, 'Ejercicios UT 6.xlsx');
       return XLSX.readFile(excelFilePathU6);
+    case 7:
+      const excelFilePathU7 = path.join(__dirname, 'Ejercicios UT 7.xlsx');
+      return XLSX.readFile(excelFilePathU7);
     default:
       return;
   }
@@ -68,7 +67,7 @@ exports.getCases = (workUnitId) => {
     eachCase['Items'] = (items.slice(0, -1)).split('_');
 
     return {
-      name: eachCase.Ejercicio,
+      name: eachCase.Ejercicio || eachCase.Descripcion,
       workUnitID: workUnitId,
       caseNumber: eachCase.ID,
       Items: eachCase.Items
