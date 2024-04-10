@@ -179,8 +179,7 @@ exports.addColors = (colors) => {
 }
 
 exports.addWorkUnitColors = (workUnitColors) => {
-  const workUnitColorsArray = workUnitColors.map((workUnitColor, index) => ({
-    id: index + 1,
+  const workUnitColorsArray = workUnitColors.map((workUnitColor) => ({
     ...workUnitColor,
     createdAt: new Date(),
     updatedAt: new Date()
@@ -189,8 +188,7 @@ exports.addWorkUnitColors = (workUnitColors) => {
 }
 
 exports.addWorkUnitGroups = (workUnitGroups) => {
-  const workUnitGroupsArray = workUnitGroups.map((workUnitGroup, index) => ({
-    id: index + 1,
+  const workUnitGroupsArray = workUnitGroups.map((workUnitGroup) => ({
     ...workUnitGroup,
     createdAt: new Date(),
     updatedAt: new Date()
