@@ -108,16 +108,16 @@ exports.submitGrade = async (req, res) => {
       return res.status(500).send({ error: true, message: "No such participation found!" });
     }
 
+    const participationId = participation.id;
+
+    participation.FinalGrade = finalGrade;
+    participation.Role = role;
+    participation.SubmittedAt = submittedTime;
+    await participation.save({ transaction });
+
     if (items && items?.length !== 0
       && handWash[0] !== undefined
       && handWash[1] !== undefined) {
-      const participationId = participation.id;
-
-      participation.FinalGrade = finalGrade;
-      participation.Role = role;
-      participation.SubmittedAt = submittedTime;
-      await participation.save({ transaction });
-
       const allItemsInWorkUnit = await Item.findAll({
         where: {
           WorkUnitID: UT
@@ -177,9 +177,32 @@ exports.submitGrade = async (req, res) => {
         )
       }
 
+    } else if (handWash != []) {
+      try {
+
+        const handWashgrades = [{
+          grade: handWash[0].grade,
+          correct: handWash[0].correct,
+          ItemID: handWash[0].itemId,
+          ParticipationID: participationId
+        }, {
+          grade: handWash[1].grade,
+          correct: handWash[1].correct,
+          ItemID: handWash[1].itemId,
+          ParticipationID: participationId
+        }];
+
+        await Grade.bulkCreate(handWashgrades, { transaction });
+        await transaction.commit();
+        return res.send({ message: "grades added successfully" })
+
+      } catch (error) {
+        await transaction.rollback();
+        return res.status(500).send({ error: true, message: 'Error saving Hand wash grades' });
+      }
     } else {
       await transaction.rollback();
-      return res.status(200).send({ message: "No item grades found" })
+      return res.status(500).send({ error: true, message: "No handwash grades provided" });
     }
 
   } catch (error) {
@@ -187,11 +210,9 @@ exports.submitGrade = async (req, res) => {
     return res.status(500).send({
       error: true,
       message: error.message || "Error when trying to update the final grade!",
-      stack: error.stack
     })
   }
 }
-
 
 exports.delete = (req, res) => {
   const id = req.params.id;
