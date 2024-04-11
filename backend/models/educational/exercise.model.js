@@ -17,6 +17,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false
     },
+    WorkUnitGroupID: {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    }
   })
   return Exercise;
 }
