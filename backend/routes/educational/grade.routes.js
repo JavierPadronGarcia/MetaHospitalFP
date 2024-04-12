@@ -1,7 +1,7 @@
 module.exports = app => {
   const grades = require("../../controllers/educational/grade.controller");
   const auth = require('../../controllers/roleManagement/auth');
-  
+
   var router = require("express").Router();
 
   //create a new grade
@@ -9,6 +9,8 @@ module.exports = app => {
 
   //retrieve all grades
   router.get("/", auth.isAuthenticated, grades.findAll);
+
+  router.get('/userGrades/:studentId', auth.isAuthenticated, grades.findAllGradesOfTheUser);
 
   //retrieve a single grade by id
   router.get("/:id", auth.isAuthenticated, grades.findOne);

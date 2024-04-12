@@ -34,6 +34,23 @@ exports.findAll = (req, res) => {
   });
 }
 
+exports.findAllGradesOfTheUser = async (req, res) => {
+  const { studentId } = req.params;
+
+  const allGradesOfTheUser = await db.participation.findOne({
+    where: {
+      StudentID: userId,
+    },
+    include: [
+      {
+        model: Grade,
+        
+      }
+    ]
+  });
+
+}
+
 exports.findOne = (req, res) => {
   let id = req.params.id;
   Grade.findByPk(id).then(data => {
