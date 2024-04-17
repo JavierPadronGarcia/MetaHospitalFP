@@ -168,6 +168,10 @@ exports.findAllGradesOfTheUserWithFilters = async (req, res) => {
   return res.send(gradesOfTheUser);
 }
 
+exports.findAllGradesOfTheGroupByUser = async (req, res) => {
+  // TODO
+}
+
 exports.findOne = (req, res) => {
   let id = req.params.id;
   Grade.findByPk(id).then(data => {
