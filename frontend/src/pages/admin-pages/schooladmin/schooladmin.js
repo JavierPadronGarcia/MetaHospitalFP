@@ -11,6 +11,7 @@ import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './schooladmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
+import SearchComponent from '../../../components/search/search';
 
 function SchoolsAdmin() {
   const [Schools, setSchools] = useState([]);
@@ -20,12 +21,14 @@ function SchoolsAdmin() {
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
+  const [filteredData, setFilteredData] = useState([]);
 
   const getSchools = async () => {
     try {
       const response = await SchoolsService.getSchools(localStorage.getItem('AccessToken'));
       const schoolList = response;
       setSchools(schoolList);
+      setFilteredData(schoolList)
     } catch (error) {
       message.error('No se pudo obtener escuelas, intentalo de nuevo o prueba más tarde')
     }
@@ -127,12 +130,17 @@ function SchoolsAdmin() {
     setName('');
   }
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='container schooladmin-page'>
       <div className='container-left'>
         <Menu />
         <Tag name='Escuelas' />
-        <BasicList items={Schools} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

@@ -12,6 +12,7 @@ import Tag from '../../../components/tag/tag';
 import { Link, useLocation } from 'react-router-dom';
 import './useradmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
+import SearchComponent from '../../../components/search/search';
 
 function UserAdmin() {
   const [users, setUsers] = useState([]);
@@ -26,6 +27,7 @@ function UserAdmin() {
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
+  const [filteredData, setFilteredData] = useState([]);
 
   const { Option } = Select;
 
@@ -49,6 +51,7 @@ function UserAdmin() {
       const response = await usersService.getUsers();
       const userList = response;
       setUsers(userList);
+      setFilteredData(userList);
     } catch (error) {
       console.error('Error fetching users:', error);
       message.error(error.message)
@@ -220,12 +223,17 @@ function UserAdmin() {
     setSelectedSchool('');
   }
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='container useradmin-page'>
       <div className='container-left'>
         <Menu />
         <Tag name="Usuarios" />
-        <BasicList items={users} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <SearchComponent data={users} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

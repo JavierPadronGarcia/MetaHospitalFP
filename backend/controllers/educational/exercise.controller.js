@@ -12,6 +12,7 @@ const Student = db.student;
 const UserAccount = db.userAccounts;
 const ActivitySubscription = db.activitySubscription;
 const Participation = db.participation;
+const ItemPlayerRole = db.itemPlayerRole;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -35,67 +36,97 @@ exports.create = (req, res) => {
 };
 
 exports.createExerciseAndParticipations = async (req, res) => {
-  const { Students, assigned, finishDate, CaseID } = req.body;
+  const { Students, assigned, finishDate, CaseID, workUnitId, groupId } = req.body;
 
   if (!assigned || !finishDate || !CaseID || !Students || Students?.length === 0) {
     return res.status(400).send({ error: true, message: 'Please, add at least one participation and exerciseData' })
   }
 
-  const participations = [];
-  const newFinishDate = new Date(finishDate);
-  const splittedStudents = Students.split(',');
+  let transaction;
+  try {
+    transaction = await db.sequelize.transaction();
 
-  const newExercise = {
-    assigned: assigned,
-    CaseID: CaseID,
-    finishDate: (newFinishDate instanceof Date && !isNaN(newFinishDate)) ? newFinishDate : null
-  }
-  const createdExercise = await Exercise.create(newExercise);
+    const participations = [];
+    const newFinishDate = new Date(finishDate);
+    const splittedStudents = Students.split(',');
 
-  splittedStudents.forEach(studentId => {
-    participations.push({
-      StudentID: studentId,
-      ExerciseID: createdExercise.id
-    })
-  })
+    const workUnitGroup = await WorkUnitGroup.findOne({
+      where: {
+        GroupId: groupId,
+        WorkUnitId: workUnitId
+      },
+      raw: true,
+      transaction
+    });
 
-  const createdParticipations = await Participation.bulkCreate(participations);
-
-  const allSubscriptions = await ActivitySubscription.findAll({
-    include: [
-      {
-        model: UserAccount,
-        required: true,
-        include: [
-          {
-            model: Student,
-            required: true,
-            include: {
-              model: Participation,
-              required: true,
-              where: { ExerciseId: createdExercise.id }
-            }
-          }
-        ]
-      }
-    ]
-  })
-
-  allSubscriptions.forEach(s => {
-    const subscriptionRecipient = {
-      endpoint: s.endpoint,
-      expirationTime: s.expirationTime,
-      keys: JSON.parse(s.keys)
+    if (!workUnitGroup) {
+      await transaction.rollback();
+      return res.status(500).send({ error: true, message: 'The group is not associated with that workUnit' });
     }
-    const title = `Nuevo ejercicio`;
 
-    let description = (assigned == 'true')
-      ? `Fecha final: ${dayjs(finishDate).format('DD/MM/YYYY')}`
-      : 'Ejercicio no evaluado';
+    const newExercise = {
+      assigned: assigned,
+      CaseID: CaseID,
+      finishDate: (newFinishDate instanceof Date && !isNaN(newFinishDate)) ? newFinishDate : null,
+      WorkUnitGroupID: workUnitGroup.id
+    }
 
-    sendNotification(subscriptionRecipient, title, description);
-  })
-  return res.send(createdParticipations);
+    const createdExercise = await Exercise.create(newExercise, { transaction });
+
+    splittedStudents.forEach(studentId => {
+      participations.push({
+        StudentID: studentId,
+        ExerciseID: createdExercise.id
+      })
+    })
+
+    const createdParticipations = await Participation.bulkCreate(participations, { transaction });
+
+    const allSubscriptions = await ActivitySubscription.findAll({
+      include: [
+        {
+          model: UserAccount,
+          required: true,
+          include: [
+            {
+              model: Student,
+              required: true,
+              include: {
+                model: Participation,
+                required: true,
+                where: { ExerciseId: createdExercise.id }
+              }
+            }
+          ]
+        }
+      ],
+      transaction
+    });
+
+    allSubscriptions.forEach(s => {
+      const subscriptionRecipient = {
+        endpoint: s.endpoint,
+        expirationTime: s.expirationTime,
+        keys: JSON.parse(s.keys)
+      }
+      const title = `New exercise`;
+
+      let description = (assigned == 'true')
+        ? `Final date: ${dayjs(finishDate).format('DD/MM/YYYY')}`
+        : 'Ungraded exercise';
+
+      sendNotification(subscriptionRecipient, title, description);
+    });
+
+    await transaction.commit();
+
+    return res.send(createdParticipations);
+
+  } catch (error) {
+    console.error('Transaction failed:', error);
+    if (transaction) await transaction.rollback();
+    return res.status(500).send({ error: true, message: 'Transaction failed' });
+  }
 }
 
 exports.findAll = (req, res) => {
@@ -124,12 +155,11 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   try {
     const result = await db.sequelize.query(`
       SELECT c.id, c.name, ex.finishDate, ex.assigned, ex.CaseID, ex.id as exerciseId
-      FROM \`${Group.tableName}\` AS g
-      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id 
-      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
-      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
-      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
-      WHERE g.id = ${groupId} and wku.id = ${workUnitId}
+      FROM \`${WorkUnitGroup.tableName}\` AS wkug
+      JOIN \`${Exercise.tableName}\` AS ex ON ex.WorkUnitGroupID = wkug.id
+      JOIN \`${Case.tableName}\` AS c ON c.id = ex.CaseID
+      WHERE wkug.GroupID = ${groupId} 
+      AND wkug.WorkUnitID = ${workUnitId}
       GROUP BY c.id, c.WorkUnitId, c.name, ex.assigned, ex.finishDate, ex.CaseID, ex.id;
     `, { type: db.Sequelize.QueryTypes.SELECT });
     return res.send(result);
@@ -143,27 +173,117 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
 exports.findAllExercisesAssignedToStudent = async (req, res) => {
   const { groupId, workUnitId } = req.params;
   try {
-    const result = await db.sequelize.query(`
-      SELECT ex.id AS exerciseId, ex.assigned, ex.finishDate, c.id AS caseId, c.WorkUnitId AS workUnitId, c.name AS caseName 
-      FROM \`${Group.tableName}\` AS g
-      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
-      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
-      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
-      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
-      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
-      JOIN \`${Student.tableName}\` AS st ON st.id = p.StudentID
-      JOIN \`${UserAccount.tableName}\` AS u ON u.id = st.id
-      WHERE g.id = ${groupId}
-      AND wku.id = ${workUnitId}
-      AND u.id = ${req.user.id}
-    `, { type: db.Sequelize.QueryTypes.SELECT });
-    return res.send(result);
+    const exercises = await Participation.findAll({
+      raw: true,
+      attributes: [
+        [db.sequelize.col('Exercise.id'), 'exerciseId'],
+        [db.sequelize.col('Exercise.assigned'), 'assigned'],
+        [db.sequelize.col('Exercise.finishDate'), 'finishDate'],
+        [db.sequelize.col('Exercise.Case.id'), 'caseId'],
+        [db.sequelize.col('Exercise.Case.WorkUnitId'), 'workUnitId'],
+        [db.sequelize.col('Exercise.Case.name'), 'caseName'],
+        [db.sequelize.col('Participation.FinalGrade'), 'finalGrade'],
+        [db.sequelize.col('Participation.id'), 'participationId'],
+      ],
+      include: [
+        {
+          model: Exercise,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: Case,
+              attributes: [],
+              required: true,
+              where: { WorkUnitId: workUnitId },
+              include: [
+                {
+                  model: WorkUnit,
+                  attributes: [],
+                  required: true,
+                  where: { id: workUnitId },
+                  include: [
+                    {
+                      model: WorkUnitGroup,
+                      required: true,
+                      attributes: [],
+                      where: { GroupID: groupId },
+                      include: [
+                        {
+                          model: Group,
+                          required: true,
+                          attributes: [],
+                          where: { id: groupId }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: Student,
+          attributes: [],
+          required: true,
+          where: { id: req.user.id },
+          include: [
+            {
+              model: UserAccount,
+              attributes: [],
+              required: true,
+              where: { id: req.user.id }
+            }
+          ]
+        },
+      ],
+    });
+
+    const exercisesWithGradesPromises = exercises.map(async (exerciseParticipation) => {
+      const grades = await Grade.findAll({
+        raw: true,
+        where: {
+          ParticipationID: exerciseParticipation.participationId
+        },
+        attributes: [
+          [db.sequelize.col('Grade.id'), 'gradeId'],
+          [db.sequelize.col('Grade.correct'), 'gradeCorrect'],
+          [db.sequelize.col('Grade.grade'), 'gradeValue'],
+          [db.sequelize.col('ItemPlayerRole.item.id'), 'itemId'],
+          [db.sequelize.col('ItemPlayerRole.item.name'), 'itemName'],
+          [db.sequelize.col('ItemPlayerRole.item.description'), 'itemDescription'],
+        ],
+        include: [
+          {
+            model: ItemPlayerRole,
+            required: true,
+            attributes: [],
+            include: [
+              {
+                model: Item,
+                attributes: [],
+                required: true
+              }
+            ]
+          }
+        ]
+      });
+      exerciseParticipation.grades = grades;
+      exerciseParticipation.assigned = exerciseParticipation.assigned ? 1 : 0;
+      return exerciseParticipation;
+    });
+
+    const exercisesWithGrades = await Promise.all(exercisesWithGradesPromises);
+
+    return res.send(exercisesWithGrades);
   } catch (err) {
     return res.status(500).send({
       error: err.message || "Some error occurred while retrieving the exercises of the student"
     });
   }
-}
+};
+
 
 exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
   try {

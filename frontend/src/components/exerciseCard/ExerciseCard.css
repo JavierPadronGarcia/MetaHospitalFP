@@ -1,0 +1,60 @@
+.exercise-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.exercise-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-height: 320px;
+}
+
+.exercise-head,
+.exercise-description {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exercise-description {
+  width: 90%;
+}
+
+.exercise-description>p {
+  font-size: 1.2rem;
+}
+
+.exercise-description .grade {
+  font-weight: bold;
+}
+
+.exercise-card .display>div {
+  font-size: 2rem;
+}
+
+.exercise-card:hover {
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+.exercise-card .grades-container {
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
+
+.exercise-card .grades-scroll {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.exercise-card .grades-container.hidden {
+  display: none;
+}

@@ -13,6 +13,7 @@ import CoursesService from '../../../services/courses.service';
 import './groupsadmin.css';
 import dayjs from 'dayjs';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
+import SearchComponent from '../../../components/search/search';
 
 function GroupsAdmin() {
   const [groups, setGroups] = useState([]);
@@ -25,6 +26,7 @@ function GroupsAdmin() {
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [courseId, setCourseId] = useState('');
   const [showPop, setShowPop] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
   const { RangePicker } = DatePicker;
 
@@ -32,6 +34,7 @@ function GroupsAdmin() {
     try {
       const groupsList = await GroupsService.getAllGroupsWithoutCount(localStorage.getItem('schoolId'));
       setGroups(groupsList);
+      setFilteredData(groupsList);
     } catch (error) {
       console.error('Error fetching Groups:', error);
       message.error(error.message)
@@ -189,12 +192,17 @@ function GroupsAdmin() {
     setRange([null, null]);
   };
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='container groupsadmin-page'>
       <div className='container-left'>
         <Menu2 />
         <Tag name="Grupos" />
-        <BasicList items={groups} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <SearchComponent data={groups} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

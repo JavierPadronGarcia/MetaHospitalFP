@@ -10,6 +10,7 @@ import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './coursesadmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
+import SearchComponent from '../../../components/search/search';
 
 function CoursesAdmin() {
   const [Courses, setCourses] = useState([]);
@@ -20,11 +21,13 @@ function CoursesAdmin() {
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
+  const [filteredData, setFilteredData] = useState([]);
 
   const getCourses = async () => {
     try {
       const response = await CoursesService.getCourses();
       setCourses(response);
+      setFilteredData(response)
     } catch (error) {
       message.error(error.message);
     }
@@ -126,12 +129,17 @@ function CoursesAdmin() {
     setAcronyms('');
   }
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='container coursesadmin-page'>
       <div className='container-left'>
         <Menu2 />
         <Tag name="Cursos" />
-        <BasicList items={Courses} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

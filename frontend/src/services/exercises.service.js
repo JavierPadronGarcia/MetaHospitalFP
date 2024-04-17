@@ -37,12 +37,15 @@ async function getAllExercisesAssignedToStudent(groupId, workUnitId) {
   }
 }
 
-async function addExercises(caseId, students, assigned, date) {
+async function addExercises(caseId, students, assigned, date, groupId, workUnitId) {
   const body = new URLSearchParams();
   body.append('CaseID', caseId);
   body.append('Students', students);
   body.append('assigned', assigned || false);
   body.append('finishDate', date);
+  body.append('groupId', groupId);
+  body.append('workUnitId', workUnitId);
+  
   try {
     const response = axios.post(`${backendExercisesEndpoint}/addExercises`,
       body,

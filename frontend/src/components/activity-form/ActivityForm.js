@@ -1,5 +1,5 @@
 import './ActivityForm.css';
-import { Button, Checkbox, DatePicker, Select, message, Modal,Affix } from 'antd';
+import { Button, Checkbox, DatePicker, Select, message, Modal, Affix } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import casesService from '../../services/cases.service';
@@ -129,7 +129,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
     }
 
     if (validForm) {
-      exercisesService.addExercises(activityCase, students, checked[1], date).then(response => {
+      exercisesService.addExercises(activityCase, students, checked[1], date, groupId, workUnitId).then(response => {
         message.success('Actividad agregada correctamente', 2);
         setSelectedCase(null);
         setSelectedItems([]);
@@ -145,7 +145,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         };
       });
     }
-    
+
   }
 
   const handleUpdate = (e) => {
@@ -234,7 +234,7 @@ function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, no
         title={isUpdateForm ? "Actualizar actividad" : "Nueva actividad"}
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
-        footer={null} 
+        footer={null}
       >
         <div className='update-activity-form'>
           <form onSubmit={isUpdateForm ? handleUpdate : handleCreate} className='activity-form'>
