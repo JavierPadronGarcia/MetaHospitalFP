@@ -10,6 +10,7 @@ import teacherGroupService from '../../../services/teacherGroup.service';
 import groupEnrolementService from '../../../services/groupEnrolement.service';
 import Menu2 from '../../../components/menu2/menu2';
 import './admincourse.css';
+import SearchComponent from '../../../components/search/search';
 
 function AdminCourse() {
   const [teachers, setTeachers] = useState([]);
@@ -22,6 +23,8 @@ function AdminCourse() {
   const location = useLocation();
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [filteredTeacher, setFilteredTeacher] = useState([]);
 
   useEffect(() => {
     getTeachers();
@@ -44,6 +47,7 @@ function AdminCourse() {
     try {
       const teacherlist = await teacherGroupService.getAllTeachersInAGroup(localStorage.getItem("groupsId"));
       setTeachersInGroup(teacherlist);
+      setFilteredTeacher(teacherlist);
     } catch (error) {
       console.error('Error fetching teachers in group:', error);
       message.error(error.message)
@@ -64,6 +68,7 @@ function AdminCourse() {
     try {
       const studentslist = await groupEnrolementService.getAllStudentsInAGroup(localStorage.getItem("groupsId"));
       setStudentsInGroup(studentslist);
+      setFilteredStudents(studentslist);
     } catch (error) {
       console.error('Error fetching students in group:', error);
       message.error(error.message)
@@ -190,15 +195,25 @@ function AdminCourse() {
     setMode(Consts.ADD_MODE);
   }
 
+  
+  const handleSearchstudents = (filteredData) => {
+    setFilteredStudents(filteredData)
+  };
+  const handleSearchteachers = (filteredData) => {
+    setFilteredTeacher(filteredData)
+  };
+
   return (
     <div className='container admincourse-page'>
       <div className='container-left'>
         <Menu2></Menu2>
         <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
         <h2 className='list-titles'>Profesores</h2>
-        <BasicList items={teachersInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
+        <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name"/>
+        <BasicList items={filteredTeacher} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
         <h2 className='list-titles'>Estudiantes</h2>
-        <BasicList items={studentsInGroup} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} ></BasicList>
+        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name"/>
+        <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} ></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />
       </div>
       <div className='container-right'>
