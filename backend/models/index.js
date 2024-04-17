@@ -103,6 +103,8 @@ db.groups.hasMany(db.workUnitGroup, { foreignKey: 'GroupID' });
 db.workUnit.hasMany(db.workUnitGroup, { foreignKey: 'WorkUnitID' });
 db.workUnit.hasMany(db.case, { foreignKey: 'WorkUnitID' });
 
+db.case.belongsTo(db.workUnit, { foreignKey: 'WorkUnitID' });
+
 db.workUnit.hasMany(db.item, { foreignKey: 'WorkUnitID' });
 db.item.belongsTo(db.workUnit, { foreignKey: 'WorkUnitID' });
 
@@ -134,7 +136,12 @@ db.participation.hasMany(db.grade, { foreignKey: 'ParticipationID' });
 db.participation.belongsTo(db.exercise, { foreignKey: 'ExerciseID' });
 
 db.student.hasMany(db.participation, { foreignKey: 'StudentID' });
+db.participation.belongsTo(db.student, { foreignKey: 'StudentID' });
+
 db.groups.hasMany(db.messages, { foreignKey: 'GroupID' });
+
+db.exercise.belongsTo(db.workUnitGroup, { foreignKey: 'WorkUnitGroupID' });
+db.workUnitGroup.hasMany(db.exercise, { foreignKey: 'WorkUnitGroupID' });
 
 //subscriptions relations
 db.userAccounts.hasMany(db.activitySubscription, { foreignKey: 'UserID' })
