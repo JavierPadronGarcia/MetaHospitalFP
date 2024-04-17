@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import './studentschool.css';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
+import SearchComponent from '../../../components/search/search';
 
 function StudentSchools() {
   const [students, setStudents] = useState([]);
@@ -23,6 +24,7 @@ function StudentSchools() {
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const Headlines = ['Nombre','Email'];
   const location = useLocation();
+  const [filteredData, setFilteredData] = useState([]);
 
   const getStudents = async () => {
     try {
@@ -30,6 +32,7 @@ function StudentSchools() {
         localStorage.getItem('schoolId')
       );
       setStudents(studentList);
+      setFilteredData(studentList)
     } catch (error) {
       message.error('No se pudo obtener a los usuarios de la escuela')
     }
@@ -148,12 +151,17 @@ function StudentSchools() {
     setEmail('');
   }
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='container studentschool-page'>
       <div className='container-left'>
         <Menu2 />
         <Tag name="Estudiantes" />
-        <BasicList items={students} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <SearchComponent data={students} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
         <FloatingExcelButton data={students}></FloatingExcelButton>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

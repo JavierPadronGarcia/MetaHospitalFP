@@ -27,7 +27,7 @@
 
 .list-titles {
   margin: 0px;
-  padding-left: 10px;
+  padding-left: 1rem;
 }
 
 @media screen and (min-width: 500px) {
