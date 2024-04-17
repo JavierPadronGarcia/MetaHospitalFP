@@ -168,6 +168,47 @@ exports.findAllGradesOfTheUserWithFilters = async (req, res) => {
   return res.send(gradesOfTheUser);
 }
 
+exports.findActivityGradesOfTheUser = async (req, res) => {
+  const { studentId, exerciseId } = req.query;
+
+  if (!studentId || !groupId) {
+    return res.status(400).send({
+      error: "Missing parameters: studentId and exerciseId are required"
+    });
+  }
+
+  const gradesOfTheUser = await Participation.findAll({
+    where: {
+      StudentId: studentId
+    },
+    attributes: {
+      exclude: ['updatedAt'],
+      include: [
+        [db.sequelize.col('Participation.id'), 'participationId'],
+        [db.sequelize.col('Participation.finalGrade'), 'finalGrade'],
+      ]
+    },
+    include: [
+      {
+        model: Exercise,
+        attributes: [],
+        where: {
+          id: exerciseId
+        }
+      },
+      {
+        model: Grade,
+        as: 'grades',
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'ParticipationID']
+        },
+      },
+    ],
+  });
+
+  return res.send(gradesOfTheUser);
+}
+
 exports.findAllGradesOfTheGroupByUser = async (req, res) => {
   // TODO
 }

@@ -1,0 +1,15 @@
+.arrow-toggle:hover {
+  background-color: #F2F2F2F2;
+}
+
+.arrow-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  padding: 3px;
+  transition: background-color 60ms ease;
+  cursor: pointer;
+}

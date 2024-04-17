@@ -5,6 +5,7 @@ import Tag from '../../../components/tag/tag';
 import exercisesService from '../../../services/exercises.service';
 import dayjs from 'dayjs';
 import { message } from 'antd';
+import ExerciseCard from '../../../components/exerciseCard/ExerciseCard';
 
 const StudentExercises = () => {
   const [workUnit, setWorkUnit] = useState(JSON.parse(localStorage.getItem('actualWorkUnit')));
@@ -16,7 +17,6 @@ const StudentExercises = () => {
   const getAllExercises = async () => {
     try {
       const allExercises = await exercisesService.getAllExercisesAssignedToStudent(studentGroup.id, workUnit.id);
-      console.log(allExercises)
       setAssignedExercises(allExercises.filter((e) => e.assigned === 1));
       setUnAssignedExercises(allExercises.filter((e) => e.assigned === 0));
     } catch (err) {
@@ -31,7 +31,12 @@ const StudentExercises = () => {
   const showAssignedExercises = () => (
     <>
       {assignedExercises.map((exercise, index) => (
-        <Card key={index} title={exercise.caseName} content={dayjs(exercise.finishDate).format('DD-MM-YYYY')} />
+        // <ExerciseCard key={index} title={exercise.caseName} content={dayjs(exercise.finishDate).format('DD-MM-YYYY')} />
+        <ExerciseCard
+          key={index}
+          title={exercise.caseName}
+          participationGrades={{ finalGrade: exercise.finalGrade, itemGrades: exercise?.grades }}
+        />
       ))}
     </>
   )
