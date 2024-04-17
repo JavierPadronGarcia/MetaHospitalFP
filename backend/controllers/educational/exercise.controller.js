@@ -12,6 +12,7 @@ const Student = db.student;
 const UserAccount = db.userAccounts;
 const ActivitySubscription = db.activitySubscription;
 const Participation = db.participation;
+const ItemPlayerRole = db.itemPlayerRole;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -172,27 +173,117 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
 exports.findAllExercisesAssignedToStudent = async (req, res) => {
   const { groupId, workUnitId } = req.params;
   try {
-    const result = await db.sequelize.query(`
-      SELECT ex.id AS exerciseId, ex.assigned, ex.finishDate, c.id AS caseId, c.WorkUnitId AS workUnitId, c.name AS caseName 
-      FROM \`${Group.tableName}\` AS g
-      JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id
-      JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
-      JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
-      JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
-      JOIN \`${Participation.tableName}\` AS p ON p.ExerciseId = ex.id
-      JOIN \`${Student.tableName}\` AS st ON st.id = p.StudentID
-      JOIN \`${UserAccount.tableName}\` AS u ON u.id = st.id
-      WHERE g.id = ${groupId}
-      AND wku.id = ${workUnitId}
-      AND u.id = ${req.user.id}
-    `, { type: db.Sequelize.QueryTypes.SELECT });
-    return res.send(result);
+    const exercises = await Participation.findAll({
+      raw: true,
+      attributes: [
+        [db.sequelize.col('Exercise.id'), 'exerciseId'],
+        [db.sequelize.col('Exercise.assigned'), 'assigned'],
+        [db.sequelize.col('Exercise.finishDate'), 'finishDate'],
+        [db.sequelize.col('Exercise.Case.id'), 'caseId'],
+        [db.sequelize.col('Exercise.Case.WorkUnitId'), 'workUnitId'],
+        [db.sequelize.col('Exercise.Case.name'), 'caseName'],
+        [db.sequelize.col('Participation.FinalGrade'), 'finalGrade'],
+        [db.sequelize.col('Participation.id'), 'participationId'],
+      ],
+      include: [
+        {
+          model: Exercise,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: Case,
+              attributes: [],
+              required: true,
+              where: { WorkUnitId: workUnitId },
+              include: [
+                {
+                  model: WorkUnit,
+                  attributes: [],
+                  required: true,
+                  where: { id: workUnitId },
+                  include: [
+                    {
+                      model: WorkUnitGroup,
+                      required: true,
+                      attributes: [],
+                      where: { GroupID: groupId },
+                      include: [
+                        {
+                          model: Group,
+                          required: true,
+                          attributes: [],
+                          where: { id: groupId }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: Student,
+          attributes: [],
+          required: true,
+          where: { id: req.user.id },
+          include: [
+            {
+              model: UserAccount,
+              attributes: [],
+              required: true,
+              where: { id: req.user.id }
+            }
+          ]
+        },
+      ],
+    });
+
+    const exercisesWithGradesPromises = exercises.map(async (exerciseParticipation) => {
+      const grades = await Grade.findAll({
+        raw: true,
+        where: {
+          ParticipationID: exerciseParticipation.participationId
+        },
+        attributes: [
+          [db.sequelize.col('Grade.id'), 'gradeId'],
+          [db.sequelize.col('Grade.correct'), 'gradeCorrect'],
+          [db.sequelize.col('Grade.grade'), 'gradeValue'],
+          [db.sequelize.col('ItemPlayerRole.item.id'), 'itemId'],
+          [db.sequelize.col('ItemPlayerRole.item.name'), 'itemName'],
+          [db.sequelize.col('ItemPlayerRole.item.description'), 'itemDescription'],
+        ],
+        include: [
+          {
+            model: ItemPlayerRole,
+            required: true,
+            attributes: [],
+            include: [
+              {
+                model: Item,
+                attributes: [],
+                required: true
+              }
+            ]
+          }
+        ]
+      });
+      exerciseParticipation.grades = grades;
+      exerciseParticipation.assigned = exerciseParticipation.assigned ? 1 : 0;
+      return exerciseParticipation;
+    });
+
+    const exercisesWithGrades = await Promise.all(exercisesWithGradesPromises);
+
+    return res.send(exercisesWithGrades);
   } catch (err) {
     return res.status(500).send({
       error: err.message || "Some error occurred while retrieving the exercises of the student"
     });
   }
-}
+};
+
 
 exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
   try {

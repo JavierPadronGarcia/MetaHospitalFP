@@ -1,0 +1,29 @@
+.grade-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grade-card .grade-card-icon {
+  font-size: 1.5rem;
+}
+
+.grade-card .success {
+  color: green;
+}
+
+.grade-card .fail {
+  color: red;
+}
+
+.grade-card .grade-card-grade {
+  font-weight: bold;
+}
+
+.grade-card-grades-container {
+  display: flex;
+  gap: 1rem;
+  padding: 2px 1.5rem;
+}

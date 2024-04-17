@@ -14,6 +14,8 @@ module.exports = app => {
 
   router.get('/groupUserGradesByWorkUnit', auth.isAuthenticated, grades.findAllGradesOfTheUserWithFilters);
 
+  router.get('/findGradesInExerciseAndUser', auth.isAuthenticated, grades.findActivityGradesOfTheUser);
+
   //retrieve a single grade by id
   router.get("/:id", auth.isAuthenticated, grades.findOne);
 

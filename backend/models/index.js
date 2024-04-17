@@ -88,6 +88,8 @@ db.school.hasMany(db.teacherSchool, { foreignKey: 'SchoolID' });
 db.groups.hasMany(db.studentGroup, { foreignKey: 'GroupID' });
 db.groups.hasMany(db.teacherGroup, { foreignKey: 'GroupID' });
 
+
+
 db.studentGroup.belongsTo(db.groups, { foreignKey: 'GroupID' });
 db.studentGroup.belongsTo(db.student, { foreignKey: 'StudentID' });
 
@@ -99,6 +101,7 @@ db.course.hasMany(db.groups, { foreignKey: 'CourseID' });
 
 // Educational Relations
 db.groups.hasMany(db.workUnitGroup, { foreignKey: 'GroupID' });
+db.workUnitGroup.belongsTo(db.groups, { foreignKey: 'GroupID' });
 
 db.workUnit.hasMany(db.workUnitGroup, { foreignKey: 'WorkUnitID' });
 db.workUnit.hasMany(db.case, { foreignKey: 'WorkUnitID' });
@@ -119,9 +122,13 @@ db.workUnitColor.belongsTo(db.workUnitGroup, { foreignKey: 'WorkUnitGroupID' });
 db.item.hasMany(db.itemPlayerRole, { foreignKey: 'ItemID' });
 db.playerRole.hasMany(db.itemPlayerRole, { foreignKey: 'PlayerRoleID' });
 
+db.itemPlayerRole.belongsTo(db.item, { foreignKey: 'ItemID' });
+
 
 db.itemPlayerRole.belongsTo(db.playerRole, { foreignKey: 'PlayerRoleID' });
 db.itemPlayerRole.hasMany(db.grade, { foreignKey: 'ItemPlayerRoleID' });
+
+db.grade.belongsTo(db.itemPlayerRole, { foreignKey: 'ItemPlayerRoleID' });
 
 db.item.hasMany(db.itemCase, { foreignKey: 'ItemID' });
 db.case.hasMany(db.itemCase, { foreignKey: 'CaseID' });
