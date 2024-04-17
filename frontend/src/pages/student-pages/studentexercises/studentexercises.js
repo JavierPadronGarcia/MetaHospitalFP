@@ -1,18 +1,19 @@
+import { message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Card from '../../../components/card/card';
+import ExerciseCard from '../../../components/exerciseCard/ExerciseCard';
 import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
 import exercisesService from '../../../services/exercises.service';
-import dayjs from 'dayjs';
-import { message } from 'antd';
-import ExerciseCard from '../../../components/exerciseCard/ExerciseCard';
+import './StudentExercises.css';
 
 const StudentExercises = () => {
-  const [workUnit, setWorkUnit] = useState(JSON.parse(localStorage.getItem('actualWorkUnit')));
-  const [studentGroup, setStudentGroup] = useState(JSON.parse(localStorage.getItem('studentGroup')));
+  const workUnit = JSON.parse(localStorage.getItem('actualWorkUnit'));
+  const studentGroup = JSON.parse(localStorage.getItem('studentGroup'));
+  const title = workUnit.name;
+
   const [assignedExercises, setAssignedExercises] = useState([]);
   const [unAssignedExercises, setUnAssignedExercises] = useState([]);
-  const [title, setTitle] = useState(workUnit.name);
 
   const getAllExercises = async () => {
     try {
@@ -29,16 +30,15 @@ const StudentExercises = () => {
   }, []);
 
   const showAssignedExercises = () => (
-    <>
+    <div className='student-exercises-assigned-exercises'>
       {assignedExercises.map((exercise, index) => (
-        // <ExerciseCard key={index} title={exercise.caseName} content={dayjs(exercise.finishDate).format('DD-MM-YYYY')} />
         <ExerciseCard
           key={index}
           title={exercise.caseName}
           participationGrades={{ finalGrade: exercise.finalGrade, itemGrades: exercise?.grades }}
         />
       ))}
-    </>
+    </div>
   )
 
   const showUnAssignedExercises = () => (
@@ -65,3 +65,5 @@ const StudentExercises = () => {
 }
 
 export default StudentExercises;
+
+// <ExerciseCard key={index} title={exercise.caseName} content={dayjs(exercise.finishDate).format('DD-MM-YYYY')} />

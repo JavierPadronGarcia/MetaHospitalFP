@@ -19,7 +19,7 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
             <h2>{title}</h2>
             <p>Calificación: <span className='grade'>{finalGrade ?? 'No calificado'}</span></p>
           </div>
-          {itemGrades &&
+          {itemGrades && itemGrades.length !== 0 &&
             <div className='display'>
               <ArrowToggle onToggle={toggleExpanded} />
             </div>
