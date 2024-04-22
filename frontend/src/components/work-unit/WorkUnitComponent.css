@@ -1,11 +1,12 @@
 .work-unit-component-selection {
   width: 90%;
-  height: 3rem;
-  border-radius: 11px;
+  height: 5rem;
+  border-radius: 1rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   text-align: center;
+  justify-content: center;
   transition: height .3s ease-in-out;
 }
 
@@ -15,7 +16,7 @@
 
 .work-unit-component-selection-first-line,
 .work-unit-component-selection-second-line {
-  height: 3rem;
+  height: 4rem;
   display: flex;
   padding-inline: 8px;
   justify-content: space-between;

@@ -16,6 +16,7 @@ const TeacherGroupStudents = () => {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedStudentId, setSelectedStudentId] = useState(null);
     const Headlines = ['Nombre', 'Codigo'];
+    const [filteredData, setFilteredData] = useState([]);
 
     const getStudents = async () => {
         try {
@@ -30,6 +31,7 @@ const TeacherGroupStudents = () => {
         try {
             const studentslist = await groupEnrolementService.getAllStudentsInAGroup(id)
             setstudentsInGroup(studentslist);
+            setFilteredData(studentslist);
         } catch (err) {
             console.log('Error:', err);
         }
@@ -116,10 +118,14 @@ const TeacherGroupStudents = () => {
         }
     }
 
+    const handleSearch = (filteredData) => {
+        setFilteredData(filteredData);
+    };
+
     return (
         <div>
-            <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
-            <BasicList items={studentsInGroup} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} password={true} />
+            <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} data={studentsInGroup} onSearch={handleSearch} fieldName="name" />
+            <BasicList items={filteredData} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} password={true} />
             <PopForm renderInputs={renderSchoolInputs} onSubmit={onSubmit} cancel={Cancel} />
         </div>
     );
