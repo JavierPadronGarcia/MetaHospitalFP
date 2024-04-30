@@ -213,6 +213,94 @@ exports.findAllGradesOfTheGroupByUser = async (req, res) => {
   // TODO
 }
 
+exports.findGradesByStudentInExercise = async (req, res) => {
+  const { exerciseId } = req.params;
+
+  if (!exerciseId) {
+    return res.status(400).send({
+      message: "Missing parameter: exerciseId"
+    });
+  }
+
+  const gradesInExerciseGroupByStudent = await Student.findAll({
+    raw: true,
+    attributes: {
+      exclude: ['createdAt', 'updatedAt', 'age'],
+      include: [
+        [db.sequelize.col('Student.id'), 'studentId'],
+        [db.sequelize.col('Student.name'), 'studentName'],
+        [db.sequelize.col('Participations.id'), 'participationId'],
+        [db.sequelize.col('Participations.FinalGrade'), 'finalGrade'],
+        [db.sequelize.col('Participations.Exercise.Case.id'), 'caseId'],
+      ]
+    },
+    include: [
+      {
+        model: Participation,
+        attributes: [],
+        where: { ExerciseID: exerciseId },
+        required: true,
+        include: [
+          {
+            model: Exercise,
+            attributes: [],
+            include: [
+              {
+                model: Case,
+                attributes: [],
+                required: true,
+                include: [
+                  {
+                    model: WorkUnit,
+                    attributes: []
+                  }
+                ]
+              },
+            ]
+          },
+          {
+            model: Grade,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'ParticipationID']
+            },
+          },
+        ]
+      },
+    ]
+  });
+
+  const studentsWithGrades = {};
+
+  gradesInExerciseGroupByStudent.forEach(row => {
+    const { studentId, studentName, caseId, participationId, finalGrade } = row;
+
+    if (!studentsWithGrades[studentId]) {
+      studentsWithGrades[studentId] = {
+        studentId: studentId,
+        studentName: studentName,
+        finalGrade: finalGrade,
+        caseId: caseId,
+        participationId: participationId,
+        grades: []
+      };
+    }
+
+    const groupedGrades = {
+      id: row['participations.grades.id'],
+      correct: row['participations.grades.correct'],
+      grade: row['participations.grades.grade'],
+      ItemID: row['participations.grades.ItemID'],
+      ItemPlayerRoleID: row['participations.grades.ItemPlayerRoleID'],
+    }
+
+    studentsWithGrades[studentId].grades.push(groupedGrades);
+  });
+
+  const result = Object.values(studentsWithGrades);
+
+  return res.send(result);
+}
+
 exports.findOne = (req, res) => {
   let id = req.params.id;
   Grade.findByPk(id).then(data => {

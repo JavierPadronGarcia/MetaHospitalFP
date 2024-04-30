@@ -23,13 +23,6 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
     setVisibility(!visibility);
   }
 
-  const iconEnter = () => (
-    <svg width="1em" height="1em" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M14.9182 2.22925H18.9454C23.3938 2.22925 27 4.66685 27 7.67378V21.2851C27 24.292 23.3938 26.7297 18.9454 26.7297H14.9182" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M2 14.4794H18.9455M18.9455 14.4794L12.9045 10.396M18.9455 14.4794L12.9045 18.5628" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-
   const handleNavigateToWorkUnit = () => {
     sessionStorage.setItem('colors', JSON.stringify(colors));
     const newPath = currentPath.replace('/units', `/unit/${workUnit.id}/${workUnit.name}`);
@@ -39,16 +32,19 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
 
   const showFirstLine = () => (
     <div className="work-unit-component-selection-first-line">
-      <Icon
-        component={iconEnter}
+      <div
         className='work-unit-component-icon enter'
         onClick={() => handleNavigateToWorkUnit()}
+        style={{ background: colors.primaryColor, height: '4rem', width: '4rem', borderRadius: '1rem' }}
       />
-      <span>{workUnit.name}</span>
+      <div style={{ display: 'flex', marginLeft: '1rem', width: '80%', textAlign: 'start', color: '#7777' }} onClick={() => handleNavigateToWorkUnit()}>
+        <b style={{ display: 'flex', alignItems: 'center', width: '100%', height: '4rem' }}>{workUnit.name}</b>
+      </div>
       <Icon
         component={visibility ? EyeOutlined : EyeInvisibleOutlined}
         className='work-unit-component-icon visibility'
         onClick={() => changeVisibility()}
+        style={{ color: '#7777' }}
       />
     </div>
   )
@@ -56,7 +52,7 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
   return (
     <div
       className='work-unit-component-selection'
-      style={{ background: colors.primaryColor }}
+      style={{ background: 'white' }}
       ref={componentRef}
     >
       {showFirstLine()}

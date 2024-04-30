@@ -55,7 +55,6 @@ function ActivityCard({ edit, caseId, activityId, title, description, assigned, 
     return (
       <>
         <Card
-          style={{ width: '80%' }}
           className='activities-card'
           actions={[
             (deleteElement()),
@@ -70,7 +69,6 @@ function ActivityCard({ edit, caseId, activityId, title, description, assigned, 
 
   return (
     <Card
-      style={{ width: '100%' }}
       className='activities-card'
       actions={[
         <EllipsisOutlined key='ellipsis' />

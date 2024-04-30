@@ -12,11 +12,13 @@ function TeacherGroupPage() {
   const { name, id } = useParams();
   const [loading, setLoading] = useState(true);
   const [allWorkUnits, setAllWorkUnits] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   const getAllWorkUnits = async () => {
     try {
       const workUnits = await workUnitGroupService.getAllWorkUnitsWithColorsByGroup(id);
       setAllWorkUnits(workUnits);
+      setFilteredData(workUnits);
     } catch (err) {
       if (!err.response) {
         noConnectionError();
@@ -40,7 +42,7 @@ function TeacherGroupPage() {
   }
 
   const showWorkUnits = () => (
-    allWorkUnits.map((workUnitGroup) => (
+    filteredData.map((workUnitGroup) => (
       <WorkUnitComponent
         workUnit={workUnitGroup.workUnit}
         unitVisibility={workUnitGroup.visibility}
@@ -50,9 +52,14 @@ function TeacherGroupPage() {
     ))
   )
 
+  const handleSearch = (filteredData) => {
+    console.log(filteredData);
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='teacher-group-page'>
-      <Headers title={name} Page={'selected'} groupData={{groupId: id, groupName: name}} />
+      <Headers title={name} Page={'selected'} groupData={{groupId: id, groupName: name}} data={allWorkUnits} onSearch={handleSearch} fieldName="workUnit.name"/>
       <div className='teacher-group-page-main'>
         {loading &&
           <LoadingOutlined style={{ fontSize: 60, color: '#08c', display: 'flex', justifyContent: 'center' }} />
