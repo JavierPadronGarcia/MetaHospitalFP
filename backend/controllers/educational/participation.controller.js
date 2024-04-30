@@ -105,7 +105,7 @@ exports.submitGrade = async (req, res) => {
 
     if (!participation) {
       await transaction.rollback();
-      return res.status(501).send({ error: true, message: "User not assigned to this exercise" });
+      return res.status(403).send({ error: true, message: "User not assigned to this exercise" });
     }
 
     if (participation.FinalGrade) {

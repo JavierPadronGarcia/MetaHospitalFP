@@ -176,14 +176,14 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
     const exercises = await Participation.findAll({
       raw: true,
       attributes: [
-        [db.sequelize.col('Exercise.id'), 'exerciseId'],
-        [db.sequelize.col('Exercise.assigned'), 'assigned'],
-        [db.sequelize.col('Exercise.finishDate'), 'finishDate'],
-        [db.sequelize.col('Exercise.Case.id'), 'caseId'],
-        [db.sequelize.col('Exercise.Case.WorkUnitId'), 'workUnitId'],
-        [db.sequelize.col('Exercise.Case.name'), 'caseName'],
-        [db.sequelize.col('Participation.FinalGrade'), 'finalGrade'],
-        [db.sequelize.col('Participation.id'), 'participationId'],
+        [db.sequelize.col('exercise.id'), 'exerciseId'],
+        [db.sequelize.col('exercise.assigned'), 'assigned'],
+        [db.sequelize.col('exercise.finishDate'), 'finishDate'],
+        [db.sequelize.col('exercise.case.id'), 'caseId'],
+        [db.sequelize.col('exercise.case.WorkUnitId'), 'workUnitId'],
+        [db.sequelize.col('exercise.case.name'), 'caseName'],
+        [db.sequelize.col('participation.FinalGrade'), 'finalGrade'],
+        [db.sequelize.col('participation.id'), 'participationId'],
       ],
       include: [
         {
@@ -247,9 +247,9 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
           ParticipationID: exerciseParticipation.participationId
         },
         attributes: [
-          [db.sequelize.col('Grade.id'), 'gradeId'],
-          [db.sequelize.col('Grade.correct'), 'gradeCorrect'],
-          [db.sequelize.col('Grade.grade'), 'gradeValue'],
+          [db.sequelize.col('grade.id'), 'gradeId'],
+          [db.sequelize.col('grade.correct'), 'gradeCorrect'],
+          [db.sequelize.col('grade.grade'), 'gradeValue'],
           [db.sequelize.col('ItemPlayerRole.item.id'), 'itemId'],
           [db.sequelize.col('ItemPlayerRole.item.name'), 'itemName'],
           [db.sequelize.col('ItemPlayerRole.item.description'), 'itemDescription'],
