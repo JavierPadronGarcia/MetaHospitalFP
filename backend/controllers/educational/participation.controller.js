@@ -105,7 +105,7 @@ exports.submitGrade = async (req, res) => {
 
     if (!participation) {
       await transaction.rollback();
-      return res.status(500).send({ error: true, message: "No such participation found!" });
+      return res.status(501).send({ error: true, message: "User not assigned to this exercise" });
     }
 
     const participationId = participation.id;
