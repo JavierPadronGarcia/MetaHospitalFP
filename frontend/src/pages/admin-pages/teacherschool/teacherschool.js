@@ -32,7 +32,7 @@ function TeacherSchools() {
         localStorage.getItem('schoolId')
       );
       setTeacher(teacherList);
-      setFilteredData(teacherList)
+      setFilteredData(teacherList);
     } catch (error) {
       message.error('No se pudo obtener a los profesores de la escuela');
     }

@@ -2,8 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
-  width: 80%;
+  padding-top: 1rem;
+  height: auto;
+  width: 90vw;
   margin: 0 auto;
   user-select: none;
 }
@@ -11,7 +12,7 @@
 .cardunits {
   background-color: #ffffff;
   border-radius: 30px;
-  padding: 10px;
+  padding: 20px;
   position: relative;
   width: 90%;
   display: flex;
@@ -19,10 +20,10 @@
 }
 
 .cardunits-container .square {
-  width: 30px;
-  height: 30px;
+  width: 3.5rem;
+  height: 3.5rem;
   background-color: #007bff;
-  margin-right: 20px;
+  margin: 0;
   border-radius: 20px;
 }
 
@@ -33,11 +34,12 @@
 
 .cardunits .content {
   width: 90%;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bolder;
   display: flex;
+  margin-left: 10px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .cardunits .content .date{
@@ -54,10 +56,5 @@
   .cardunits .content {
     font-size: 1.5rem;
     font-weight: bolder;
-  }
-
-  .cardunits-container .square {
-    width: 50px;
-    height: 50px;
   }
 }

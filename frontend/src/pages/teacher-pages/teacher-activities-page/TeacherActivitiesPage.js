@@ -7,6 +7,8 @@ import exercisesService from '../../../services/exercises.service';
 import { errorMessage, noConnectionError } from '../../../utils/shared/errorHandler';
 import { message } from 'antd';
 import Headers from '../../../components/headers/headers';
+import Tag from '../../../components/tag/tag';
+
 function TeacherActivitiesPage() {
 
   const { name, id, workUnitId, workUnitName } = useParams();
@@ -14,10 +16,12 @@ function TeacherActivitiesPage() {
 
   const [assignedExercises, setAssignedExercises] = useState([]);
   const [unAssignedExercises, setUnAssignedExercises] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   const getAllExercises = () => {
     exercisesService.getAllExercisesOfTheGroup(id, workUnitId).then(exercises => {
       setAssignedExercises(exercises.filter(exercise => Boolean(exercise.assigned) === true));
+      setFilteredData(exercises.filter(exercise => Boolean(exercise.assigned) === true));
       setUnAssignedExercises(exercises.filter(exercise => Boolean(exercise.assigned) === false));
     }).catch(err => {
       if (!err.response) {
@@ -50,7 +54,7 @@ function TeacherActivitiesPage() {
   }
 
   const showAssignedExercises = () => (
-    assignedExercises.map(exercise => {
+    filteredData.map(exercise => {
       return (
         <ActivityCard
           key={exercise.exerciseId}
@@ -84,35 +88,17 @@ function TeacherActivitiesPage() {
     })
   )
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className='teacher-activities-page'>
-      <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
+      <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} data={assignedExercises} onSearch={handleSearch} fieldName="name"/>
       <div className='teacher-activities-page-main'>
-        <div style={{ background: colors.primaryColor }} className='activity-section'>
-          <header>
-            <span className='workUnitName' style={{ color: colors.text }}>{workUnitName}</span>
-          </header>
-          <main>
-
-            <section className='evaluable-activities'>
-              <header style={{ color: colors.text }}>
-                <span>Actividades evaluadas</span>
-              </header>
-              <main>
-                {showAssignedExercises()}
-              </main>
-            </section>
-
-            <section className='non-evaluable-activities'>
-              <header style={{ color: colors.text }}>
-                <span>Actividades no evaluadas</span>
-              </header>
-              <main>
-                {showUnAssignedExercises()}
-              </main>
-            </section>
-
-          </main>
+        <Tag name={workUnitName} color={colors.primaryColor}/>
+        <div style={{ display: 'flex', alignItems: 'center' }} className='activity-section'>
+          {showAssignedExercises()}
         </div>
         <ActivityForm groupId={id} workUnitId={workUnitId} notifyUpdateInfo={getAllExercises} />
       </div>
