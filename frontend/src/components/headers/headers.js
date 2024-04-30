@@ -5,8 +5,9 @@ import { RolesContext } from '../../context/roles';
 import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import './headers.css';
+import SearchComponent from '../search/search';
 
-const Headers = ({ title, color, groupId, Page, groupData }) => {
+const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, fieldName }) => {
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -118,19 +119,22 @@ const Headers = ({ title, color, groupId, Page, groupData }) => {
 
   return (
     <div className='headers' style={{ backgroundColor: color }}>
-      <h1>{title}</h1>
-      <ul className='menu-list'>
-        {showMenuList()}
-      </ul>
-      <Dropdown
-        className='dropdown'
-        menu={{ items, onClick: handleMenuClick }}
-        placement="bottom"
-      >
-        <div className="ant-dropdown-link">
-          <MenuOutlined style={{ fontSize: '24px' }} />
-        </div>
-      </Dropdown>
+      <div  className="header-content">
+        <h1>{title}</h1>
+        <ul className='menu-list'>
+          {showMenuList()}
+        </ul>
+        <Dropdown
+          className='dropdown'
+          menu={{ items, onClick: handleMenuClick }}
+          placement="bottom"
+        >
+          <div className="ant-dropdown-link">
+            <MenuOutlined style={{ fontSize: '24px' }} />
+          </div>
+        </Dropdown>
+      </div>
+      <SearchComponent data={data} onSearch={onSearch} fieldName={fieldName}/>
     </div>
   );
 }

@@ -1,12 +1,20 @@
 .headers {
   background-color: #3E94E7;
-  border-bottom-left-radius: 60px;
-  height: 13vh;
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  user-select: none;
+  color: white;
+  padding-bottom: 1rem;
+}
+
+.header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  user-select: none;
-  color: white;
 }
 
 .headers h1 {

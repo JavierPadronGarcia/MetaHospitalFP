@@ -15,7 +15,7 @@ exports.signin = (req, res) => {
   const pwd = req.body.password;
 
   if (!user || !pwd) {
-    return res.status(400).json({
+    return res.status(401).json({
       error: true,
       message: "Username or Password required."
     });
@@ -70,7 +70,7 @@ exports.codeSignin = (req, res) => {
 
   User.findOne({ where: { code: code } }).then(user => {
     if (!user) {
-      return res.status(404).json({
+      return res.status(401).json({
         error: true,
         message: "User not found"
       });
@@ -135,7 +135,7 @@ exports.getRole = (req, res) => {
   if (req.user) {
     return res.json({ role: req.user.role })
   }
-  return res.status(404).json({
+  return res.status(204).json({
     error: true,
     message: "User not found"
   })

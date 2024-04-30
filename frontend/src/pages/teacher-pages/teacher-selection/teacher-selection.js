@@ -7,18 +7,41 @@ import './teacher-selectionn.css';
 const TeacherSelection = () => {
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
     const { name, id } = useParams();
+    const initialData = [
+        { teacherSearch: 'Estudiantes', route: currentPath + '/students', icon: '/assets/imgs/users.svg' },
+        { teacherSearch: 'Unidades', route: currentPath + '/units', icon: '/assets/imgs/schools.svg' }
+    ];
+    const [data, setData] = useState(initialData);
+    const [searchResult, setSearchResult] = useState(data);
+
+    const handleSearch = (filteredData) => {
+        setSearchResult(filteredData);
+    };
 
     useEffect(() => {
-        setCurrentPath(window.location.pathname);
-    }, []);
+    }, [searchResult]);
+
+    const renderSquares = () => {
+        return (
+            <div className='Squares'>
+                {searchResult.map((item, index) => (
+                    <Square icon={item.icon} label={item.teacherSearch} route={item.route} />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div className='teacher-selection-container'>
-            <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} />
-            <div className='Squares'>
-                <Square label={'Estudiantes'} route={currentPath + '/students'} icon='/assets/imgs/users.svg' />
-                <Square label={'Unidades'} route={currentPath + '/units'} icon='/assets/imgs/schools.svg' />
-            </div>
+            <Headers
+                title={name}
+                Page={'selected'}
+                groupData={{ groupId: id, groupName: name }}
+                data={data}
+                onSearch={handleSearch}
+                fieldName={'teacherSearch'}
+            />
+            {renderSquares()}
         </div>
     );
 }

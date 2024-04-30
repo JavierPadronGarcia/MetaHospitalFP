@@ -16,8 +16,8 @@ const CardUnits = ({ title, color, route, workUnit, date }) => {
       <div className='cardunits' onClick={handleNavigate}>
         <div className="square" style={{ backgroundColor: color }}></div>
         <div className="content">
-          <div>{title}</div>
-          <div className='date'>{date}</div>
+          <div style={{color: '#777777'}}>{title}</div>
+          <div className='date' style={{color: '#777777'}}>{date}</div>
         </div>
       </div>
     </div>

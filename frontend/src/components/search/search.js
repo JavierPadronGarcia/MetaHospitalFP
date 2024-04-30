@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import './search.css'; // Importa el archivo CSS para aplicar estilos
+import './search.css';
 
 function SearchComponent({ data, onSearch, fieldName }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -8,9 +8,25 @@ function SearchComponent({ data, onSearch, fieldName }) {
     const handleSearch = (e) => {
         const searchTerm = e.target.value;
         setSearchTerm(searchTerm);
-        const filteredData = data.filter(item =>
-            item[fieldName].toLowerCase().includes(searchTerm.toLowerCase())
-        );
+
+        const filteredData = data.filter(item => {
+            if (fieldName.includes('.')) {
+                const fields = fieldName.split('.');
+                let fieldValue = item;
+
+                for (let field of fields) {
+                    if (fieldValue[field]) {
+                        fieldValue = fieldValue[field];
+                    } else {
+                        return false;
+                    }
+                }
+                return fieldValue.toLowerCase().includes(searchTerm.toLowerCase());
+            } else {
+                return item[fieldName].toLowerCase().includes(searchTerm.toLowerCase());
+            }
+        });
+
         onSearch(filteredData);
     };
 
@@ -31,4 +47,5 @@ function SearchComponent({ data, onSearch, fieldName }) {
 }
 
 export default SearchComponent;
+
 
