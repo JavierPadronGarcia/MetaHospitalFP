@@ -10,7 +10,9 @@
     "antd": "^5.11.0",
     "axios": "^1.6.0",
     "dayjs": "^1.11.10",
+    "dotenv": "^16.4.5",
     "jwt-decode": "^4.0.0",
+    "node-cron": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
@@ -20,6 +22,7 @@
   },
   "scripts": {
     "start-server": "node server/server.js",
+    "sync-translations": "node server/downloadTranslations.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!axios).+\\.js$'",
