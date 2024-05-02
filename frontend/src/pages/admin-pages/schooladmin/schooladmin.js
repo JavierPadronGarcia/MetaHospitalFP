@@ -10,14 +10,17 @@ import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './schooladmin.css';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import { useTranslation } from 'react-i18next';
 
 function SchoolsAdmin() {
+  const [t] = useTranslation('global');
+  const { noConnectionError, schoolCreateFail, noNameError, schoolGetFail } = useNotification();
   const [Schools, setSchools] = useState([]);
   const [name, setName] = useState('');
   const [Id, setId] = useState('');
-  const Headlines = ['Nombre'];
+  const Headlines = [t('name_s')];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
@@ -28,9 +31,9 @@ function SchoolsAdmin() {
       const response = await SchoolsService.getSchools(localStorage.getItem('AccessToken'));
       const schoolList = response;
       setSchools(schoolList);
-      setFilteredData(schoolList)
+      setFilteredData(schoolList);
     } catch (error) {
-      message.error('No se pudo obtener escuelas, intentalo de nuevo o prueba más tarde')
+      schoolGetFail();
     }
   };
 
@@ -41,9 +44,7 @@ function SchoolsAdmin() {
   const navigateSchool = (id, name) => {
     localStorage.setItem('schoolId', id);
     localStorage.setItem('schoolName', name)
-    console.log(id);
   }
-
 
   const renderSchoolRow = (school) => (
     <>
@@ -51,11 +52,22 @@ function SchoolsAdmin() {
     </>
   );
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderSchoolImputs = () => (
     <>
-      <h1>{String(mode)}</h1>
-      <p>Name</p>
-      <Input placeholder="Name"
+      <h1>{getTranslation(String(mode))}</h1>
+      <p>{t('name_s')}</p>
+      <Input placeholder={t('name_s')}
         value={name}
         onChange={(e) => setName(e.target.value)} />
     </>
@@ -65,9 +77,7 @@ function SchoolsAdmin() {
     try {
       await SchoolsService.deleteSchool(id);
       getSchools();
-      console.log('school deleted successfully');
     } catch (error) {
-      console.error('Error delete school:', error);
       message.error(error.message);
     }
   }
@@ -91,7 +101,7 @@ function SchoolsAdmin() {
     try {
 
       if (!name) {
-        throw new Error('No name');
+        throw new Error(t('no_name_error'));
       }
 
       if (mode === Consts.EDIT_MODE) {
@@ -101,7 +111,7 @@ function SchoolsAdmin() {
 
         await SchoolsService.updateSchool(Id, schoolToEdit);
 
-        message.success('Escuela actualizada correctamente')
+        message.success(t('school_update_successful'))
         getSchools();
       } else {
         const school = {
@@ -111,16 +121,16 @@ function SchoolsAdmin() {
         await SchoolsService.createNewSchool(school);
         getSchools();
 
-        message.success('Escuela agregada correctamente')
+        message.success(t('school_create_successful'))
       }
       Cancel();
     } catch (error) {
       if (error.message === 'No name') {
-        message.error(error.message);
+        noNameError();
       } else if (error.message === 'Network Error') {
         noConnectionError();
       } else {
-        message.error('No se ha podido crear correctamente la nueva escuela')
+        schoolCreateFail();
       }
     }
   }
@@ -138,8 +148,8 @@ function SchoolsAdmin() {
     <div className='container schooladmin-page'>
       <div className='container-left'>
         <Menu />
-        <Tag name='Escuelas' />
-        <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name"/>
+        <Tag name={t('school_p')} />
+        <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

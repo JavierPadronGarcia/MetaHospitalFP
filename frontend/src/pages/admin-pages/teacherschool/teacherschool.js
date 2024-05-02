@@ -10,10 +10,22 @@ import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './teacherschool.css';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import { useTranslation } from 'react-i18next';
 
 function TeacherSchools() {
+  const [t] = useTranslation('global');
+  const {
+    noConnectionError,
+    schoolTeacherGetError,
+    usersGetError,
+    userDeleteFailed,
+    userDeletedSuccessfully,
+    userUpdatedSuccessfully,
+    userCreateSuccessful,
+    userUpdateOrCreateFail
+  } = useNotification();
   const [teacher, setTeacher] = useState([]);
   const [users, setUsers] = useState([]);
   const [name, setName] = useState('');
@@ -23,7 +35,7 @@ function TeacherSchools() {
   const [Id, setId] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  const Headlines = ['Nombre'];
+  const Headlines = [t('name_s'), t('email')];
   const location = useLocation();
 
   const getTeacher = async () => {
@@ -34,7 +46,7 @@ function TeacherSchools() {
       setTeacher(teacherList);
       setFilteredData(teacherList);
     } catch (error) {
-      message.error('No se pudo obtener a los profesores de la escuela');
+      schoolTeacherGetError();
     }
   };
 
@@ -44,7 +56,7 @@ function TeacherSchools() {
       const userList = response;
       setUsers(userList);
     } catch (error) {
-      message.error('No se pudo obtener a los usuarios')
+      usersGetError();
     }
   };
 
@@ -60,15 +72,26 @@ function TeacherSchools() {
     </>
   );
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderSchoolImputs = () => (
     <>
-      <h1>{String(Consts.ADD_MODE)}</h1>
-      <p>Name</p>
-      <Input placeholder="Name"
+      <h1>{getTranslation(String(mode))}</h1>
+      <p>{t('name_s')}</p>
+      <Input placeholder={t('name_s')}
         value={name}
         onChange={(e) => setName(e.target.value)} />
-      <p>Email</p>
-      <Input placeholder="Email"
+      <p>{t('email')}</p>
+      <Input placeholder={t('email')}
         value={email}
         onChange={(e) => setEmail(e.target.value)} />
     </>
@@ -77,12 +100,12 @@ function TeacherSchools() {
   const onDelete = async (id) => {
     try {
       await usersService.deleteUser(id);
-      message.success("Usuario eliminado correctamente");
+      userDeletedSuccessfully();
       getTeacher();
       getUsers();
     } catch (error) {
       console.error(error)
-      message.error('Error al eliminar al usuario')
+      userDeleteFailed();
     }
   }
 
@@ -106,14 +129,14 @@ function TeacherSchools() {
     try {
 
       if (!name || !email) {
-        throw new Error('Rellena todos los campos');
+        throw new Error(t('fill_all_fields'));
       }
 
       if (mode === Consts.EDIT_MODE) {
 
         await usersService.updateUserWithoutImage(email, Id, 'teacher', name, localStorage.getItem('schoolId'));
 
-        message.success('Usuario actualizado correctamente');
+        userUpdatedSuccessfully();
         cleanInputs();
         setMode(Consts.ADD_MODE);
         getTeacher();
@@ -123,7 +146,7 @@ function TeacherSchools() {
         await usersService.createNewUser({ name: name, role: 'teacher', schoolId: localStorage.getItem('schoolId') }, email);
 
         cleanInputs();
-        message.success('Usuario creado correctamente');
+        userCreateSuccessful();
         getTeacher();
         getUsers();
       }
@@ -132,9 +155,9 @@ function TeacherSchools() {
       if (error.message === 'Network Error') {
         noConnectionError();
       } else if (error.message === 'Rellena todos los campos') {
-        message.error(error.message);
+        message.error(t('fill_all_fields'));
       } else {
-        message.error('No se ha podido crear/actualizar el usuario');
+        userUpdateOrCreateFail();
       }
     }
   }
@@ -158,9 +181,9 @@ function TeacherSchools() {
     <div className='container teacherschool-page'>
       <div className='container-left'>
         <Menu2 />
-        <Tag name="Profesores" />
-        <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <Tag name={t('teacher_p')} />
+        <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name" />
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

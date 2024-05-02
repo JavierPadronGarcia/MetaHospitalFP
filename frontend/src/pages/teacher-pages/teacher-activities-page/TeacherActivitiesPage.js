@@ -4,12 +4,14 @@ import ActivityForm from '../../../components/activity-form/ActivityForm';
 import ActivityCard from '../../../components/activity-card/ActivityCard';
 import { useEffect, useState } from 'react';
 import exercisesService from '../../../services/exercises.service';
-import { errorMessage, noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import { message } from 'antd';
 import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
 
 function TeacherActivitiesPage() {
+
+  const { noConnectionError, errorMessage } = useNotification();
 
   const { name, id, workUnitId, workUnitName } = useParams();
   const colors = JSON.parse(sessionStorage.getItem('colors'));

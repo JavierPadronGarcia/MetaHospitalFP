@@ -4,9 +4,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Dropdown, Space } from 'antd';
 import { DownOutlined, LogoutOutlined, MenuOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
 import authService from '../../services/auth.service';
+import { useTranslation } from 'react-i18next';
 
 function Menu() {
 
+  const [t] = useTranslation('global');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -48,7 +50,7 @@ function Menu() {
 
   const dropdownItems = [
     {
-      label: <div>Mi perfil</div>,
+      label: <div>{t('my_profile')}</div>,
       icon: <UserOutlined />,
       key: 'profile',
     },
@@ -56,7 +58,7 @@ function Menu() {
       type: 'divider',
     },
     {
-      label: <div>Cerrar sesión</div>,
+      label: <div>{t('logout')}</div>,
       key: 'logout',
       icon: <LogoutOutlined />,
       danger: true,
@@ -65,22 +67,22 @@ function Menu() {
 
   const smallDropdownItems = [
     {
-      label: <div>Inicio</div>,
+      label: <div>{t('home')}</div>,
       key: 'home',
     },
     {
-      label: <div>Usuarios</div>,
+      label: <div>{t('user_p')}</div>,
       key: 'users',
     },
     {
-      label: <div>Escuelas</div>,
+      label: <div>{t('school_p')}</div>,
       key: 'schools',
     },
     {
       type: 'divider',
     },
     {
-      label: <div>Mi perfil</div>,
+      label: <div>{t('my_profile')}</div>,
       icon: <UserOutlined />,
       key: 'profile',
     },
@@ -88,7 +90,7 @@ function Menu() {
       type: 'divider',
     },
     {
-      label: <div>Cerrar sesión</div>,
+      label: <div>{t('logout')}</div>,
       key: 'logout',
       icon: <LogoutOutlined />,
       danger: true,
@@ -105,28 +107,28 @@ function Menu() {
           <li>
             <Link
               to="/admin/control-panel"
-              data-item="Inicio"
+              data-item={t('home')}
               className={getMenuActiveItem() === 'Inicio' ? 'active' : ''}
             >
-              Inicio
+              {t('home')}
             </Link>
           </li>
           <li>
             <Link
               to="/admin/users"
-              data-item="Usuarios"
+              data-item={t('user_p')}
               className={getMenuActiveItem() === 'Usuarios' ? 'active' : ''}
             >
-              Usuarios
+              {t('user_p')}
             </Link>
           </li>
           <li>
             <Link
               to="/admin/schools"
-              data-item="Escuelas"
+              data-item={t('school_p')}
               className={getMenuActiveItem() === 'Escuelas' ? 'active' : ''}
             >
-              Escuelas
+              {t('school_p')}
             </Link>
           </li>
         </ul>
@@ -143,7 +145,7 @@ function Menu() {
           <div onClick={(e) => e.preventDefault()} shape='circle' className='more-options-content'>
             <div className='setting-display'>
               <Space>
-                Más opciones
+                {t('more_options')}
                 <DownOutlined />
               </Space>
             </div>

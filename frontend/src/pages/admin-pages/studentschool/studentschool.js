@@ -11,10 +11,22 @@ import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './studentschool.css';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import { useTranslation } from 'react-i18next';
 
 function StudentSchools() {
+  const [t] = useTranslation('global');
+  const {
+    noConnectionError,
+    schoolStudentsGetError,
+    usersGetError,
+    userDeletedSuccessfully,
+    userDeleteFailed,
+    userUpdateOrCreateFail,
+    userUpdatedSuccessfully,
+    userCreateSuccessful
+  } = useNotification();
   const [students, setStudents] = useState([]);
   const [users, setUsers] = useState([]);
   const [Id, setId] = useState('');
@@ -22,7 +34,7 @@ function StudentSchools() {
   const [email, setEmail] = useState('');
   const [showPop, setShowPop] = useState(false);
   const [mode, setMode] = useState(Consts.ADD_MODE);
-  const Headlines = ['Nombre','Email'];
+  const Headlines = [t('name_s'), t('email')];
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
@@ -34,7 +46,7 @@ function StudentSchools() {
       setStudents(studentList);
       setFilteredData(studentList)
     } catch (error) {
-      message.error('No se pudo obtener a los usuarios de la escuela')
+      schoolStudentsGetError();
     }
   };
 
@@ -44,8 +56,7 @@ function StudentSchools() {
       const userList = response;
       setUsers(userList);
     } catch (error) {
-      console.error('Error fetching users:', error);
-      message.error(error.message)
+      usersGetError();
     }
   };
 
@@ -61,15 +72,26 @@ function StudentSchools() {
     </>
   );
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderSchoolImputs = () => (
     <>
-      <h1>{String(Consts.ADD_MODE)}</h1>
-      <p>Name</p>
-      <Input placeholder="Name"
+      <h1>{getTranslation(String(mode))}</h1>
+      <p>{t('name_s')}</p>
+      <Input placeholder={t('name_s')}
         value={name}
         onChange={(e) => setName(e.target.value)} />
-      <p>Email</p>
-      <Input placeholder="Email"
+      <p>{t('email')}</p>
+      <Input placeholder={t('email')}
         value={email}
         onChange={(e) => setEmail(e.target.value)} />
     </>
@@ -78,12 +100,12 @@ function StudentSchools() {
   const onDelete = async (id) => {
     try {
       await usersService.deleteUser(id);
-      message.success("Usuario eliminado correctamente");
+      userDeletedSuccessfully();
       getStudents();
       getUsers();
     } catch (error) {
       console.error(error)
-      message.error('Error al eliminar al usuario')
+      userDeleteFailed();
     }
   }
 
@@ -107,14 +129,14 @@ function StudentSchools() {
     try {
 
       if (!name || !email) {
-        throw new Error('Rellena todos los campos');
+        throw new Error(t('fill_all_fields'));
       }
 
       if (mode === Consts.EDIT_MODE) {
 
         await usersService.updateUserWithoutImage(email, Id, 'student', name, localStorage.getItem('schoolId'));
 
-        message.success('Usuario actualizado correctamente');
+        userUpdatedSuccessfully();
         cleanInputs();
         setMode(Consts.ADD_MODE);
         getStudents();
@@ -124,7 +146,7 @@ function StudentSchools() {
         await usersService.createNewUser({ name: name, role: 'student', schoolId: localStorage.getItem('schoolId') }, email);
 
         cleanInputs();
-        message.success('Usuario creado correctamente');
+        userCreateSuccessful();
         getStudents();
         getUsers();
       }
@@ -133,9 +155,9 @@ function StudentSchools() {
       if (error.message === 'Network Error') {
         noConnectionError();
       } else if (error.message === 'Rellena todos los campos') {
-        message.error(error.message);
+        message.error(t('fill_all_fields'));
       } else {
-        message.error('No se ha podido crear/actualizar el usuario');
+        userUpdateOrCreateFail();
       }
     }
   }
@@ -159,9 +181,9 @@ function StudentSchools() {
     <div className='container studentschool-page'>
       <div className='container-left'>
         <Menu2 />
-        <Tag name="Estudiantes" />
-        <SearchComponent data={students} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <Tag name={t('student_p')} />
+        <SearchComponent data={students} onSearch={handleSearch} fieldName="name" />
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
         <FloatingExcelButton data={students}></FloatingExcelButton>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

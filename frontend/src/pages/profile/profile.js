@@ -5,10 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import ProfileHeader from "../../components/profileheader/profileheader";
 import authService from "../../services/auth.service";
 import usersService from '../../services/users.service';
-import { errorMessage, noConnectionError } from '../../utils/shared/errorHandler';
+import useNotification from '../../utils/shared/errorHandler';
 import "./profile.css";
 
 const UserProfilePage = () => {
+  const { noConnectionError, errorMessage } = useNotification();
   const passwordRef = useRef(null);
   const [user, setUser] = useState(null);
   const [password, setPassword] = useState('');

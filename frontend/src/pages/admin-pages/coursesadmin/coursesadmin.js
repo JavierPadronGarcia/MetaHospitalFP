@@ -9,10 +9,11 @@ import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './coursesadmin.css';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
 
 function CoursesAdmin() {
+  const { noConnectionError } = useNotification();
   const [Courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [acronyms, setAcronyms] = useState('');
@@ -138,7 +139,7 @@ function CoursesAdmin() {
       <div className='container-left'>
         <Menu2 />
         <Tag name="Cursos" />
-        <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name"/>
+        <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

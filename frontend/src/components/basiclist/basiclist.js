@@ -2,8 +2,10 @@ import React from 'react';
 import { EditOutlined, DeleteOutlined, LockOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import './basiclist.css';
+import { useTranslation } from 'react-i18next';
 
 const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password }) => {
+  const [t] = useTranslation('global');
 
   return (
     <div className='table-component'>
@@ -13,7 +15,7 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password }) 
             {Headlines.map((headline, index) => (
               <th key={index} className='headlines'>{headline}</th>
             ))}
-            <th>Acciones</th>
+            <th>{t('action_p')}</th>
           </tr>
         </thead>
         <tbody>
@@ -23,30 +25,30 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password }) 
                 {renderRow(item)}
                 <td>
                   {password && <Popconfirm
-                    title="Restablecer Contraseña"
-                    description="¿Estas seguro que quieres restablecer Contraseña?"
+                    title={t('reset_password')}
+                    description={t('reset_password_req')}
                     onConfirm={() => onEdit(item.id, 'popform')}
-                    okText="si"
-                    cancelText="no"
+                    okText={t('yes')}
+                    cancelText={t('no')}
                   ><LockOutlined className='edit-normal' style={{ marginRight: 8 }} />
                   </Popconfirm>}
                   {password && <Popconfirm
-                    title="Restablecer Contraseña"
-                    description="¿Estas seguro que quieres restablecer Contraseña?"
+                    title={t('reset_password')}
+                    description={t('reset_password_req')}
                     onConfirm={() => onEdit(item.id, 'popform')}
-                    okText="si"
-                    cancelText="no"
+                    okText={t('yes')}
+                    cancelText={t('no')}
                   ><LockOutlined className='edit-popform' style={{ marginRight: 8 }} />
                   </Popconfirm>}
 
                   {onEdit && !password && <EditOutlined className='edit-normal' style={{ marginRight: 8 }} onClick={() => onEdit(item.id, 'normal')} />}
                   {onEdit && !password && <EditOutlined className='edit-popform' style={{ marginRight: 8 }} onClick={() => onEdit(item.id, 'popform')} />}
                   <Popconfirm
-                    title="Eliminar"
-                    description="¿Estas seguro que quieres eliminar?"
+                    title={t('delete')}
+                    description={t('delete_question')}
                     onConfirm={() => onDelete(item.id)}
-                    okText="si"
-                    cancelText="no"
+                    okText={t('yes')}
+                    cancelText={t('no')}
                   >
                     <DeleteOutlined data-testid="delete-button" />
                   </Popconfirm>
@@ -55,7 +57,7 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password }) 
             ))
           ) : (
             <tr>
-              <td colSpan={Headlines.length + 1}>No hay elementos para mostrar</td>
+              <td colSpan={Headlines.length + 1}>{t('no_elements_to_show')}</td>
             </tr>
           )}
         </tbody>
@@ -65,5 +67,3 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password }) 
 };
 
 export default BasicList;
-
-

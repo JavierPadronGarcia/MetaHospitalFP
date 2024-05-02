@@ -4,11 +4,12 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import WorkUnitComponent from '../../../components/work-unit/WorkUnitComponent';
 import workUnitGroupService from '../../../services/workUnitGroups.service';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import Headers from '../../../components/headers/headers';
 
 function TeacherGroupPage() {
 
+  const { noConnectionError} = useNotification();
   const { name, id } = useParams();
   const [loading, setLoading] = useState(true);
   const [allWorkUnits, setAllWorkUnits] = useState([]);

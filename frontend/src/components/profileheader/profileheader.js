@@ -6,10 +6,11 @@ import { RolesContext } from '../../context/roles';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/auth.service';
 import usersService from '../../services/users.service';
-import { noConnectionError } from '../../utils/shared/errorHandler';
+import useNotification from '../../utils/shared/errorHandler';
 import { backendImageEndpoint } from '../../constants/backendEndpoints';
 
 const ProfileHeader = ({ user, updateUserInfo }) => {
+  const { noConnectionError } = useNotification();
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
