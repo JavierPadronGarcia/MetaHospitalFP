@@ -12,14 +12,17 @@ const StudentExercises = () => {
   const studentGroup = JSON.parse(localStorage.getItem('studentGroup'));
   const title = workUnit.name;
 
+  const [exercises, setExercises] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
   const [assignedExercises, setAssignedExercises] = useState([]);
   const [unAssignedExercises, setUnAssignedExercises] = useState([]);
 
   const getAllExercises = async () => {
     try {
       const allExercises = await exercisesService.getAllExercisesAssignedToStudent(studentGroup.id, workUnit.id);
-      setAssignedExercises(allExercises.filter((e) => e.assigned === 1));
-      setUnAssignedExercises(allExercises.filter((e) => e.assigned === 0));
+      setExercises(allExercises);
+      setFilteredData(allExercises);
     } catch (err) {
       message.error('Error al obtener ejercicios');
     }
@@ -31,7 +34,7 @@ const StudentExercises = () => {
 
   const showAssignedExercises = () => (
     <div className='student-exercises-assigned-exercises'>
-      {assignedExercises.map((exercise, index) => (
+      {filteredData.filter((e) => e.assigned === 1).map((exercise, index) => (
         <ExerciseCard
           key={index}
           title={exercise.caseName}
@@ -43,15 +46,25 @@ const StudentExercises = () => {
 
   const showUnAssignedExercises = () => (
     <>
-      {unAssignedExercises.map((exercise, index) => (
+      {filteredData.filter((e) => e.assigned === 0).map((exercise, index) => (
         <Card key={index} title={exercise.caseName} content={''} />
       ))}
     </>
   )
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className="student-home student-exercises">
-      <Headers title={title} groupId={studentGroup.id} />
+      <Headers
+        title={title}
+        groupId={studentGroup.id}
+        data={exercises}
+        onSearch={handleSearch}
+        fieldName="caseName"
+      />
       <div className='container-scloll'>
 
         <Tag name="Ejercicios" className="tags" />
