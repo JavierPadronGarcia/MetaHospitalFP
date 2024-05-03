@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 import ExerciseCard from '../../../components/exerciseCard/ExerciseCard';
 import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
-import GradeService from  '../../../services/grade.service';
+import GradeService from '../../../services/grade.service';
 import './TeacherGradesPage.css';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 const TeacherGradesPage = () => {
     const { name, id, workUnitId, workUnitName, gradeid } = useParams();
@@ -26,12 +27,11 @@ const TeacherGradesPage = () => {
 
     useEffect(() => {
         getAllGrades();
-        console.log(assignedExercises);
     }, []);
 
     const handleSearch = (filteredData) => {
         setFilteredData(filteredData);
-      };
+    };
 
     const showAssignedExercises = () => (
         <div className='student-exercises-assigned-exercises'>
@@ -53,6 +53,11 @@ const TeacherGradesPage = () => {
                 <Tag name="Ejercicios" className="tags" />
                 {showAssignedExercises()}
 
+                <FloatingExcelButton
+                    data={assignedExercises}
+                    name={'Nota estudiantes'}
+                    forGrades={true}
+                />
             </div>
         </div>
     );

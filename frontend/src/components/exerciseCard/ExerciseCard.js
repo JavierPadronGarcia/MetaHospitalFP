@@ -17,7 +17,7 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
         <div className='exercise-head'>
           <div className='exercise-description'>
             <h2>{title}</h2>
-            <p>Calificación: <span className='grade'>{finalGrade ?? 'No calificado'}</span></p>
+            <p>Calificación: <span className='grade'>{finalGrade ?? '---'}</span></p>
           </div>
           {itemGrades && itemGrades.length !== 0 &&
             <div className='display'>
