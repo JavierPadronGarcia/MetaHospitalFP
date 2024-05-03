@@ -22,7 +22,7 @@ function StudentSchools() {
   const [email, setEmail] = useState('');
   const [showPop, setShowPop] = useState(false);
   const [mode, setMode] = useState(Consts.ADD_MODE);
-  const Headlines = ['Nombre','Email'];
+  const Headlines = ['Nombre', 'Email'];
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
@@ -160,9 +160,9 @@ function StudentSchools() {
       <div className='container-left'>
         <Menu2 />
         <Tag name="Estudiantes" />
-        <SearchComponent data={students} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
-        <FloatingExcelButton data={students}></FloatingExcelButton>
+        <SearchComponent data={students} onSearch={handleSearch} fieldName="name" />
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
+        <FloatingExcelButton data={students} name={`estudiantes - ${localStorage.getItem('schoolName')}`} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

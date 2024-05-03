@@ -13,6 +13,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './useradmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function UserAdmin() {
   const [users, setUsers] = useState([]);
@@ -62,7 +63,6 @@ function UserAdmin() {
     try {
       const schoolsResponse = await schoolService.getSchools();
       setSchools(schoolsResponse);
-      console.log(schoolsResponse);
     } catch (err) {
       console.log("Error fetching schools:", err);
     }
@@ -174,7 +174,7 @@ function UserAdmin() {
         throw new Error('Rellena todos los campos');
       }
 
-      if ((role === 'student' && selectedSchool === '')||(role === 'teacher' && selectedSchool === '')) {
+      if ((role === 'student' && selectedSchool === '') || (role === 'teacher' && selectedSchool === '')) {
         throw new Error('Es necesario para estudiantes como profesores seleccionar Escuela')
       }
 
@@ -202,7 +202,7 @@ function UserAdmin() {
         message.error(error.message);
       } else if (error.message === 'Es necesario para estudiantes como profesores seleccionar Escuela') {
         message.error(error.message);
-      }else {
+      } else {
         message.error('No se ha podido crear/actualizar el usuario');
       }
     }
@@ -232,8 +232,9 @@ function UserAdmin() {
       <div className='container-left'>
         <Menu />
         <Tag name="Usuarios" />
-        <SearchComponent data={users} onSearch={handleSearch} fieldName="name"/>
+        <SearchComponent data={users} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <FloatingExcelButton data={users} name={'usuarios'} />
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

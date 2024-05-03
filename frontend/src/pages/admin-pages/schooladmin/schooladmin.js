@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import './schooladmin.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function SchoolsAdmin() {
   const [Schools, setSchools] = useState([]);
@@ -139,8 +140,9 @@ function SchoolsAdmin() {
       <div className='container-left'>
         <Menu />
         <Tag name='Escuelas' />
-        <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name"/>
+        <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <FloatingExcelButton data={Schools} name={'escuelas'} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
