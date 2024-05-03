@@ -28,11 +28,10 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
         <div className={`grades-container ${!isExpanded && 'hidden'}`}>
           <div className='grades-scroll'>
             {itemGrades &&
-              itemGrades.map(({ gradeId, gradeCorrect, gradeValue, itemName, itemDescription }, index) => (
+              itemGrades.map(({ gradeId, gradeCorrect, gradeValue, itemName }, index) => (
                 <GradeCard
                   key={gradeId}
                   title={itemName}
-                  description={itemDescription}
                   grade={gradeValue}
                   correct={gradeCorrect}
                 />
