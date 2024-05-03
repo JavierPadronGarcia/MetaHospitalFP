@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import './teacherschool.css';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function TeacherSchools() {
   const [teacher, setTeacher] = useState([]);
@@ -159,8 +160,9 @@ function TeacherSchools() {
       <div className='container-left'>
         <Menu2 />
         <Tag name="Profesores" />
-        <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name" />
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
+        <FloatingExcelButton data={teacher} name={`profesores - ${localStorage.getItem('schoolName')}`} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

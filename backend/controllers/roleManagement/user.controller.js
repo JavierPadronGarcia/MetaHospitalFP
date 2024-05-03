@@ -73,7 +73,7 @@ exports.create = async (req, res) => {
         break;
     }
 
-    enviarCorreo(user.username,'Se le Ha dado de alta en MetaHospitalFP');
+    enviarCorreo(user.username, 'Se le Ha dado de alta en MetaHospitalFP');
 
   } else {
     return res.status(500).send({
@@ -90,6 +90,9 @@ exports.findByRole = (req, res) => {
 exports.findAll = async (req, res) => {
   try {
     const users = await User.findAll({
+      attributes: {
+        exclude: ['password']
+      },
       include: [{ model: Admin }, { model: Student }, { model: Teacher }],
     });
 
@@ -274,7 +277,7 @@ exports.update = async (req, res) => {
     switch (actualUserRole.Role.name) {
       case 'admin':
         const adminUser = await Admin.findOne({ where: { id: userFound.id } });
-        if(adminUser){
+        if (adminUser) {
           adminUser.SchoolID = req.body.schoolId;
           await adminUser.save();
         }
@@ -330,7 +333,7 @@ exports.update = async (req, res) => {
           name: oldUserInTableRole.name,
           age: oldUserInTableRole.age,
         })
-        TeacherToSchool.updateTeacherSchoolById(oldUserInTableRole.id,req.body.schoolId);
+        TeacherToSchool.updateTeacherSchoolById(oldUserInTableRole.id, req.body.schoolId);
         break;
       case 'student':
         await Student.create({

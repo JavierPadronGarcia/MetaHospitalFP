@@ -14,6 +14,7 @@ import './groupsadmin.css';
 import dayjs from 'dayjs';
 import { noConnectionError } from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function GroupsAdmin() {
   const [groups, setGroups] = useState([]);
@@ -201,9 +202,10 @@ function GroupsAdmin() {
       <div className='container-left'>
         <Menu2 />
         <Tag name="Grupos" />
-        <SearchComponent data={groups} onSearch={handleSearch} fieldName="name"/>
+        <SearchComponent data={groups} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
+        <FloatingExcelButton data={groups} name={`grupos - ${localStorage.getItem('schoolName')}`} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderGroupsImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} />
