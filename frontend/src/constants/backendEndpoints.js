@@ -37,3 +37,5 @@ export const backendSchoolsEndpoint = `${backendEndpoint}/api/schools`;
 export const backendSubscriptionEndpoint = `${backendEndpoint}/api/activitysubscriptions`;
 
 export const backendEmailEndpoint = `${backendEndpoint}/api/mailer`;
+
+export const backendGradesEndpoint =  `${backendEndpoint}/api/grades`;

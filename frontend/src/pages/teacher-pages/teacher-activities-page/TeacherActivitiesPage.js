@@ -1,5 +1,5 @@
 import './TeacherActivitiesPage.css';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ActivityForm from '../../../components/activity-form/ActivityForm';
 import ActivityCard from '../../../components/activity-card/ActivityCard';
 import { useEffect, useState } from 'react';
@@ -17,6 +17,9 @@ function TeacherActivitiesPage() {
   const [assignedExercises, setAssignedExercises] = useState([]);
   const [unAssignedExercises, setUnAssignedExercises] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getAllExercises = () => {
     exercisesService.getAllExercisesOfTheGroup(id, workUnitId).then(exercises => {
@@ -53,6 +56,11 @@ function TeacherActivitiesPage() {
     })
   }
 
+  const navigateTo = (id) => {
+    const route = location.pathname + '/' + id;
+    navigate(route)
+  }
+
   const showAssignedExercises = () => (
     filteredData.map(exercise => {
       return (
@@ -66,6 +74,7 @@ function TeacherActivitiesPage() {
           assigned={true}
           notifyDelete={(activityId) => handleDelete(activityId)}
           notifyUpdateInfo={() => getAllExercises()}
+          onClick={navigateTo}
         />
       )
     })
@@ -94,9 +103,9 @@ function TeacherActivitiesPage() {
 
   return (
     <div className='teacher-activities-page'>
-      <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} data={assignedExercises} onSearch={handleSearch} fieldName="name"/>
+      <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} data={assignedExercises} onSearch={handleSearch} fieldName="name" />
       <div className='teacher-activities-page-main'>
-        <Tag name={workUnitName} color={colors.primaryColor}/>
+        <Tag name={workUnitName} color={colors.primaryColor} />
         <div style={{ display: 'flex', alignItems: 'center' }} className='activity-section'>
           {showAssignedExercises()}
         </div>

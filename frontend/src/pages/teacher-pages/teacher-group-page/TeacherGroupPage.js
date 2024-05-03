@@ -53,7 +53,6 @@ function TeacherGroupPage() {
   )
 
   const handleSearch = (filteredData) => {
-    console.log(filteredData);
     setFilteredData(filteredData);
   };
 
