@@ -6,6 +6,8 @@ const Exercise = db.exercise;
 const Case = db.case;
 const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
+const ItemPlayerRole = db.itemPlayerRole;
+const Item = db.item;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -259,10 +261,22 @@ exports.findGradesByStudentInExercise = async (req, res) => {
             ]
           },
           {
+            raw: true,
             model: Grade,
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'ParticipationID']
+              exclude: ['createdAt', 'updatedAt', 'ParticipationID'],
             },
+            include: [
+              {
+                required: true,
+                model: ItemPlayerRole,
+                include: [
+                  {
+                    model: Item,
+                  }
+                ]
+              }
+            ]
           },
         ]
       },
@@ -286,11 +300,11 @@ exports.findGradesByStudentInExercise = async (req, res) => {
     }
 
     const groupedGrades = {
-      id: row['participations.grades.id'],
-      correct: row['participations.grades.correct'],
-      grade: row['participations.grades.grade'],
-      ItemID: row['participations.grades.ItemID'],
-      ItemPlayerRoleID: row['participations.grades.ItemPlayerRoleID'],
+      gradeId: row['participations.grades.id'],
+      gradeCorrect: row['participations.grades.correct'],
+      gradeValue: row['participations.grades.grade'],
+      itemId: row['participations.grades.ItemPlayerRole.item.id'],
+      itemName: row['participations.grades.ItemPlayerRole.item.name']
     }
 
     studentsWithGrades[studentId].grades.push(groupedGrades);

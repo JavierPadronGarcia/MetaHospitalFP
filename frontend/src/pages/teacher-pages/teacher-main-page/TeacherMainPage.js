@@ -38,7 +38,7 @@ function TeacherMainPage() {
 
   const showGroups = () => (
     filteredData.map((item, index) =>
-      <CardUnits title={item.name} date={item.data} route={`./group/${item.name}/${item.id}`} color={'#FF704A'} />
+      <CardUnits title={item.name} date={item.date} route={`./group/${item.name}/${item.id}`} color={'#FF704A'} />
     )
   )
 
