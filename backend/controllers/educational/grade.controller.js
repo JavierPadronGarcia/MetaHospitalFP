@@ -299,15 +299,17 @@ exports.findGradesByStudentInExercise = async (req, res) => {
       };
     }
 
-    const groupedGrades = {
-      gradeId: row['participations.grades.id'],
-      gradeCorrect: row['participations.grades.correct'],
-      gradeValue: row['participations.grades.grade'],
-      itemId: row['participations.grades.ItemPlayerRole.item.id'],
-      itemName: row['participations.grades.ItemPlayerRole.item.name']
-    }
+    if (row['participations.grades.id']) {
+      const groupedGrades = {
+        gradeId: row['participations.grades.id'],
+        gradeCorrect: row['participations.grades.correct'],
+        gradeValue: row['participations.grades.grade'],
+        itemId: row['participations.grades.ItemPlayerRole.item.id'],
+        itemName: row['participations.grades.ItemPlayerRole.item.name']
+      }
 
-    studentsWithGrades[studentId].grades.push(groupedGrades);
+      studentsWithGrades[studentId].grades.push(groupedGrades);
+    }
   });
 
   const result = Object.values(studentsWithGrades);
