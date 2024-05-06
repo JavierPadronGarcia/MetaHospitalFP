@@ -68,7 +68,6 @@ exports.findOne = async (req, res) => {
 
 const transformArray = (array) => {
   return array.reduce((acc, obj) => {
-    console.log(obj.workUnitGroup.workUnit)
     const propertyName = obj.visibility ? 'visible' : 'invisible';
     const colorObject = {
       id: obj.color.id,

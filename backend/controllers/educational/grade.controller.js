@@ -288,8 +288,8 @@ exports.findGradesByStudentInExercise = async (req, res) => {
   gradesInExerciseGroupByStudent.forEach(row => {
     const { studentId, studentName, caseId, participationId, finalGrade } = row;
 
-    if (!studentsWithGrades[studentId]) {
-      studentsWithGrades[studentId] = {
+    if (!studentsWithGrades[participationId]) {
+      studentsWithGrades[participationId] = {
         studentId: studentId,
         studentName: studentName,
         finalGrade: finalGrade,
@@ -308,7 +308,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
         itemName: row['participations.grades.ItemPlayerRole.item.name']
       }
 
-      studentsWithGrades[studentId].grades.push(groupedGrades);
+      studentsWithGrades[participationId].grades.push(groupedGrades);
     }
   });
 

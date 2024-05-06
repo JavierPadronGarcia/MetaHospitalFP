@@ -15,8 +15,8 @@ const StudentExercises = () => {
   const [exercises, setExercises] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
-  const [assignedExercises, setAssignedExercises] = useState([]);
-  const [unAssignedExercises, setUnAssignedExercises] = useState([]);
+  // const [assignedExercises, setAssignedExercises] = useState([]);
+  // const [unAssignedExercises, setUnAssignedExercises] = useState([]);
 
   const getAllExercises = async () => {
     try {
@@ -34,7 +34,7 @@ const StudentExercises = () => {
 
   const showAssignedExercises = () => (
     <div className='student-exercises-assigned-exercises'>
-      {filteredData.filter((e) => e.assigned === 1).map((exercise, index) => (
+      {filteredData.map((exercise, index) => (
         <ExerciseCard
           key={index}
           title={exercise.caseName}
@@ -44,13 +44,13 @@ const StudentExercises = () => {
     </div>
   )
 
-  const showUnAssignedExercises = () => (
-    <>
-      {filteredData.filter((e) => e.assigned === 0).map((exercise, index) => (
-        <Card key={index} title={exercise.caseName} content={''} />
-      ))}
-    </>
-  )
+  // const showUnAssignedExercises = () => (
+  //   <>
+  //     {filteredData.filter((e) => e.assigned === 0).map((exercise, index) => (
+  //       <Card key={index} title={exercise.caseName} content={''} />
+  //     ))}
+  //   </>
+  // )
 
   const handleSearch = (filteredData) => {
     setFilteredData(filteredData);
@@ -70,8 +70,8 @@ const StudentExercises = () => {
         <Tag name="Ejercicios" className="tags" />
         {showAssignedExercises()}
 
-        <Tag name="Ejercicios no evaluados" className="tags" />
-        {showUnAssignedExercises()}
+        {/* <Tag name="Ejercicios no evaluados" className="tags" />
+        {showUnAssignedExercises()} */}
       </div>
     </div>
   );
