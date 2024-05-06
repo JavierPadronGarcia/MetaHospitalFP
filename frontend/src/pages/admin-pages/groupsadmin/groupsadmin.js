@@ -28,6 +28,16 @@ function GroupsAdmin() {
   const [showPop, setShowPop] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Fecha: 'date',
+    }, name: {
+      Nombre: 'name',
+      Fecha: 'date',
+    }
+  }];
+
   const { RangePicker } = DatePicker;
 
   const getGroups = async () => {
@@ -202,7 +212,7 @@ function GroupsAdmin() {
         <Menu2 />
         <Tag name="Grupos" />
         <SearchComponent data={groups} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

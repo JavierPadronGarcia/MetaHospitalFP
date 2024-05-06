@@ -23,6 +23,16 @@ function CoursesAdmin() {
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Acrónimo: 'string',
+    }, name: {
+      Nombre: 'name',
+      Acrónimo: 'acronyms',
+    }
+  }];
+
   const getCourses = async () => {
     try {
       const response = await CoursesService.getCourses();
@@ -139,7 +149,7 @@ function CoursesAdmin() {
         <Menu2 />
         <Tag name="Cursos" />
         <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

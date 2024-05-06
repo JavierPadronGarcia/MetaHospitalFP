@@ -23,8 +23,18 @@ function TeacherSchools() {
   const [Id, setId] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  const Headlines = ['Nombre'];
+  const Headlines = ['Nombre','Email'];
   const location = useLocation();
+
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Email: 'email',
+    }, name: {
+      Nombre: 'name',
+      Email: 'username',
+    }
+  }];
 
   const getTeacher = async () => {
     try {
@@ -51,6 +61,7 @@ function TeacherSchools() {
   useEffect(() => {
     getTeacher();
     getUsers();
+    console.log(mode);
   }, []);
 
   const renderSchoolRow = (teacher) => (
@@ -62,7 +73,7 @@ function TeacherSchools() {
 
   const renderSchoolImputs = () => (
     <>
-      <h1>{String(Consts.ADD_MODE)}</h1>
+      <h1>{String(mode)}</h1>
       <p>Name</p>
       <Input placeholder="Name"
         value={name}
@@ -160,11 +171,11 @@ function TeacherSchools() {
         <Menu2 />
         <Tag name="Profesores" />
         <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}/>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
-        <Rightmenu renderImputs={renderSchoolImputs} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
+        <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
       </div>
     </div>
   );

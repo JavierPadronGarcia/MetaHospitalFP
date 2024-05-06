@@ -60,9 +60,8 @@ function ActivityCard({ edit, caseId, activityId, title, description, assigned, 
             (deleteElement()),
             (editElement()),
           ]}
-          onClick={() => onClick(activityId)}
         >
-          <Meta title={title} description={description ? dayjs(description).format('DD-MM-YYYY') : ''} />
+          <Meta onClick={() => onClick(activityId)} title={title} description={description ? dayjs(description).format('DD-MM-YYYY') : ''} />
         </Card>
       </>
     );

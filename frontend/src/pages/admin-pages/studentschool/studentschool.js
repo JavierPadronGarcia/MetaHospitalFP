@@ -26,6 +26,16 @@ function StudentSchools() {
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Email: 'email',
+    }, name: {
+      Nombre: 'name',
+      Email: 'username',
+    }
+  }];
+
   const getStudents = async () => {
     try {
       const studentList = await StudentSchoolsService.getStudentsBySchool(
@@ -63,7 +73,7 @@ function StudentSchools() {
 
   const renderSchoolImputs = () => (
     <>
-      <h1>{String(Consts.ADD_MODE)}</h1>
+      <h1>{String(mode)}</h1>
       <p>Name</p>
       <Input placeholder="Name"
         value={name}
@@ -161,7 +171,7 @@ function StudentSchools() {
         <Menu2 />
         <Tag name="Estudiantes" />
         <SearchComponent data={students} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}/>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}/>
         <FloatingExcelButton data={students}></FloatingExcelButton>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

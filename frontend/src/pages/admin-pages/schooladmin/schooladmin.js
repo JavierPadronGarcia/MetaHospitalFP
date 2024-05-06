@@ -51,6 +51,14 @@ function SchoolsAdmin() {
     </>
   );
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+    }, name: {
+      Nombre: 'name',
+    }
+  }];
+
   const renderSchoolImputs = () => (
     <>
       <h1>{String(mode)}</h1>
@@ -140,7 +148,7 @@ function SchoolsAdmin() {
         <Menu />
         <Tag name='Escuelas' />
         <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name"/>
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

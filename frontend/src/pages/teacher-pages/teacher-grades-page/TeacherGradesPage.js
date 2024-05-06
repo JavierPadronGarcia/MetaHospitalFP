@@ -26,7 +26,6 @@ const TeacherGradesPage = () => {
 
     useEffect(() => {
         getAllGrades();
-        console.log(assignedExercises);
     }, []);
 
     const handleSearch = (filteredData) => {
