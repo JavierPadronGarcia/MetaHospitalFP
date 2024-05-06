@@ -10,6 +10,9 @@ const Case = db.case;
 const ItemPlayerRole = db.itemPlayerRole;
 const PlayerRole = db.playerRole;
 const Item = db.item;
+const WorkUnitGroup = db.workUnitGroup;
+const Group = db.groups;
+const StudentGroup = db.studentGroup;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -87,42 +90,48 @@ exports.submitGrade = async (req, res) => {
 
   const transaction = await db.sequelize.transaction();
   try {
-    const participation = await Participation.findOne({
-      where: {
-        StudentID: userId,
-      },
-      include: {
-        model: Exercise,
-        required: true,
-        include: {
+
+    const exercise = await Exercise.findOne({
+      attributes: ['id'],
+      include: [
+        {
           model: Case,
           required: true,
+          attributes: [],
           where: {
             caseNumber: exerciseId + 1,
             WorkUnitID: UT
           }
+        },
+        {
+          model: WorkUnitGroup,
+          required: true,
+          attributes: [],
+          include: {
+            model: Group,
+            required: true,
+            include: {
+              model: StudentGroup,
+              attributes: [],
+              where: {
+                StudentID: userId
+              }
+            }
+          }
         }
-      },
+      ],
       transaction
     });
 
-    if (!participation) {
-      await transaction.rollback();
-      submitGradesLogger.saveErrorLog(req.body, { message: "User not assigned to this exercise" }, '403');
-      return res.status(403).send({ error: true, message: "User not assigned to this exercise" });
-    }
-
-    if (participation.FinalGrade) {
-      await transaction.rollback();
-      submitGradesLogger.saveErrorLog(req.body, { message: 'The user has already done this exercise, the grades will not be updated' }, '200');
-      return res.status(200).send({ message: 'The user has already done this exercise, the grades will not be updated' });
-    }
+    const participation = await Participation.create({
+      ExerciseID: exercise.id,
+      StudentID: userId,
+    }, { transaction });
 
     const participationId = participation.id;
     participation.FinalGrade = finalGrade;
     participation.Role = role;
     participation.SubmittedAt = dayjs(submittedTime, 'DD-MM-YYYY HH:mm:ss').utcOffset(60);
-    participationTestDate = participation.SubmittedAt
     await participation.save({ transaction });
 
     if (items && items?.length !== 0

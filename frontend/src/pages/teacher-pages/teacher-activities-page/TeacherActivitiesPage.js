@@ -17,7 +17,7 @@ function TeacherActivitiesPage() {
   const colors = JSON.parse(sessionStorage.getItem('colors'));
 
   const [assignedExercises, setAssignedExercises] = useState([]);
-  const [unAssignedExercises, setUnAssignedExercises] = useState([]);
+  // const [unAssignedExercises, setUnAssignedExercises] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
   const navigate = useNavigate();
@@ -25,9 +25,9 @@ function TeacherActivitiesPage() {
 
   const getAllExercises = () => {
     exercisesService.getAllExercisesOfTheGroup(id, workUnitId).then(exercises => {
-      setAssignedExercises(exercises.filter(exercise => Boolean(exercise.assigned) === true));
-      setFilteredData(exercises.filter(exercise => Boolean(exercise.assigned) === true));
-      setUnAssignedExercises(exercises.filter(exercise => Boolean(exercise.assigned) === false));
+      setAssignedExercises(exercises);
+      setFilteredData(exercises);
+      // setUnAssignedExercises(exercises);
     }).catch(err => {
       if (!err.response) {
         noConnectionError();
@@ -82,22 +82,22 @@ function TeacherActivitiesPage() {
     })
   )
 
-  const showUnAssignedExercises = () => (
-    unAssignedExercises.map(exercise => {
-      return (
-        <ActivityCard
-          key={exercise.exerciseId}
-          edit={true}
-          caseId={exercise.id}
-          activityId={exercise.exerciseId}
-          title={exercise.name}
-          assigned={false}
-          notifyDelete={(activityId) => handleDelete(activityId)}
-          notifyUpdateInfo={() => getAllExercises()}
-        />
-      )
-    })
-  )
+  // const showUnAssignedExercises = () => (
+  //   unAssignedExercises.map(exercise => {
+  //     return (
+  //       <ActivityCard
+  //         key={exercise.exerciseId}
+  //         edit={true}
+  //         caseId={exercise.id}
+  //         activityId={exercise.exerciseId}
+  //         title={exercise.name}
+  //         assigned={false}
+  //         notifyDelete={(activityId) => handleDelete(activityId)}
+  //         notifyUpdateInfo={() => getAllExercises()}
+  //       />
+  //     )
+  //   })
+  // )
 
   const handleSearch = (filteredData) => {
     setFilteredData(filteredData);
@@ -111,7 +111,7 @@ function TeacherActivitiesPage() {
         <div style={{ display: 'flex', alignItems: 'center' }} className='activity-section'>
           {showAssignedExercises()}
         </div>
-        <ActivityForm groupId={id} workUnitId={workUnitId} notifyUpdateInfo={getAllExercises} />
+        {/* <ActivityForm groupId={id} workUnitId={workUnitId} notifyUpdateInfo={getAllExercises} /> */}
       </div>
     </div>
   );

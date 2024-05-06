@@ -8,44 +8,81 @@ const WorkUnit = db.workUnit;
 const StudentGroup = db.studentGroup;
 const TeacherGroup = db.teacherGroup;
 const WorkUnitGroup = db.workUnitGroup;
+const Case = db.case;
+const Exercise = db.exercise;
 const Op = db.Sequelize.Op;
 
-exports.createGroup = (req, res) => {
+exports.createGroup = async (req, res) => {
   const name = req.body.name;
   const date = req.body.date;
   const CourseId = req.body.CourseId;
   const schoolId = req.body.schoolId;
 
   const workUnitGroupCreation = [];
+  const exercisesArray = [];
+  let workUnit;
 
-  if (!name || !CourseId || !schoolId) {
-    return res.status(400).send({
-      error: "You must provide a name"
+  const transaction = await db.sequelize.transaction();
+  try {
+
+    if (!name || !CourseId || !schoolId) {
+      return res.status(400).send({
+        error: "You must provide a name"
+      });
+    }
+
+    const newGroup = { name: name, date: date, CourseID: CourseId, SchoolID: schoolId };
+
+    const group = await Group.create(newGroup, { transaction });
+
+    const allWorkUnits = await WorkUnit.findAll({ transaction });
+
+    allWorkUnits.forEach(workUnit => {
+      workUnitGroupCreation.push({
+        GroupID: group.id,
+        WorkUnitID: workUnit.id,
+        visibility: false
+      });
     });
-  }
-  const newGroup = { name: name, date: date, CourseID: CourseId, SchoolID: schoolId };
 
-  Group.create(newGroup).then((group) => {
-    //find all the work units to assign them to the new group
-    WorkUnit.findAll().then(allWorkUnits => {
-      //create all the rows to assign al work units to its group
-      allWorkUnits.forEach(workUnit => {
-        workUnitGroupCreation.push({
-          GroupID: group.id,
-          WorkUnitID: workUnit.id,
-          visibility: false
-        })
-      })
-      //create all whe workUnitGroups
-      WorkUnitGroup.bulkCreate(workUnitGroupCreation).then(response => {
-        res.send(group);
-      })
-    })
-  }).catch((err) => {
-    res.status(500).send({
+    const workUnitGroups = await WorkUnitGroup.bulkCreate(workUnitGroupCreation, { transaction });
+    const parsedWorkUnitGroups = workUnitGroups.map((workUnitGroup) => workUnitGroup.get({ plain: true }));
+
+    for (const workUnitGroup of parsedWorkUnitGroups) {
+
+      if (!workUnit || workUnitGroup.WorkUnitID !== workUnit)
+        workUnit = workUnitGroup.WorkUnitID;
+
+      const casesInWorkUnit = await Case.findAll({
+        where: {
+          WorkUnitID: workUnit,
+        },
+        raw: true,
+        transaction
+      });
+
+      casesInWorkUnit.forEach((caseItem) => {
+        exercisesArray.push({
+          finishDate: null,
+          CaseID: caseItem.id,
+          WorkUnitGroupID: workUnitGroup.id
+        });
+      });
+
+    }
+
+    await Exercise.bulkCreate(exercisesArray, { transaction });
+
+    await transaction.commit();
+
+    return res.send(group);
+
+  } catch (err) {
+    if (transaction) await transaction.rollback();
+    return res.status(500).send({
       error: err
     });
-  });
+  }
 };
 
 exports.findAllWithCounts = async (req, res) => {
@@ -156,14 +193,13 @@ exports.findUserGroup = (req, res) => {
       }
     }
   }).then(userWithGroup => {
-    if (userWithGroup) {
-      return res.send(userWithGroup.StudentGroups[0].group);
-    } else {
+    if (!userWithGroup) {
       return res.status(500).send({
         error: true,
         message: 'User do not have a group in this range'
       });
     }
+    return res.send(userWithGroup.StudentGroups[0].group);
   });
 }
 
