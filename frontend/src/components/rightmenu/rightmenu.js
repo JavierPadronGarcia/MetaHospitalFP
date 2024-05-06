@@ -2,8 +2,11 @@ import React from 'react';
 import './rightmenu.css';
 import { Button } from 'antd';
 import { Consts } from '../../constants/modes';
+import { useTranslation } from 'react-i18next';
 
 const Rightmenu = ({ renderImputs, cancel, mode, onSubmit, currentRoute }) => {
+
+  const [t, i18n] = useTranslation('global');
 
   const selectIcon = () => {
     let icon = '';
@@ -41,10 +44,10 @@ const Rightmenu = ({ renderImputs, cancel, mode, onSubmit, currentRoute }) => {
         <div className="inputs">
           {renderImputs()}
           <div className='buttons'>
-            <Button className='submit-button' onClick={onSubmit}>Enviar</Button>
+            <Button className='submit-button' onClick={onSubmit}>{t('send')}</Button>
             {mode !== Consts.ADD_MODE && mode && cancel && (
               <Button danger onClick={cancel}>
-                Cancelar
+                {t('cancel')}
               </Button>
             )}
           </div>

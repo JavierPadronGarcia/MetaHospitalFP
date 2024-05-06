@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import './search.css';
+import { useTranslation } from 'react-i18next';
 
 function SearchComponent({ data, onSearch, fieldName }) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [t, i18n] = useTranslation('global');
 
     const handleSearch = (e) => {
         const searchTerm = e.target.value;
@@ -31,15 +33,15 @@ function SearchComponent({ data, onSearch, fieldName }) {
     };
 
     return (
-        <div className="search-container"> 
+        <div className="search-container">
             <input
                 type="text"
-                placeholder="Search..."
+                placeholder={`${t('search')} ...`}
                 value={searchTerm}
                 onChange={handleSearch}
-                className="search-input" 
+                className="search-input"
             />
-            <div className="search-icon-container"> 
+            <div className="search-icon-container">
                 <SearchOutlined className="search-icon" />
             </div>
         </div>

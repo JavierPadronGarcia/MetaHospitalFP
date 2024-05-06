@@ -12,18 +12,30 @@ import { Link } from 'react-router-dom';
 import CoursesService from '../../../services/courses.service';
 import './groupsadmin.css';
 import dayjs from 'dayjs';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import useNotification from '../../../utils/shared/errorHandler';
+import { useTranslation } from 'react-i18next';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function GroupsAdmin() {
+  const [t] = useTranslation('global');
+  const {
+    noConnectionError,
+    groupGetError,
+    courseGetError,
+    groupCreateSuccessful,
+    groupDeleteFail,
+    groupDeleteSuccessful,
+    groupUpdateOrCreateFail,
+    groupUpdateSuccessful
+  } = useNotification();
   const [groups, setGroups] = useState([]);
   const [courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [yearRange, setYearRange] = useState('');
   const [range, setRange] = useState([null, null]);
   const [Id, setId] = useState('');
-  const Headlines = ['Nombre', 'Fecha'];
+  const Headlines = [t('name_s'), t('date')];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [courseId, setCourseId] = useState('');
   const [showPop, setShowPop] = useState(false);
@@ -37,8 +49,7 @@ function GroupsAdmin() {
       setGroups(groupsList);
       setFilteredData(groupsList);
     } catch (error) {
-      console.error('Error fetching Groups:', error);
-      message.error(error.message)
+      groupGetError();
     }
   };
 
@@ -47,8 +58,7 @@ function GroupsAdmin() {
       const courseList = await CoursesService.getCourses();
       setCourses(courseList);
     } catch (error) {
-      console.error('Error fetching Courses:', error);
-      message.error(error.message)
+      courseGetError();
     }
   }
 
@@ -69,27 +79,38 @@ function GroupsAdmin() {
     </>
   );
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderGroupsImputs = () => (
     <>
-      <h1>{String(mode)}</h1>
-      <p>Name</p>
+      <h1>{getTranslation(String(mode))}</h1>
+      <p>{t('name_s')}</p>
       <Input
-        placeholder="Name"
+        placeholder={t('name_s')}
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <p>Año</p>
+      <p>{t('year')}</p>
       <RangePicker
         picker="year"
-        placeholder={['Start Year', 'End Year']}
+        placeholder={[t('start_year'), t('end_year')]}
         value={range}
         onPanelChange={handlePanelChange}
       />
-      <p>Curso</p>
+      <p>{t('course_s')}</p>
       <AutoComplete
         style={{ width: 200 }}
         options={courses.map(course => ({ value: course.name, label: course.name, id: course.id }))}
-        placeholder="Cursos"
+        placeholder={t('course_p')}
         filterOption={(inputValue, option) =>
           option.label.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
         }
@@ -99,7 +120,6 @@ function GroupsAdmin() {
   );
 
   const handlePanelChange = (value, mode) => {
-    console.log(range)
     if (Array.isArray(value) && value.length === 2) {
       const validDates = value.filter(date => date !== null && date !== undefined);
       setRange(value);
@@ -114,9 +134,9 @@ function GroupsAdmin() {
     try {
       await GroupsService.deleteGroup(id);
       getGroups();
-      message.success('Grupo eliminado correctamente');
+      groupDeleteSuccessful();
     } catch (error) {
-      message.error('Error al eliminar el grupo')
+      groupDeleteFail();
     }
   };
 
@@ -148,7 +168,7 @@ function GroupsAdmin() {
     try {
 
       if (!name || !yearRange || !courseId) {
-        throw new Error('No fields filled');
+        throw new Error(t('fill_all_fields'));
       }
 
       if (mode === Consts.EDIT_MODE) {
@@ -161,7 +181,7 @@ function GroupsAdmin() {
 
         await GroupsService.updateGroup(groupsToEdit);
 
-        message.success('Grupo actualizado correctamente');
+        groupUpdateSuccessful();
         getGroups();
       } else {
         const Groups = {
@@ -172,17 +192,16 @@ function GroupsAdmin() {
 
         await GroupsService.addGroup(Groups, localStorage.getItem('schoolId'));
         getGroups();
-        message.success('Grupo agregado correctamente');
+        groupCreateSuccessful();
       }
       Cancel();
     } catch (error) {
       if (error.message === 'No fields filled') {
-        message.error('Rellena todos los campos');
+        message.error(t('fill_all_fields'));
       } else if (error.message === 'Network Error') {
         noConnectionError();
       } else {
-        message.error('No se ha podido agregar/actualizar el grupo');
-        console.log(error.message)
+        groupUpdateOrCreateFail();
       }
     }
   };
@@ -201,7 +220,7 @@ function GroupsAdmin() {
     <div className='container groupsadmin-page'>
       <div className='container-left'>
         <Menu2 />
-        <Tag name="Grupos" />
+        <Tag name={t('group_p')} />
         <SearchComponent data={groups} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />

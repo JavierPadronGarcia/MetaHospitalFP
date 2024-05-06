@@ -4,13 +4,14 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import casesService from '../../services/cases.service';
 import groupEnrolementService from '../../services/groupEnrolement.service';
-import { errorMessage, noConnectionError } from '../../utils/shared/errorHandler';
+import useNotification from '../../utils/shared/errorHandler';
 import { activityFormValidation, activityFormValidationWithDate } from '../../utils/shared/globalFunctions';
 import exercisesService from '../../services/exercises.service';
 
 function ActivityForm({ groupId, workUnitId, isUpdateForm, updateFormContent, notifyUpdateInfo }) {
 
   const colors = JSON.parse(sessionStorage.getItem('colors'));
+  const { noConnectionError, errorMessage } = useNotification();
 
   const [allStudents, setAllStudents] = useState([]);
   const [allCases, setAllCases] = useState([]);
