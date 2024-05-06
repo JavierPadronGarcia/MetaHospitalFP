@@ -11,14 +11,16 @@ import { useLocation } from 'react-router-dom';
 import './coursesadmin.css';
 import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import { useTranslation } from 'react-i18next';
 
 function CoursesAdmin() {
+  const [t] = useTranslation('global');
   const { noConnectionError } = useNotification();
   const [Courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [acronyms, setAcronyms] = useState('');
   const [Id, setId] = useState('');
-  const Headlines = ['Nombre', 'Acrónimo'];
+  const Headlines = [t('name_s'), 'Acrónimo'];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
@@ -48,12 +50,12 @@ function CoursesAdmin() {
   const renderCoursesImputs = () => (
     <>
       <h1>{String(mode)}</h1>
-      <p>Nombre</p>
-      <Input placeholder="Nombre"
+      <p>{t('name_s')}</p>
+      <Input placeholder={t('name_s')}
         value={name}
         onChange={(e) => setName(e.target.value)} />
-      <p>Acrónimo</p>
-      <Input placeholder="Acrónimo"
+      <p>{t('acronym')}</p>
+      <Input placeholder={t('acronym')}
         value={acronyms}
         onChange={(e) => setAcronyms(e.target.value)} />
     </>
