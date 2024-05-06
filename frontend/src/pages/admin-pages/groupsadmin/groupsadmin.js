@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 import SearchComponent from '../../../components/search/search';
 import useNotification from '../../../utils/shared/errorHandler';
 import { useTranslation } from 'react-i18next';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function GroupsAdmin() {
   const [t] = useTranslation('global');
@@ -223,6 +224,7 @@ function GroupsAdmin() {
         <SearchComponent data={groups} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
+        <FloatingExcelButton data={groups} name={`grupos - ${localStorage.getItem('schoolName')}`} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderGroupsImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} />

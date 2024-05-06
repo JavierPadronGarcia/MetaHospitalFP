@@ -12,6 +12,7 @@ import './coursesadmin.css';
 import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
 import { useTranslation } from 'react-i18next';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function CoursesAdmin() {
   const [t] = useTranslation('global');
@@ -144,6 +145,7 @@ function CoursesAdmin() {
         <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
         <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
+        <FloatingExcelButton data={Courses} name={`cursos - ${localStorage.getItem('schoolName')}`} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderCoursesImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />

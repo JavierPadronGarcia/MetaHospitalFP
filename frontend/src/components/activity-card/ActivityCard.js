@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 const { Meta } = Card;
 
-function ActivityCard({ edit, caseId, activityId, title, description, assigned, notifyDelete, notifyUpdateInfo }) {
+function ActivityCard({ edit, caseId, activityId, title, description, assigned, notifyDelete, notifyUpdateInfo, onClick }) {
   const [isOpen, setOpen] = useState(false);
   const params = useParams();
   const groupId = params.id;
@@ -60,6 +60,7 @@ function ActivityCard({ edit, caseId, activityId, title, description, assigned, 
             (deleteElement()),
             (editElement()),
           ]}
+          onClick={() => onClick(activityId)}
         >
           <Meta title={title} description={description ? dayjs(description).format('DD-MM-YYYY') : ''} />
         </Card>

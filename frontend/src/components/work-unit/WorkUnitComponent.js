@@ -37,14 +37,14 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
         onClick={() => handleNavigateToWorkUnit()}
         style={{ background: colors.primaryColor, height: '4rem', width: '4rem', borderRadius: '1rem' }}
       />
-      <div style={{ display: 'flex', marginLeft: '1rem', width: '80%', textAlign: 'start', color: '#7777' }} onClick={() => handleNavigateToWorkUnit()}>
+      <div style={{ display: 'flex', marginLeft: '1rem', width: '80%', textAlign: 'start', color: '#777777' }} onClick={() => handleNavigateToWorkUnit()}>
         <b style={{ display: 'flex', alignItems: 'center', width: '100%', height: '4rem' }}>{workUnit.name}</b>
       </div>
       <Icon
         component={visibility ? EyeOutlined : EyeInvisibleOutlined}
         className='work-unit-component-icon visibility'
         onClick={() => changeVisibility()}
-        style={{ color: '#7777' }}
+        style={{ color: '#777777' }}
       />
     </div>
   )

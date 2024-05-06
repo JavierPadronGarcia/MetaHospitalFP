@@ -1,4 +1,8 @@
+const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat)
 const db = require("../../models");
+const submitGradesLogger = require('../../utils/submitGradesLogger');
 const Participation = db.participation;
 const Grade = db.grade
 const Exercise = db.exercise;
@@ -82,7 +86,6 @@ exports.submitGrade = async (req, res) => {
   const handWash = [req.body.handWashInit, req.body.handWashEnd];
 
   const transaction = await db.sequelize.transaction();
-
   try {
     const participation = await Participation.findOne({
       where: {
@@ -105,19 +108,21 @@ exports.submitGrade = async (req, res) => {
 
     if (!participation) {
       await transaction.rollback();
+      submitGradesLogger.saveErrorLog(req.body, { message: "User not assigned to this exercise" }, '403');
       return res.status(403).send({ error: true, message: "User not assigned to this exercise" });
     }
 
     if (participation.FinalGrade) {
       await transaction.rollback();
+      submitGradesLogger.saveErrorLog(req.body, { message: 'The user has already done this exercise, the grades will not be updated' }, '200');
       return res.status(200).send({ message: 'The user has already done this exercise, the grades will not be updated' });
     }
 
     const participationId = participation.id;
-
     participation.FinalGrade = finalGrade;
     participation.Role = role;
-    participation.SubmittedAt = submittedTime;
+    participation.SubmittedAt = dayjs(submittedTime, 'DD-MM-YYYY HH:mm:ss').utcOffset(60);
+    participationTestDate = participation.SubmittedAt
     await participation.save({ transaction });
 
     if (items && items?.length !== 0
@@ -171,12 +176,16 @@ exports.submitGrade = async (req, res) => {
         await Grade.bulkCreate(grades, { transaction });
 
         await transaction.commit();
-
         return res.send({
           message: 'grades added successfully',
         })
       } catch (error) {
         await transaction.rollback();
+        submitGradesLogger.saveErrorLog(req.body,
+          { message: "Error adding the grading information to the database!: " + error },
+          '500'
+        );
+
         return res.status(500).send(
           { error: true, message: "Error adding the grading information to the database!: " + error }
         )
@@ -199,19 +208,32 @@ exports.submitGrade = async (req, res) => {
 
         await Grade.bulkCreate(handWashgrades, { transaction });
         await transaction.commit();
+
         return res.send({ message: "grades added successfully" })
 
       } catch (error) {
         await transaction.rollback();
+        submitGradesLogger.saveErrorLog(req.body,
+          { message: "Error saving Hand wash grades" + error },
+          '500'
+        );
         return res.status(500).send({ error: true, message: 'Error saving Hand wash grades' });
       }
     } else {
       await transaction.rollback();
+      submitGradesLogger.saveErrorLog(req.body,
+        { message: "No handwash grades provided" },
+        '500'
+      );
       return res.status(500).send({ error: true, message: "No handwash grades provided" });
     }
 
   } catch (error) {
     await transaction.rollback();
+    submitGradesLogger.saveErrorLog(req.body,
+      { message: "Error when trying to update the final grade: " + error },
+      '500'
+    );
     return res.status(500).send({
       error: true,
       message: error.message || "Error when trying to update the final grade!",

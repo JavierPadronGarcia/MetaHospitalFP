@@ -10,6 +10,7 @@ const Studenthome = () => {
   const [title, setTitle] = useState('');
   const [groupId, setGroupId] = useState(null);
   const [workUnits, setWorkUnits] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   const getGroup = async () => {
     try {
@@ -18,7 +19,6 @@ const Studenthome = () => {
       setTitle(userGroup.name);
       setGroupId(userGroup.id)
       getWorkUnits(userGroup.id);
-      console.log()
     } catch (err) {
       console.log("Error: ", err);
     };
@@ -27,8 +27,8 @@ const Studenthome = () => {
   const getWorkUnits = async (groupId) => {
     try {
       const workUnits = await workUnitGroupsService.getAllWorkUnitsWithColorsByGroup(groupId);
-      console.log(workUnits)
       setWorkUnits(workUnits);
+      setFilteredData(workUnits);
     } catch (err) {
       console.log('Error: ' + err)
     }
@@ -38,12 +38,16 @@ const Studenthome = () => {
     getGroup();
   }, []);
 
+  const handleSearch = (filteredData) => {
+    setFilteredData(filteredData);
+  };
+
   return (
     <div className="student-home">
-      <Headers title={title} groupId={groupId} />
+      <Headers title={title} groupId={groupId} data={workUnits} onSearch={handleSearch} fieldName="workUnit.name"/>
       <div className='container-scroll'>
         <Tag name="Unidades" className="tags" />
-        {workUnits.map((workUnit, index) => {
+        {filteredData.map((workUnit, index) => {
           if (workUnit.visibility)
             return <CardUnits key={index}
               title={workUnit.workUnit.name}

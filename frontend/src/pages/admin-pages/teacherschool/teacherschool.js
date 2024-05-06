@@ -13,6 +13,7 @@ import './teacherschool.css';
 import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
 import { useTranslation } from 'react-i18next';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function TeacherSchools() {
   const [t] = useTranslation('global');
@@ -184,6 +185,7 @@ function TeacherSchools() {
         <Tag name={t('teacher_p')} />
         <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
+        <FloatingExcelButton data={teacher} name={`profesores - ${localStorage.getItem('schoolName')}`} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
