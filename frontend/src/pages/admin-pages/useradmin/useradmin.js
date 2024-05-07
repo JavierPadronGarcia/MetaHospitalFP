@@ -51,10 +51,10 @@ function UserAdmin() {
   const { Option } = Select;
 
   const filter = [
-    { name: 'name', value: 'name' },
-    { name: 'email', value: 'username' },
-    { name: 'school', value: 'schoolName' },
-    { name: 'role', value: 'role' },
+    { name: t('name_s'), value: 'name' },
+    { name: t('email'), value: 'username' },
+    { name: t('school_s'), value: 'schoolName' },
+    { name: t('role_s'), value: 'role' },
   ];
 
   useEffect(() => {
