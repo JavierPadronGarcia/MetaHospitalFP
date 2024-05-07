@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { EditOutlined, DeleteOutlined, LockOutlined } from '@ant-design/icons';
 import './basiclist.css';
 import { Popconfirm } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, columnTypes }) => {
   const [sortBy, setSortBy] = useState({ key: null, order: 'asc' });
+  const [t] = useTranslation('global');
 
   const handleSort = (key) => {
     if (sortBy.key === key) {
@@ -66,7 +68,7 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, co
                 {headline} {sortBy.key === headline && (sortBy.order === 'asc' ? '▲' : '▼')}
               </th>
             ))}
-            <th>Acciones</th>
+            <th>{t('action_p')}</th>
           </tr>
         </thead>
         <tbody>
@@ -77,11 +79,11 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, co
                 <td>
                   {password && (
                     <Popconfirm
-                      title="Restablecer Contraseña"
-                      description="¿Estás seguro que quieres restablecer la Contraseña?"
+                      title={t('reset_password')}
+                      description={t('reset_password_req')}
                       onConfirm={() => onEdit(item.id, 'popform')}
-                      okText="Sí"
-                      cancelText="No"
+                      okText={t('yes')}
+                      cancelText={t('no')}
                     >
                       <LockOutlined className='edit-normal' style={{ marginRight: 8 }} />
                     </Popconfirm>
@@ -94,11 +96,11 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, co
                     />
                   )}
                   <Popconfirm
-                    title="Eliminar"
-                    description="¿Estás seguro que quieres eliminar?"
+                    title={t('delete')}
+                    description={t('delete_question')}
                     onConfirm={() => onDelete(item.id)}
-                    okText="Sí"
-                    cancelText="No"
+                    okText={t('yes')}
+                    cancelText={t('no')}
                   >
                     <DeleteOutlined data-testid="delete-button" />
                   </Popconfirm>
@@ -107,7 +109,7 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, co
             ))
           ) : (
             <tr>
-              <td colSpan={Headlines.length + 1}>No hay elementos para mostrar</td>
+              <td colSpan={Headlines.length + 1}>{t('no_elements_to_show')}</td>
             </tr>
           )}
         </tbody>

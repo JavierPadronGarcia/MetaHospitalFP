@@ -1,4 +1,8 @@
+const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat)
 const db = require("../../models");
+const submitGradesLogger = require('../../utils/submitGradesLogger');
 const Participation = db.participation;
 const Grade = db.grade
 const Exercise = db.exercise;
@@ -6,6 +10,9 @@ const Case = db.case;
 const ItemPlayerRole = db.itemPlayerRole;
 const PlayerRole = db.playerRole;
 const Item = db.item;
+const WorkUnitGroup = db.workUnitGroup;
+const Group = db.groups;
+const StudentGroup = db.studentGroup;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -82,37 +89,49 @@ exports.submitGrade = async (req, res) => {
   const handWash = [req.body.handWashInit, req.body.handWashEnd];
 
   const transaction = await db.sequelize.transaction();
-
   try {
-    const participation = await Participation.findOne({
-      where: {
-        StudentID: userId,
-      },
-      include: {
-        model: Exercise,
-        required: true,
-        include: {
+
+    const exercise = await Exercise.findOne({
+      attributes: ['id'],
+      include: [
+        {
           model: Case,
           required: true,
+          attributes: [],
           where: {
             caseNumber: exerciseId + 1,
             WorkUnitID: UT
           }
+        },
+        {
+          model: WorkUnitGroup,
+          required: true,
+          attributes: [],
+          include: {
+            model: Group,
+            required: true,
+            include: {
+              model: StudentGroup,
+              attributes: [],
+              where: {
+                StudentID: userId
+              }
+            }
+          }
         }
-      },
+      ],
       transaction
     });
 
-    if (!participation) {
-      await transaction.rollback();
-      return res.status(500).send({ error: true, message: "No such participation found!" });
-    }
+    const participation = await Participation.create({
+      ExerciseID: exercise.id,
+      StudentID: userId,
+    }, { transaction });
 
     const participationId = participation.id;
-
     participation.FinalGrade = finalGrade;
     participation.Role = role;
-    participation.SubmittedAt = submittedTime;
+    participation.SubmittedAt = dayjs(submittedTime, 'DD-MM-YYYY HH:mm:ss').utcOffset(60);
     await participation.save({ transaction });
 
     if (items && items?.length !== 0
@@ -166,12 +185,16 @@ exports.submitGrade = async (req, res) => {
         await Grade.bulkCreate(grades, { transaction });
 
         await transaction.commit();
-
         return res.send({
           message: 'grades added successfully',
         })
       } catch (error) {
         await transaction.rollback();
+        submitGradesLogger.saveErrorLog(req.body,
+          { message: "Error adding the grading information to the database!: " + error },
+          '500'
+        );
+
         return res.status(500).send(
           { error: true, message: "Error adding the grading information to the database!: " + error }
         )
@@ -194,19 +217,32 @@ exports.submitGrade = async (req, res) => {
 
         await Grade.bulkCreate(handWashgrades, { transaction });
         await transaction.commit();
+
         return res.send({ message: "grades added successfully" })
 
       } catch (error) {
         await transaction.rollback();
+        submitGradesLogger.saveErrorLog(req.body,
+          { message: "Error saving Hand wash grades" + error },
+          '500'
+        );
         return res.status(500).send({ error: true, message: 'Error saving Hand wash grades' });
       }
     } else {
       await transaction.rollback();
+      submitGradesLogger.saveErrorLog(req.body,
+        { message: "No handwash grades provided" },
+        '500'
+      );
       return res.status(500).send({ error: true, message: "No handwash grades provided" });
     }
 
   } catch (error) {
     await transaction.rollback();
+    submitGradesLogger.saveErrorLog(req.body,
+      { message: "Error when trying to update the final grade: " + error },
+      '500'
+    );
     return res.status(500).send({
       error: true,
       message: error.message || "Error when trying to update the final grade!",

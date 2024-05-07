@@ -4,8 +4,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { DownOutlined, LogoutOutlined, MenuOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Space, Button } from 'antd';
 import authService from '../../services/auth.service';
+import { useTranslation } from 'react-i18next';
 
 function Menu2() {
+  const [t] = useTranslation('global');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -56,7 +58,7 @@ function Menu2() {
 
   const dropdownItems = [
     {
-      label: <div>Mi perfil</div>,
+      label: <div>{t('my_profile')}</div>,
       icon: <UserOutlined />,
       key: 'profile',
     },
@@ -64,7 +66,7 @@ function Menu2() {
       type: 'divider',
     },
     {
-      label: <div>Cerrar sesión</div>,
+      label: <div>{t('logout')}</div>,
       key: 'logout',
       icon: <LogoutOutlined />,
       danger: true,
@@ -73,33 +75,33 @@ function Menu2() {
 
   const smallDropdownItems = [
     {
-      label: <div>Inicio</div>,
+      label: <div>{t('home')}</div>,
       key: 'home',
     },
     {
       type: 'divider',
     },
     {
-      label: <div>Estudiantes</div>,
+      label: <div>{t('student_p')}</div>,
       key: 'students',
     },
     {
-      label: <div>Profesores</div>,
+      label: <div>{t('teacher_p')}</div>,
       key: 'teachers',
     },
     {
-      label: <div>Grupos</div>,
+      label: <div>{t('group_p')}</div>,
       key: 'groups',
     },
     {
-      label: <div>Cursos</div>,
+      label: <div>{t('course_p')}</div>,
       key: 'courses',
     },
     {
       type: 'divider',
     },
     {
-      label: <div>Mi perfil</div>,
+      label: <div>{t('my_profile')}</div>,
       icon: <UserOutlined />,
       key: 'profile',
     },
@@ -107,7 +109,7 @@ function Menu2() {
       type: 'divider',
     },
     {
-      label: <div>Cerrar sesión</div>,
+      label: <div>{t('logout')}</div>,
       key: 'logout',
       icon: <LogoutOutlined />,
       danger: true,
@@ -132,46 +134,46 @@ function Menu2() {
           <li>
             <Link
               to="/admin/school"
-              data-item="Inicio"
+              data-item={t('home')}
               className={getMenuActiveItem() === 'Inicio' ? 'active' : ''}
             >
-              Inicio
+              {t('home')}
             </Link>
           </li>
           <li>
             <Link
               to="/admin/students"
-              data-item="Estudiantes"
+              data-item={t('student_p')}
               className={getMenuActiveItem() === 'Estudiantes' ? 'active' : ''}
             >
-              Estudiantes
+              {t('student_p')}
             </Link>
           </li>
           <li>
             <Link
               to="/admin/teachers"
-              data-item="Profesores"
+              data-item={t('teacher_p')}
               className={getMenuActiveItem() === 'Profesores' ? 'active' : ''}
             >
-              Profesores
+              {t('teacher_p')}
             </Link>
           </li>
           <li>
             <Link
               to="/admin/groups"
-              data-item="Grupos"
+              data-item={t('group_p')}
               className={getMenuActiveItem() === 'Grupos' ? 'active' : ''}
             >
-              Grupos
+              {t('group_p')}
             </Link>
           </li>
           <li>
             <Link
               to="/admin/courses"
-              data-item="Cursos"
+              data-item={t('course_p')}
               className={getMenuActiveItem() === 'Cursos' ? 'active' : ''}
             >
-              Cursos
+              {t('course_p')}
             </Link>
           </li>
         </ul>

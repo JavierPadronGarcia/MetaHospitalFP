@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import './search.css';
+import { useTranslation } from 'react-i18next';
 
 function SearchComponent({ data, onSearch, filter, fieldName }) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [t, i18n] = useTranslation('global');
     const [selectedFilter, setSelectedFilter] = useState('');
 
     useEffect(() => {
@@ -54,7 +56,7 @@ function SearchComponent({ data, onSearch, filter, fieldName }) {
         <div className="search-container">
             <input
                 type="text"
-                placeholder="Search..."
+                placeholder={`${t('search')} ...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"

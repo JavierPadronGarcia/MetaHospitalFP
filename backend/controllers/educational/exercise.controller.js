@@ -154,13 +154,13 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   const { groupId, workUnitId } = req.params;
   try {
     const result = await db.sequelize.query(`
-      SELECT c.id, c.name, ex.finishDate, ex.assigned, ex.CaseID, ex.id as exerciseId
+      SELECT c.id, c.name, ex.finishDate, ex.CaseID, ex.id as exerciseId
       FROM \`${WorkUnitGroup.tableName}\` AS wkug
       JOIN \`${Exercise.tableName}\` AS ex ON ex.WorkUnitGroupID = wkug.id
       JOIN \`${Case.tableName}\` AS c ON c.id = ex.CaseID
       WHERE wkug.GroupID = ${groupId} 
       AND wkug.WorkUnitID = ${workUnitId}
-      GROUP BY c.id, c.WorkUnitId, c.name, ex.assigned, ex.finishDate, ex.CaseID, ex.id;
+      GROUP BY c.id, c.WorkUnitId, c.name, ex.finishDate, ex.CaseID, ex.id;
     `, { type: db.Sequelize.QueryTypes.SELECT });
     return res.send(result);
   } catch (err) {
@@ -176,14 +176,13 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
     const exercises = await Participation.findAll({
       raw: true,
       attributes: [
-        [db.sequelize.col('Exercise.id'), 'exerciseId'],
-        [db.sequelize.col('Exercise.assigned'), 'assigned'],
-        [db.sequelize.col('Exercise.finishDate'), 'finishDate'],
-        [db.sequelize.col('Exercise.Case.id'), 'caseId'],
-        [db.sequelize.col('Exercise.Case.WorkUnitId'), 'workUnitId'],
-        [db.sequelize.col('Exercise.Case.name'), 'caseName'],
-        [db.sequelize.col('Participation.FinalGrade'), 'finalGrade'],
-        [db.sequelize.col('Participation.id'), 'participationId'],
+        [db.sequelize.col('exercise.id'), 'exerciseId'],
+        [db.sequelize.col('exercise.finishDate'), 'finishDate'],
+        [db.sequelize.col('exercise.case.id'), 'caseId'],
+        [db.sequelize.col('exercise.case.WorkUnitId'), 'workUnitId'],
+        [db.sequelize.col('exercise.case.name'), 'caseName'],
+        [db.sequelize.col('participation.FinalGrade'), 'finalGrade'],
+        [db.sequelize.col('participation.id'), 'participationId'],
       ],
       include: [
         {
@@ -247,9 +246,9 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
           ParticipationID: exerciseParticipation.participationId
         },
         attributes: [
-          [db.sequelize.col('Grade.id'), 'gradeId'],
-          [db.sequelize.col('Grade.correct'), 'gradeCorrect'],
-          [db.sequelize.col('Grade.grade'), 'gradeValue'],
+          [db.sequelize.col('grade.id'), 'gradeId'],
+          [db.sequelize.col('grade.correct'), 'gradeCorrect'],
+          [db.sequelize.col('grade.grade'), 'gradeValue'],
           [db.sequelize.col('ItemPlayerRole.item.id'), 'itemId'],
           [db.sequelize.col('ItemPlayerRole.item.name'), 'itemName'],
           [db.sequelize.col('ItemPlayerRole.item.description'), 'itemDescription'],
@@ -270,7 +269,6 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
         ]
       });
       exerciseParticipation.grades = grades;
-      exerciseParticipation.assigned = exerciseParticipation.assigned ? 1 : 0;
       return exerciseParticipation;
     });
 
@@ -303,7 +301,6 @@ exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
       JOIN \`${Item.tableName}\` AS i ON i.id = grd.ItemID
       WHERE g.id = ${groupId}
       AND wku.id = ${workUnitId}
-      AND ex.assigned = ${assigned}
       AND ex.CaseID = ${caseId}
       AND (date(ex.finishDate) like '${finishDate}' OR ex.finishDate IS NULL)
     `, { type: db.Sequelize.QueryTypes.SELECT });
@@ -341,12 +338,11 @@ exports.getAllStudentsassignedToExerciseWithDetails = async (req, res) => {
 exports.update = (req, res) => {
   const updatedExercise = {
     id: req.params.id,
-    assigned: req.body.assigned,
     CaseID: req.body.CaseID,
     UserID: req.body.UserID
   }
 
-  if (!updatedExercise.assigned || !updatedExercise.CaseID || !updatedExercise.UserID) {
+  if (!updatedExercise.CaseID || !updatedExercise.UserID) {
     return res.status(400).send({
       message: "Exercise data cannot be empty!"
     })
@@ -396,7 +392,6 @@ exports.getAllStudentsAssignedToExercise = async (req, res) => {
       JOIN \`${UserAccount.tableName}\` AS u ON stud.id = u.id
       WHERE g.id = ${groupId} 
       AND wku.id = ${workUnitId} 
-      AND ex.assigned = ${assigned}
       AND ex.CaseID = ${caseId}
       AND (ex.finishDate like '${formattedDate}' OR ex.finishDate IS NULL)
       ORDER BY u.id asc
@@ -415,7 +410,7 @@ exports.getAllStudentsAssignedToExercise = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const { GroupID, WorkUnitID, prevCaseID, CaseID, Students, prevAssigned, assigned, prevDate, finishDate } = req.body;
+    const { GroupID, WorkUnitID, prevCaseID, CaseID, Students, prevAssigned, prevDate, finishDate } = req.body;
     const idsToDelete = [];
     let formattedPrevDate = null;
     let formattedFinishDate = null;
@@ -436,13 +431,10 @@ exports.update = async (req, res) => {
     JOIN \`${Exercise.tableName}\` AS ex ON ex.CaseID = c.id
     WHERE g.id = ${GroupID} 
     and wku.id = ${WorkUnitID} 
-    and ex.assigned = ${prevAssigned}
     and ex.CaseID = ${prevCaseID}
     and (ex.finishDate like '${formattedPrevDate}' OR ex.finishDate IS NULL)
   `, { type: db.Sequelize.QueryTypes.SELECT });
 
-
-    console.log(result)
 
     result.forEach(exercise => {
       idsToDelete.push(exercise.id);
@@ -456,7 +448,6 @@ exports.update = async (req, res) => {
       if (assigned === 'true') {
         splittedStudents.forEach(studentId => {
           creationExercises.push({
-            assigned: assigned,
             CaseID: CaseID,
             UserID: studentId,
             finishDate: finishDate
@@ -465,7 +456,6 @@ exports.update = async (req, res) => {
       } else {
         splittedStudents.forEach(studentId => {
           creationExercises.push({
-            assigned: assigned,
             CaseID: CaseID,
             UserID: studentId,
             finishDate: null

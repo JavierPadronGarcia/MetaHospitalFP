@@ -5,10 +5,6 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    assigned: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false
-    },
     finishDate: {
       type: Sequelize.DATE,
       allowNull: true

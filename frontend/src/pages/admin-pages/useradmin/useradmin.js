@@ -11,10 +11,14 @@ import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
 import { Link, useLocation } from 'react-router-dom';
 import './useradmin.css';
-import { noConnectionError } from '../../../utils/shared/errorHandler';
+import useNotification from '../../../utils/shared/errorHandler';
 import SearchComponent from '../../../components/search/search';
+import { useTranslation } from 'react-i18next';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function UserAdmin() {
+  const { noConnectionError } = useNotification();
+  const [t] = useTranslation('global');
   const [users, setUsers] = useState([]);
   const [schools, setSchools] = useState([]);
   const [selectedSchool, setSelectedSchool] = useState('');
@@ -22,7 +26,7 @@ function UserAdmin() {
   const [name, setName] = useState('');
   const [Id, setId] = useState('');
   const [role, setRole] = useState('student');
-  const Headlines = ['Imagen', 'Nombre', 'Email', 'Escuela', 'Identificador'];
+  const Headlines = [t('image'), t('name_s'), t('email'), t('school_s'), t('role_s')];
 
   const columnTypes = [{
     type: {
@@ -39,8 +43,6 @@ function UserAdmin() {
       Identificador: 'role'
     }
   }];
-
-  const [schoolId, setSchoolId] = useState();
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
@@ -61,9 +63,9 @@ function UserAdmin() {
   }, []);
 
   const optionRole = [
-    { value: 'student', label: 'Estudiante' },
-    { value: 'Admin', label: 'Admin' },
-    { value: 'teacher', label: 'Profesor' },
+    { value: 'student', label: t('student_s') },
+    { value: 'Admin', label: t('admin_s') },
+    { value: 'teacher', label: t('teacher_s') },
   ];
 
   const handleChange = (value) => {
@@ -73,8 +75,22 @@ function UserAdmin() {
   const getUsers = async () => {
     try {
       const response = await usersService.getUsers();
-      const userList = response;
-      console.log(userList);
+      const userList = response.map((user => {
+        switch (user.role) {
+          case 'admin':
+            user.role = t('admin_s');
+            break;
+          case 'teacher':
+            user.role = t('teacher_s');
+            break;
+          case 'student':
+            user.role = t('student_s');
+            break;
+          default:
+            break;
+        }
+        return user;
+      }));
       setUsers(userList);
       setFilteredData(userList);
     } catch (error) {
@@ -87,7 +103,6 @@ function UserAdmin() {
     try {
       const schoolsResponse = await schoolService.getSchools();
       setSchools(schoolsResponse);
-      console.log(schoolsResponse);
     } catch (err) {
       console.log("Error fetching schools:", err);
     }
@@ -132,30 +147,41 @@ function UserAdmin() {
     setSelectedSchool(value);
   }
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderUserImputs = () => (
     <>
-      <h1>{String(mode)}</h1>
-      <p>Name</p>
-      <Input placeholder="Name"
+      <h1>{getTranslation(String(mode))}</h1>
+      <p>{t('name_s')}</p>
+      <Input placeholder={t('name_s')}
         value={name}
         onChange={(e) => setName(e.target.value)} />
-      <p>Email</p>
-      <Input placeholder="Email"
+      <p>{t('email')}</p>
+      <Input placeholder={t('email')}
         value={email}
         onChange={(e) => setEmail(e.target.value)} />
       <p>Role</p>
       <Select
-        defaultValue="Estudiante"
+        defaultValue={t('student_s')}
         value={role}
         options={optionRole}
         onChange={handleChange} />
-      <p>School</p>
+      <p>{t('school_s')}</p>
       <Select
-        placeholder="Select School"
+        placeholder={t('select_school')}
         value={selectedSchool}
         onChange={handleSchoolChange}
       >
-        <Option value="">Select School</Option>
+        <Option value="">{t('select_school')}</Option>
         {schools.map(school => (
           <Option key={school.id} value={school.id}>{school.name}</Option>
         ))}
@@ -166,11 +192,11 @@ function UserAdmin() {
   const onDelete = async (id) => {
     try {
       await usersService.deleteUser(id);
-      message.success("Usuario eliminado correctamente");
+      message.success(t('user_delete_successfull'));
       getUsers();
     } catch (error) {
       console.error(error)
-      message.error('Error al eliminar al usuario')
+      message.error(t('user_delete_failed'))
     }
   }
 
@@ -196,18 +222,18 @@ function UserAdmin() {
     try {
 
       if (!name || !role || !email) {
-        throw new Error('Rellena todos los campos');
+        throw new Error(t('fill_all_fields'));
       }
 
       if ((role === 'student' && selectedSchool === '') || (role === 'teacher' && selectedSchool === '')) {
-        throw new Error('Es necesario para estudiantes como profesores seleccionar Escuela')
+        throw new Error(t('school_required_1'))
       }
 
       if (mode === Consts.EDIT_MODE) {
 
         await usersService.updateUserWithoutImage(email, Id, role, name, selectedSchool);
 
-        message.success('Usuario actualizado correctamente');
+        message.success(t('user_update_successfull'));
         cleanInputs();
         setMode(Consts.ADD_MODE);
         getUsers();
@@ -216,7 +242,7 @@ function UserAdmin() {
         await usersService.createNewUser({ name: name, role: role, schoolId: selectedSchool }, email);
 
         cleanInputs();
-        message.success('Usuario creado correctamente');
+        message.success(t('user_create_successfull'));
         getUsers();
       }
     } catch (error) {
@@ -224,11 +250,11 @@ function UserAdmin() {
       if (error.message === 'Network Error') {
         noConnectionError();
       } else if (error.message === 'Rellena todos los campos') {
-        message.error(error.message);
+        message.error(t('fill_all_fields'));
       } else if (error.message === 'Es necesario para estudiantes como profesores seleccionar Escuela') {
-        message.error(error.message);
+        message.error(t('school_required_1'));
       } else {
-        message.error('No se ha podido crear/actualizar el usuario');
+        message.error(t('user_update_create_fail'));
       }
     }
   }
@@ -244,7 +270,7 @@ function UserAdmin() {
     setMode(Consts.ADD_MODE);
     setName('');
     setEmail('');
-    setRole('Estudiante');
+    setRole('student');
     setSelectedSchool('');
   }
 
@@ -256,9 +282,10 @@ function UserAdmin() {
     <div className='container useradmin-page'>
       <div className='container-left'>
         <Menu />
-        <Tag name="Usuarios" />
-        <SearchComponent data={users} onSearch={handleSearch} fieldName="name" filter={filter} />
+        <Tag name={t('user_p')} />
+        <SearchComponent data={users} onSearch={handleSearch} fieldName="name"  filter={filter} />
         <BasicList items={filteredData} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
+        <FloatingExcelButton data={users} name={'usuarios'} />
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
