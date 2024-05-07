@@ -53,6 +53,14 @@ function SchoolsAdmin() {
     </>
   );
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+    }, name: {
+      Nombre: 'name',
+    }
+  }];
+
   const getTranslation = (mode) => {
     switch (mode) {
       case Consts.ADD_MODE:
@@ -151,7 +159,7 @@ function SchoolsAdmin() {
         <Menu />
         <Tag name={t('school_p')} />
         <SearchComponent data={Schools} onSearch={handleSearch} fieldName="name" />
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <FloatingExcelButton data={Schools} name={'escuelas'} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

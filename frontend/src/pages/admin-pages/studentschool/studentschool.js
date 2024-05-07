@@ -38,6 +38,16 @@ function StudentSchools() {
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Email: 'email',
+    }, name: {
+      Nombre: 'name',
+      Email: 'username',
+    }
+  }];
+
   const getStudents = async () => {
     try {
       const studentList = await StudentSchoolsService.getStudentsBySchool(
@@ -182,9 +192,9 @@ function StudentSchools() {
       <div className='container-left'>
         <Menu2 />
         <Tag name={t('student_p')} />
-        <SearchComponent data={students} onSearch={handleSearch} fieldName="name" />
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
-        <FloatingExcelButton data={students} name={`estudiantes - ${localStorage.getItem('schoolName')}`} />
+        <SearchComponent data={students} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}/>
+        <FloatingExcelButton data={students}></FloatingExcelButton>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

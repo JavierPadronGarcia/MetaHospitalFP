@@ -41,6 +41,16 @@ function GroupsAdmin() {
   const [showPop, setShowPop] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Fecha: 'date',
+    }, name: {
+      Nombre: 'name',
+      Fecha: 'date',
+    }
+  }];
+
   const { RangePicker } = DatePicker;
 
   const getGroups = async () => {
@@ -222,7 +232,7 @@ function GroupsAdmin() {
         <Menu2 />
         <Tag name={t('group_p')} />
         <SearchComponent data={groups} onSearch={handleSearch} fieldName="name" />
-        <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
         <FloatingExcelButton data={groups} name={`grupos - ${localStorage.getItem('schoolName')}`} />
       </div>

@@ -27,12 +27,35 @@ function UserAdmin() {
   const [Id, setId] = useState('');
   const [role, setRole] = useState('student');
   const Headlines = [t('image'), t('name_s'), t('email'), t('school_s'), t('role_s')];
+
+  const columnTypes = [{
+    type: {
+      Imagen: 'image',
+      Nombre: 'string',
+      Email: 'email',
+      Escuela: 'string',
+      Identificador: 'string'
+    }, name: {
+      Imagen: 'filename',
+      Nombre: 'name',
+      Email: 'username',
+      Escuela: 'schoolName',
+      Identificador: 'role'
+    }
+  }];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
 
   const { Option } = Select;
+
+  const filter = [
+    { name: t('name_s'), value: 'name' },
+    { name: t('email'), value: 'username' },
+    { name: t('school_s'), value: 'schoolName' },
+    { name: t('role_s'), value: 'role' },
+  ];
 
   useEffect(() => {
     getUsers();
@@ -260,8 +283,8 @@ function UserAdmin() {
       <div className='container-left'>
         <Menu />
         <Tag name={t('user_p')} />
-        <SearchComponent data={users} onSearch={handleSearch} fieldName="name" />
-        <BasicList items={filteredData} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <SearchComponent data={users} onSearch={handleSearch} fieldName="name"  filter={filter} />
+        <BasicList items={filteredData} renderRow={renderUserRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <FloatingExcelButton data={users} name={'usuarios'} />
         <PopForm renderInputs={renderUserImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>

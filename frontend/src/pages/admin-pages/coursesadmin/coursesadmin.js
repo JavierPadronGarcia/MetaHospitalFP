@@ -21,11 +21,21 @@ function CoursesAdmin() {
   const [name, setName] = useState('');
   const [acronyms, setAcronyms] = useState('');
   const [Id, setId] = useState('');
-  const Headlines = [t('name_s'), 'Acrónimo'];
+  const Headlines = [t('name_s'), t('acronym')];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const [showPop, setShowPop] = useState(false);
   const location = useLocation();
   const [filteredData, setFilteredData] = useState([]);
+
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Acrónimo: 'string',
+    }, name: {
+      Nombre: 'name',
+      Acrónimo: 'acronyms',
+    }
+  }];
 
   const getCourses = async () => {
     try {
@@ -141,9 +151,9 @@ function CoursesAdmin() {
     <div className='container coursesadmin-page'>
       <div className='container-left'>
         <Menu2 />
-        <Tag name="Cursos" />
-        <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name" />
-        <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit}></BasicList>
+        <Tag name={t('course_p')} />
+        <SearchComponent data={Courses} onSearch={handleSearch} fieldName="name"/>
+        <BasicList items={filteredData} renderRow={rendercoursesRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <PopForm renderInputs={renderCoursesImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
         <FloatingExcelButton data={Courses} name={`cursos - ${localStorage.getItem('schoolName')}`} />
       </div>

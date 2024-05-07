@@ -27,6 +27,14 @@ function AdminCourse() {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredTeacher, setFilteredTeacher] = useState([]);
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+    }, name: {
+      Nombre: 'name',
+    }
+  }];
+
   useEffect(() => {
     getTeachers();
     getTeachersInGroup();
@@ -212,8 +220,8 @@ function AdminCourse() {
         <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name" />
         <BasicList items={filteredTeacher} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
         <h2 className='list-titles'>Estudiantes</h2>
-        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name" />
-        <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} ></BasicList>
+        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name"/>
+        <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} columnTypes={columnTypes} ></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />
         <FloatingExcelButton
           data={[

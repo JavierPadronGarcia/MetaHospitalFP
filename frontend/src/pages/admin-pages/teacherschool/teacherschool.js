@@ -39,6 +39,16 @@ function TeacherSchools() {
   const Headlines = [t('name_s'), t('email')];
   const location = useLocation();
 
+  const columnTypes = [{
+    type: {
+      Nombre: 'string',
+      Email: 'email',
+    }, name: {
+      Nombre: 'name',
+      Email: 'username',
+    }
+  }];
+
   const getTeacher = async () => {
     try {
       const teacherList = await TeacherSchoolsService.getTeachersBySchool(
@@ -64,6 +74,7 @@ function TeacherSchools() {
   useEffect(() => {
     getTeacher();
     getUsers();
+    console.log(mode);
   }, []);
 
   const renderSchoolRow = (teacher) => (
@@ -184,12 +195,12 @@ function TeacherSchools() {
         <Menu2 />
         <Tag name={t('teacher_p')} />
         <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name" />
-        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} />
+        <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes} />
         <FloatingExcelButton data={teacher} name={`profesores - ${localStorage.getItem('schoolName')}`} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>
-        <Rightmenu renderImputs={renderSchoolImputs} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
+        <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
       </div>
     </div>
   );

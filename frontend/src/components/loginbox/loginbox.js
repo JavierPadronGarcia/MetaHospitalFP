@@ -34,7 +34,7 @@ function LoginBox() {
       roles.role = user.role;
 
       message.success({
-        content: `Sesión iniciada correctamente`,
+        content: t('successfull_login'),
         duration: 1,
       })
       if (user.schoolId) {
