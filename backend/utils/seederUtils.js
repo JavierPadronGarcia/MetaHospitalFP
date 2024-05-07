@@ -233,9 +233,7 @@ exports.addParticipations = (participations) => {
 exports.addItems = (workUnitId) => {
   const items = getItems(workUnitId);
   return items.map(item => ({
-    name: item.name,
     itemNumber: item.itemNumber,
-    description: item.description,
     value: item.value,
     WorkUnitID: workUnitId,
     createdAt: new Date(),
