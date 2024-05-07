@@ -9,13 +9,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false
     },
-    name: {
-      type: Sequelize.TEXT,
-      allowNull: false
-    },
-    description: {
-      type: Sequelize.TEXT,
-    },
     value: {
       type: Sequelize.FLOAT,
       default: 0
