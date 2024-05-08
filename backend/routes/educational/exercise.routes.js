@@ -1,6 +1,7 @@
 module.exports = app => {
   const exercises = require("../../controllers/educational/exercise.controller");
   const auth = require('../../controllers/roleManagement/auth');
+  const { getRequestedTranslation } = require('../../middlewares/translations');
 
   var router = require("express").Router();
 
@@ -13,6 +14,7 @@ module.exports = app => {
   //retrieve all exercises in a workUnit assigned to a group
   router.get("/exercisesinagroup/:groupId/:workUnitId",
     auth.isAuthenticated,
+    getRequestedTranslation,
     exercises.findAllExercisesInAGroupByWorkUnit
   );
 
@@ -26,6 +28,7 @@ module.exports = app => {
 
   router.get('/exercisesAssignedToStudent/:groupId/:workUnitId',
     auth.isAuthenticated,
+    getRequestedTranslation,
     exercises.findAllExercisesAssignedToStudent)
 
   //retrieve all exercises

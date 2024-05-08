@@ -90,5 +90,6 @@
   "network_error_description": "No se ha podido establecer una conexión con el servidor, intentalo de nuevo o pruebalo más tarde",
   "no_name_error": "No hay nombre",
   "school_required_1": "Es necesario para estudiantes como profesores seleccionar Escuela",
-  "serach_filter": "Selecciona filtro"
+  "search_filter": "Selecciona filtro",
+  "successfull_password_update": "La contraseña se ha actualizado correctamente"
 }

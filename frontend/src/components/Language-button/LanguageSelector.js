@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Cookies from 'js-cookie';
 import './LanguageSelector.css';
 
 const LanguageSelector = () => {
@@ -17,7 +18,13 @@ const LanguageSelector = () => {
 
   const changeLanguage = (language) => {
     i18n.changeLanguage(language);
-    setSelectedLanguage(language);
+    setSelectedLanguage(() => {
+      Cookies.set("userLanguage",
+        language,
+        { expires: 365 }
+      );
+      return language;
+    });
     setShowOptions(false);
   };
 

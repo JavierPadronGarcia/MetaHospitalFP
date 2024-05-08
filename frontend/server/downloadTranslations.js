@@ -20,7 +20,7 @@ function downloadTranslations() {
       const sheet = workbook.Sheets[sheetName];
       const translationsByLanguage = {};
       const range = XLSX.utils.decode_range(sheet['!ref']);
-      const languages = ['en', 'es'];
+      const languages = ['en', 'es', 'eu', 'ca', 'gl'];
       const columnNames = ['rowIndex', 'Tname', ...languages];
 
       range.s.r = 2;
