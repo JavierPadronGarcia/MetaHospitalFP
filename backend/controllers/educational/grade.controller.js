@@ -215,11 +215,11 @@ exports.findActivityGradesOfTheUser = async (req, res) => {
 exports.findAllGradesOfTheGroupByUser = async (req, res) => {
   // TODO
 }
-// TODO : ADD TRANSLATIONS TO THIS FUNCTION
+
 exports.findGradesByStudentInExercise = async (req, res) => {
   const { exerciseId } = req.params;
   const { language } = req.body;
-  console.log(language)
+  
   const itemTranslationProps = getTranslationIncludeProps('item', language, true);
 
   if (!exerciseId) {
