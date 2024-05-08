@@ -158,7 +158,7 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
   const { language } = req.body;
   try {
     const result = await db.sequelize.query(`
-      SELECT c.id, ct.name, ex.finishDate, ex.CaseID, ex.id as exerciseId
+      SELECT c.id, c.caseNumber, ct.name, ex.finishDate, ex.CaseID, ex.id as exerciseId
       FROM \`${WorkUnitGroup.tableName}\` AS wkug
       JOIN \`${Exercise.tableName}\` AS ex ON ex.WorkUnitGroupID = wkug.id
       JOIN \`${Case.tableName}\` AS c ON c.id = ex.CaseID
@@ -167,7 +167,7 @@ exports.findAllExercisesInAGroupByWorkUnit = async (req, res) => {
       WHERE wkug.GroupID = ${groupId} 
       AND wkug.WorkUnitID = ${workUnitId}
       AND lang.languageShort = '${language}'
-      GROUP BY c.id, c.WorkUnitId, ct.name, ex.finishDate, ex.CaseID, ex.id;
+      GROUP BY c.id, c.caseNumber, c.WorkUnitId, ct.name, ex.finishDate, ex.CaseID, ex.id;
     `, { type: db.Sequelize.QueryTypes.SELECT });
     return res.send(result);
   } catch (err) {

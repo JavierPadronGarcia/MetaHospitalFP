@@ -91,5 +91,7 @@
   "no_name_error": "No name",
   "school_required_1": "It is necessary for students as well as teachers to select School",
   "search_filter": "Select Filter",
-  "successfull_password_update": "Password has been successfully updated"
+  "successfull_password_update": "Password has been successfully updated",
+  "case_s": "Case",
+  "case_p": "Cases"
 }

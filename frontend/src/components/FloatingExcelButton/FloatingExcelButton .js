@@ -8,7 +8,7 @@ import { utils, writeFile } from 'xlsx';
 
 dayjs.extend(customParseFormat);
 
-const FloatingExcelButton = ({ data, name, forGrades }) => {
+const FloatingExcelButton = ({ data, name, forGrades, manySheets }) => {
 
   const params = useParams();
   const groupName = params.name;
@@ -86,7 +86,7 @@ const FloatingExcelButton = ({ data, name, forGrades }) => {
         onClick={() => {
           if (forGrades) {
             generateExcelOfGrades();
-          } else if (Array.isArray(data)) {
+          } else if (manySheets) {
             generateExcelWithMoreSheets();
           } else {
             generateExcel();

@@ -220,7 +220,7 @@ function AdminCourse() {
         <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name" />
         <BasicList items={filteredTeacher} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
         <h2 className='list-titles'>Estudiantes</h2>
-        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name"/>
+        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name" />
         <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} columnTypes={columnTypes} ></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />
         <FloatingExcelButton
@@ -228,6 +228,7 @@ function AdminCourse() {
             { sheetTitle: 'profesores', content: teachersInGroup },
             { sheetTitle: 'estudiantes', content: studentsInGroup },
           ]}
+          manySheets={true}
           name={`estudiantes_profesores - ${localStorage.getItem('groupsName')} - ${localStorage.getItem('schoolName')}`}
         />
       </div>

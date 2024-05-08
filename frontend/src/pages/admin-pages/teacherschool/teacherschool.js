@@ -196,7 +196,7 @@ function TeacherSchools() {
         <Tag name={t('teacher_p')} />
         <SearchComponent data={teacher} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderSchoolRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes} />
-        <FloatingExcelButton data={teacher} name={`profesores - ${localStorage.getItem('schoolName')}`} />
+        <FloatingExcelButton data={teacher} name={`${t('teacher_p')} - ${localStorage.getItem('schoolName')}`} />
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
       </div>
       <div className='container-right'>

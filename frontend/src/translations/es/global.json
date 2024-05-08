@@ -91,5 +91,7 @@
   "no_name_error": "No hay nombre",
   "school_required_1": "Es necesario para estudiantes como profesores seleccionar Escuela",
   "search_filter": "Selecciona filtro",
-  "successfull_password_update": "La contraseña se ha actualizado correctamente"
+  "successfull_password_update": "La contraseña se ha actualizado correctamente",
+  "case_s": "Caso",
+  "case_p": "Casos"
 }
