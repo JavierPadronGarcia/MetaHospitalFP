@@ -8,8 +8,11 @@ import useNotification from '../../../utils/shared/errorHandler';
 import { Card, message } from 'antd';
 import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
+import { useTranslation } from 'react-i18next';
 
 function TeacherActivitiesPage() {
+
+  const [t] = useTranslation('global');
 
   const { noConnectionError, errorMessage } = useNotification();
 
@@ -28,7 +31,6 @@ function TeacherActivitiesPage() {
       setAssignedExercises(exercises);
       setFilteredData(exercises);
       // setUnAssignedExercises(exercises);
-      console.log(exercises);
     }).catch(err => {
       if (!err.response) {
         noConnectionError();
@@ -67,7 +69,7 @@ function TeacherActivitiesPage() {
   const showAssignedExercises = () => (
     filteredData.map(exercise => {
       return (
-        <Card title={'Case '+exercise.caseNumber} onClick={() => navigateTo(exercise.exerciseId)} style={{margin: '1rem', width: '100%'}}>
+        <Card title={`${t('case_s')} ${exercise.caseNumber}`} onClick={() => navigateTo(exercise.exerciseId)} style={{ margin: '1rem', width: '100%' }}>
           {exercise.name}
         </Card>
       )

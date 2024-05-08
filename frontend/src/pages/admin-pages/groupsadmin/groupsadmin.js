@@ -234,7 +234,7 @@ function GroupsAdmin() {
         <SearchComponent data={groups} onSearch={handleSearch} fieldName="name" />
         <BasicList items={filteredData} renderRow={renderGroupsRow} Headlines={Headlines} onDelete={onDelete} onEdit={Edit} columnTypes={columnTypes}></BasicList>
         <PopForm renderInputs={renderGroupsImputs} cancel={Cancel} onSubmit={onSubmit} showModalAutomatically={{ editMode: mode === Consts.EDIT_MODE, showPop: showPop }} />
-        <FloatingExcelButton data={groups} name={`grupos - ${localStorage.getItem('schoolName')}`} />
+        <FloatingExcelButton data={groups} name={`${t('group_p')} - ${localStorage.getItem('schoolName')}`} />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderGroupsImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} />
