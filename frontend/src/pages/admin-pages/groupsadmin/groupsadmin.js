@@ -43,11 +43,11 @@ function GroupsAdmin() {
 
   const columnTypes = [{
     type: {
-      Nombre: 'string',
-      Fecha: 'date',
+      1: 'string',
+      2: 'string',
     }, name: {
-      Nombre: 'name',
-      Fecha: 'date',
+      1: 'name',
+      2: 'date',
     }
   }];
 

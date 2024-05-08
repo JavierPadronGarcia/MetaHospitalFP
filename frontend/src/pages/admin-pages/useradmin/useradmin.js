@@ -30,17 +30,17 @@ function UserAdmin() {
 
   const columnTypes = [{
     type: {
-      Imagen: 'image',
-      Nombre: 'string',
-      Email: 'email',
-      Escuela: 'string',
-      Identificador: 'string'
+      1: 'image',
+      2: 'string',
+      3: 'string',
+      4: 'string',
+      5: 'string'
     }, name: {
-      Imagen: 'filename',
-      Nombre: 'name',
-      Email: 'username',
-      Escuela: 'schoolName',
-      Identificador: 'role'
+      1: 'filename',
+      2: 'name',
+      3: 'username',
+      4: 'schoolName',
+      5: 'role'
     }
   }];
   const [mode, setMode] = useState(Consts.ADD_MODE);

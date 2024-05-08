@@ -41,11 +41,11 @@ function TeacherSchools() {
 
   const columnTypes = [{
     type: {
-      Nombre: 'string',
-      Email: 'email',
+      1: 'string',
+      2: 'string',
     }, name: {
-      Nombre: 'name',
-      Email: 'username',
+      1: 'name',
+      2: 'username',
     }
   }];
 

@@ -8,51 +8,31 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, co
   const [sortBy, setSortBy] = useState({ key: null, order: 'asc' });
   const [t] = useTranslation('global');
 
-  const handleSort = (key) => {
-    if (sortBy.key === key) {
-      setSortBy({ key, order: sortBy.order === 'asc' ? 'desc' : 'asc' });
+  const handleSort = (index) => {
+    if (sortBy.key === index) {
+      setSortBy({ key: index, order: sortBy.order === 'asc' ? 'desc' : 'asc' });
     } else {
-      setSortBy({ key, order: 'asc' });
+      setSortBy({ key: index, order: 'asc' });
     }
   };
 
   const sortedItems = [...items].sort((a, b) => {
-    if (sortBy.key) {
-      const type = columnTypes[sortBy.key];
-      const name = columnTypes[0].name[sortBy.key];
-      const aValue = a[name];
-      const bValue = b[name];
+    if (sortBy.key !== null) {
+      const columnName = columnTypes[0].name[sortBy.key + 1]; // Ajusta el índice a base cero
+      const columnType = columnTypes[0].type[sortBy.key + 1]; // Ajusta el índice a base cero
+      const aValue = a[columnName];
+      const bValue = b[columnName];
 
-      if (type === 'string') {
-        if (aValue && bValue) {
-          if (sortBy.order === 'asc') {
-            return aValue.localeCompare(bValue);
-          } else {
-            return bValue.localeCompare(aValue);
-          }
-        } else {
-          return 0;
-        }
-      } else if (type === 'email') {
-        const aDomain = aValue.split('@')[1];
-        const bDomain = bValue.split('@')[1];
+      if (columnType === 'string') {
+        // Ordenamiento de cadenas
         if (sortBy.order === 'asc') {
-          return aDomain.localeCompare(bDomain);
+          return aValue.localeCompare(bValue);
         } else {
-          return bDomain.localeCompare(aDomain);
+          return bValue.localeCompare(aValue);
         }
-      } else if (type === 'image') {
+      } else if (columnType === 'image') {
+        // No ordenar columnas de imagen
         return 0;
-      } else {
-        if (aValue && bValue) {
-          if (sortBy.order === 'asc') {
-            return aValue.localeCompare(bValue);
-          } else {
-            return bValue.localeCompare(aValue);
-          }
-        } else {
-          return 0;
-        }
       }
     }
     return 0;
@@ -64,8 +44,8 @@ const BasicList = ({ items, renderRow, Headlines, onDelete, onEdit, password, co
         <thead>
           <tr>
             {Headlines.map((headline, index) => (
-              <th key={index} className='headlines' onClick={() => handleSort(headline)}>
-                {headline} {sortBy.key === headline && (sortBy.order === 'asc' ? '▲' : '▼')}
+              <th key={index} className='headlines' onClick={() => handleSort(index)}>
+                {t(headline)} {sortBy.key === index && (sortBy.order === 'asc' ? '▲' : '▼')}
               </th>
             ))}
             <th>{t('action_p')}</th>
