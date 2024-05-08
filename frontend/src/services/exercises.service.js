@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import i18next from 'i18next';
 import { backendExercisesEndpoint } from '../constants/backendEndpoints';
 
 
@@ -9,7 +9,8 @@ function getOptions(token) {
   let options = {
     headers: {
       'Authorization': bearerAccess,
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'required-language-response': i18next.language
     }
   }
   return options;
@@ -45,7 +46,7 @@ async function addExercises(caseId, students, assigned, date, groupId, workUnitI
   body.append('finishDate', date);
   body.append('groupId', groupId);
   body.append('workUnitId', workUnitId);
-  
+
   try {
     const response = axios.post(`${backendExercisesEndpoint}/addExercises`,
       body,

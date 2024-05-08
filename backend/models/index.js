@@ -168,7 +168,7 @@ db.itemTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' 
 db.caseTranslation.belongsTo(db.case, { foreignKey: 'CaseID' });
 db.caseTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
 
-db.translationLanguage.hasMany(db.case, { foreignKey: 'LanguageID' });
-db.translationLanguage.hasMany(db.item, { foreignKey: 'LanguageID' });
+db.translationLanguage.hasMany(db.itemTranslation, { foreignKey: 'LanguageID' });
+db.translationLanguage.hasMany(db.caseTranslation, { foreignKey: 'LanguageID' });
 
 module.exports = db;

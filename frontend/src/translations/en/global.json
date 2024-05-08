@@ -90,5 +90,6 @@
   "network_error_description": "Could not establish a connection to the server, please try again or try again later.",
   "no_name_error": "No name",
   "school_required_1": "It is necessary for students as well as teachers to select School",
-  "serach_filter": "Select Filter"
+  "search_filter": "Select Filter",
+  "successfull_password_update": "Password has been successfully updated"
 }
