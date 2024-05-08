@@ -8,9 +8,9 @@ const LanguageSelector = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
 
   const languages = [
-    { code: 'glg', label: 'Gallego', flag: '/assets/icons/Flag_of_Galicia.svg'},
-    { code: 'eus', label: 'Gallego', flag: '/assets/icons/Flag_of_the_Basque_Country.svg'},
-    { code: 'cat', label: 'Catalan', flag: '/assets/icons/Flag_of_Catalonia.svg'},
+    { code: 'gl', label: 'Galego', flag: '/assets/icons/Flag_of_Galicia.svg' },
+    { code: 'eu', label: 'Euskera', flag: '/assets/icons/Flag_of_the_Basque_Country.svg' },
+    { code: 'ca', label: 'Catala', flag: '/assets/icons/Flag_of_Catalonia.svg' },
     { code: 'en', label: 'English', flag: 'assets/icons/gb.svg' },
     { code: 'es', label: 'Español', flag: 'assets/icons/es.svg' }
   ];
