@@ -11,6 +11,7 @@ import groupEnrolementService from '../../../services/groupEnrolement.service';
 import Menu2 from '../../../components/menu2/menu2';
 import './admincourse.css';
 import SearchComponent from '../../../components/search/search';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
 function AdminCourse() {
   const [teachers, setTeachers] = useState([]);
@@ -25,6 +26,14 @@ function AdminCourse() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [filteredTeacher, setFilteredTeacher] = useState([]);
+
+  const columnTypes = [{
+    type: {
+      1: 'string',
+    }, name: {
+      1: 'name',
+    }
+  }];
 
   useEffect(() => {
     getTeachers();
@@ -195,7 +204,6 @@ function AdminCourse() {
     setMode(Consts.ADD_MODE);
   }
 
-  
   const handleSearchstudents = (filteredData) => {
     setFilteredStudents(filteredData)
   };
@@ -206,15 +214,23 @@ function AdminCourse() {
   return (
     <div className='container admincourse-page'>
       <div className='container-left'>
-        <Menu2></Menu2>
+        <Menu2 />
         <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
         <h2 className='list-titles'>Profesores</h2>
-        <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name"/>
+        <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name" />
         <BasicList items={filteredTeacher} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
         <h2 className='list-titles'>Estudiantes</h2>
-        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name"/>
-        <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} ></BasicList>
+        <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name" />
+        <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} columnTypes={columnTypes} ></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />
+        <FloatingExcelButton
+          data={[
+            { sheetTitle: 'profesores', content: teachersInGroup },
+            { sheetTitle: 'estudiantes', content: studentsInGroup },
+          ]}
+          manySheets={true}
+          name={`estudiantes_profesores - ${localStorage.getItem('groupsName')} - ${localStorage.getItem('schoolName')}`}
+        />
       </div>
       <div className='container-right'>
         <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />

@@ -115,6 +115,7 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
 
   useEffect(() => {
     ItemsByRole();
+    console.log(data); 
   }, []);
 
   return (

@@ -1,6 +1,7 @@
 module.exports = app => {
   const grades = require("../../controllers/educational/grade.controller");
   const auth = require('../../controllers/roleManagement/auth');
+  const { getRequestedTranslation } = require('../../middlewares/translations');
 
   var router = require("express").Router();
 
@@ -16,7 +17,7 @@ module.exports = app => {
 
   router.get('/findGradesInExerciseAndUser', auth.isAuthenticated, grades.findActivityGradesOfTheUser);
 
-  router.get('/findGradesByStudentInExercise/:exerciseId', auth.isAuthenticated, grades.findGradesByStudentInExercise);
+  router.get('/findGradesByStudentInExercise/:exerciseId', auth.isAuthenticated, getRequestedTranslation, grades.findGradesByStudentInExercise);
 
   //retrieve a single grade by id
   router.get("/:id", auth.isAuthenticated, grades.findOne);

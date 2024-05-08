@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import './loginbox.css';
-import { errorOnLogin, noConnectionError } from '../../utils/shared/errorHandler';
+import useNotification from '../../utils/shared/errorHandler';
 import { Button, Input, message, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/auth.service';
@@ -8,8 +8,11 @@ import { RolesContext } from '../../context/roles';
 import { loginValidation } from '../../utils/shared/globalFunctions';
 import subscriptionMiddleware from '../../utils/subscriptionMiddleware';
 import { UserOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 function LoginBox() {
+  const { noConnectionError, errorOnLogin} = useNotification();
+  const [t, i18n] = useTranslation('global');
   const roles = useContext(RolesContext);
   const navigate = useNavigate();
 
@@ -31,7 +34,7 @@ function LoginBox() {
       roles.role = user.role;
 
       message.success({
-        content: `Sesión iniciada correctamente`,
+        content: t('successfull_login'),
         duration: 1,
       })
       if (user.schoolId) {
@@ -137,7 +140,7 @@ function LoginBox() {
                     status={inputNameStatus}
                     name="user"
                     id="user"
-                    placeholder="Usuario"
+                    placeholder={t('user_s')}
                     prefix={<UserOutlined />}
                     onChange={(e) => setUserName(e.target.value)}
                   />
@@ -147,14 +150,14 @@ function LoginBox() {
                     status={inputPasswdStatus}
                     name="password"
                     id="password"
-                    placeholder="Contraseña"
+                    placeholder={t('password')}
                     onChange={(e) => setUserPassword(e.target.value)}
                   />
                 </label>
               </div>
               <label className='buttons-container'>
-                <Button className='button' htmlType='submit' loading={loading}>Iniciar sesion</Button>
-                <a href="/assets/help/Ayuda.html">Ayuda</a>
+                <Button className='button' htmlType='submit' loading={loading}>{t('login')}</Button>
+                <a href="/assets/help/Ayuda.html">{t('help')}</a>
               </label>
             </form>
           </main>

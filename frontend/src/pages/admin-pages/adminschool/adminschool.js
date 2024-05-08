@@ -5,8 +5,10 @@ import Square from '../../../components/square/square';
 import Tag from '../../../components/tag/tag';
 import { useLocation } from 'react-router-dom';
 import './adminschool.css';
+import { useTranslation } from 'react-i18next';
 
 function AdminSchool() {
+  const [t] = useTranslation('global');
   const location = useLocation();
 
   return (
@@ -15,10 +17,10 @@ function AdminSchool() {
         <Menu2 />
         <Tag name={localStorage.getItem('schoolName')} />
         <div className='squares'>
-          <Square icon='/assets/imgs/students2.svg' label="Estudiantes" route="/admin/students" />
-          <Square icon='/assets/imgs/teachers.svg' label="Profesores" route="/admin/teachers" />
-          <Square icon='/assets/imgs/schools.svg' label="Grupos" route="/admin/groups" />
-          <Square icon='/assets/imgs/courses.svg' label="Cursos" route="/admin/courses" />
+          <Square icon='/assets/imgs/students2.svg' label={t("student_p")} route="/admin/students" />
+          <Square icon='/assets/imgs/teachers.svg' label={t("teacher_p")} route="/admin/teachers" />
+          <Square icon='/assets/imgs/schools.svg' label={t("group_p")} route="/admin/groups" />
+          <Square icon='/assets/imgs/courses.svg' label={t("course_p")} route="/admin/courses" />
         </div>
       </div>
       <div className='container-right'>

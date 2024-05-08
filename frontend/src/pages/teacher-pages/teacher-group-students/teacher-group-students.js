@@ -12,7 +12,7 @@ const TeacherGroupStudents = () => {
     const { id, name } = useParams();
     const [students, setStudents] = useState([]);
     const [mode, setMode] = useState(Consts.ADD_MODE);
-    const [studentsInGroup, setstudentsInGroup] = useState({});
+    const [studentsInGroup, setstudentsInGroup] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedStudentId, setSelectedStudentId] = useState(null);
     const Headlines = ['Nombre', 'Codigo'];
@@ -27,9 +27,18 @@ const TeacherGroupStudents = () => {
         }
     }
 
+    const columnTypes = [{
+        type: {
+          1: 'string',
+        }, name: {
+          1: 'name',
+        }
+      }];
+
     const getStudentsInGroup = async () => {
         try {
-            const studentslist = await groupEnrolementService.getAllStudentsInAGroup(id)
+            const studentslist = await groupEnrolementService.getAllStudentsInAGroup(id);
+            console.log(studentslist);
             setstudentsInGroup(studentslist);
             setFilteredData(studentslist);
         } catch (err) {
@@ -125,7 +134,7 @@ const TeacherGroupStudents = () => {
     return (
         <div>
             <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} data={studentsInGroup} onSearch={handleSearch} fieldName="name" />
-            <BasicList items={filteredData} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} password={true} />
+            <BasicList items={filteredData} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={onDelete} onEdit={onEdit} password={true} columnTypes={columnTypes} />
             <PopForm renderInputs={renderSchoolInputs} onSubmit={onSubmit} cancel={Cancel} />
         </div>
     );

@@ -5,10 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import ProfileHeader from "../../components/profileheader/profileheader";
 import authService from "../../services/auth.service";
 import usersService from '../../services/users.service';
-import { errorMessage, noConnectionError } from '../../utils/shared/errorHandler';
+import useNotification from '../../utils/shared/errorHandler';
+import { useTranslation } from "react-i18next";
 import "./profile.css";
 
 const UserProfilePage = () => {
+  const [t] = useTranslation('global');
+  const { noConnectionError, errorMessage } = useNotification();
   const passwordRef = useRef(null);
   const [user, setUser] = useState(null);
   const [password, setPassword] = useState('');
@@ -23,7 +26,7 @@ const UserProfilePage = () => {
     authService.changePassword({ password: passwordValue }).then((data) => {
       notification.success({
         placement: "top",
-        message: 'La contraseña se ha actualizado correctamente',
+        message: t('successfull_password_update'),
       });
       setPassword('');
     });
@@ -59,11 +62,11 @@ const UserProfilePage = () => {
       <div className="main-container">
         <div className="username">{user?.name}</div>
         <div className="floating-container">
-          <div className="auth-code-header">Código de autentificación</div>
+          <div className="auth-code-header">{t('auth_code')}</div>
           <div className="auth-code-container">
             {(user && user.code) && <>
-              <div>Codigo: {user.code}</div>
-              {user.codeExpirationDate && <div>Expiración: {dayjs(user.codeExpirationDate).format('DD-MM-YYYY')}</div>}
+              <div>{t('code')}: {user.code}</div>
+              {user.codeExpirationDate && <div>{t('expiration')}: {dayjs(user.codeExpirationDate).format('DD-MM-YYYY')}</div>}
             </>}
             {(user && !user.code) && <>
               <div>No hay codigo generado</div>
@@ -71,7 +74,7 @@ const UserProfilePage = () => {
             </>}
           </div>
           <form className="form-container" onSubmit={handleChangePassword}>
-            <h2>Cambiar contraseña</h2>
+            <h2>{t('change_password')}</h2>
             <div className="input-password">
               <Input.Password
                 ref={passwordRef}

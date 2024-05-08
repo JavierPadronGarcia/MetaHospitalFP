@@ -1,4 +1,5 @@
 const db = require("../../models");
+const { getTranslationIncludeProps } = require("../../utils/translationProps");
 const Grade = db.grade;
 const Student = db.student;
 const Participation = db.participation;
@@ -217,6 +218,9 @@ exports.findAllGradesOfTheGroupByUser = async (req, res) => {
 
 exports.findGradesByStudentInExercise = async (req, res) => {
   const { exerciseId } = req.params;
+  const { language } = req.body;
+  
+  const itemTranslationProps = getTranslationIncludeProps('item', language, true);
 
   if (!exerciseId) {
     return res.status(400).send({
@@ -273,6 +277,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
                 include: [
                   {
                     model: Item,
+                    include: [itemTranslationProps]
                   }
                 ]
               }
@@ -288,8 +293,8 @@ exports.findGradesByStudentInExercise = async (req, res) => {
   gradesInExerciseGroupByStudent.forEach(row => {
     const { studentId, studentName, caseId, participationId, finalGrade } = row;
 
-    if (!studentsWithGrades[studentId]) {
-      studentsWithGrades[studentId] = {
+    if (!studentsWithGrades[participationId]) {
+      studentsWithGrades[participationId] = {
         studentId: studentId,
         studentName: studentName,
         finalGrade: finalGrade,
@@ -299,15 +304,18 @@ exports.findGradesByStudentInExercise = async (req, res) => {
       };
     }
 
-    const groupedGrades = {
-      gradeId: row['participations.grades.id'],
-      gradeCorrect: row['participations.grades.correct'],
-      gradeValue: row['participations.grades.grade'],
-      itemId: row['participations.grades.ItemPlayerRole.item.id'],
-      itemName: row['participations.grades.ItemPlayerRole.item.name']
-    }
+    if (row['participations.grades.id']) {
 
-    studentsWithGrades[studentId].grades.push(groupedGrades);
+      const groupedGrades = {
+        gradeId: row['participations.grades.id'],
+        gradeCorrect: row['participations.grades.correct'],
+        gradeValue: row['participations.grades.grade'],
+        itemId: row['participations.grades.ItemPlayerRole.item.id'],
+        itemName: row['participations.grades.ItemPlayerRole.item.itemTranslations.name']
+      }
+
+      studentsWithGrades[participationId].grades.push(groupedGrades);
+    }
   });
 
   const result = Object.values(studentsWithGrades);

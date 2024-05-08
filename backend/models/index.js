@@ -53,6 +53,9 @@ db.workUnitColor = require('./educational/workUnitColor.model.js')(sequelize, Se
 db.itemPlayerRole = require('./educational/itemplayerrole.model.js')(sequelize, Sequelize);
 db.playerRole = require('./educational/playerrole.model.js')(sequelize, Sequelize);
 db.messages = require('./educational/messages.model.js')(sequelize, Sequelize);
+db.itemTranslation = require('./educational/itemTranslations.model.js')(sequelize, Sequelize);
+db.caseTranslation = require('./educational/caseTranslations.model.js')(sequelize, Sequelize);
+db.translationLanguage = require('./educational/translationLanguage.model.js')(sequelize, Sequelize);
 
 // Role Management Relations
 db.application.hasMany(db.userRole, { foreignKey: 'AppID' });
@@ -87,8 +90,6 @@ db.school.hasMany(db.teacherSchool, { foreignKey: 'SchoolID' });
 
 db.groups.hasMany(db.studentGroup, { foreignKey: 'GroupID' });
 db.groups.hasMany(db.teacherGroup, { foreignKey: 'GroupID' });
-
-
 
 db.studentGroup.belongsTo(db.groups, { foreignKey: 'GroupID' });
 db.studentGroup.belongsTo(db.student, { foreignKey: 'StudentID' });
@@ -156,5 +157,18 @@ db.activitySubscription.belongsTo(db.userAccounts, { foreignKey: 'UserID' });
 
 //course relations
 db.course.belongsTo(db.school, { throw: 'SchoolId' })
+
+//translations
+db.item.hasMany(db.itemTranslation, { foreignKey: 'ItemID' });
+db.case.hasMany(db.caseTranslation, { foreignKey: 'CaseID' });
+
+db.itemTranslation.belongsTo(db.item, { foreignKey: 'ItemID' });
+db.itemTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
+
+db.caseTranslation.belongsTo(db.case, { foreignKey: 'CaseID' });
+db.caseTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
+
+db.translationLanguage.hasMany(db.itemTranslation, { foreignKey: 'LanguageID' });
+db.translationLanguage.hasMany(db.caseTranslation, { foreignKey: 'LanguageID' });
 
 module.exports = db;
