@@ -29,9 +29,9 @@ const TeacherGroupStudents = () => {
 
     const columnTypes = [{
         type: {
-          Nombre: 'string',
+          1: 'string',
         }, name: {
-          Nombre: 'name',
+          1: 'name',
         }
       }];
 

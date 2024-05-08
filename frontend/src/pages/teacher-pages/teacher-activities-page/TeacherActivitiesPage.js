@@ -5,7 +5,7 @@ import ActivityCard from '../../../components/activity-card/ActivityCard';
 import { useEffect, useState } from 'react';
 import exercisesService from '../../../services/exercises.service';
 import useNotification from '../../../utils/shared/errorHandler';
-import { message } from 'antd';
+import { Card, message } from 'antd';
 import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
 
@@ -28,6 +28,7 @@ function TeacherActivitiesPage() {
       setAssignedExercises(exercises);
       setFilteredData(exercises);
       // setUnAssignedExercises(exercises);
+      console.log(exercises);
     }).catch(err => {
       if (!err.response) {
         noConnectionError();
@@ -66,38 +67,12 @@ function TeacherActivitiesPage() {
   const showAssignedExercises = () => (
     filteredData.map(exercise => {
       return (
-        <ActivityCard
-          key={exercise.exerciseId}
-          edit={true}
-          caseId={exercise.id}
-          activityId={exercise.exerciseId}
-          title={exercise.name}
-          description={exercise.finishDate}
-          assigned={true}
-          notifyDelete={(activityId) => handleDelete(activityId)}
-          notifyUpdateInfo={() => getAllExercises()}
-          onClick={navigateTo}
-        />
+        <Card title={'Case '+exercise.caseNumber} onClick={() => navigateTo(exercise.exerciseId)} style={{margin: '1rem', width: '100%'}}>
+          {exercise.name}
+        </Card>
       )
     })
   )
-
-  // const showUnAssignedExercises = () => (
-  //   unAssignedExercises.map(exercise => {
-  //     return (
-  //       <ActivityCard
-  //         key={exercise.exerciseId}
-  //         edit={true}
-  //         caseId={exercise.id}
-  //         activityId={exercise.exerciseId}
-  //         title={exercise.name}
-  //         assigned={false}
-  //         notifyDelete={(activityId) => handleDelete(activityId)}
-  //         notifyUpdateInfo={() => getAllExercises()}
-  //       />
-  //     )
-  //   })
-  // )
 
   const handleSearch = (filteredData) => {
     setFilteredData(filteredData);
@@ -111,7 +86,6 @@ function TeacherActivitiesPage() {
         <div style={{ display: 'flex', alignItems: 'center' }} className='activity-section'>
           {showAssignedExercises()}
         </div>
-        {/* <ActivityForm groupId={id} workUnitId={workUnitId} notifyUpdateInfo={getAllExercises} /> */}
       </div>
     </div>
   );

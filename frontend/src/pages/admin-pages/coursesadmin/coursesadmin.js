@@ -29,11 +29,11 @@ function CoursesAdmin() {
 
   const columnTypes = [{
     type: {
-      Nombre: 'string',
-      Acrónimo: 'string',
+      1: 'string',
+      2: 'string',
     }, name: {
-      Nombre: 'name',
-      Acrónimo: 'acronyms',
+      1: 'name',
+      2: 'acronyms',
     }
   }];
 
