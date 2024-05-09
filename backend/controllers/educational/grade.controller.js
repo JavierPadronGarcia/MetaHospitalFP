@@ -238,6 +238,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
         [db.sequelize.col('Participations.id'), 'participationId'],
         [db.sequelize.col('Participations.FinalGrade'), 'finalGrade'],
         [db.sequelize.col('Participations.Exercise.Case.id'), 'caseId'],
+        [db.Sequelize.col('Participations.SubmittedAt'), 'submittedAt']
       ]
     },
     include: [

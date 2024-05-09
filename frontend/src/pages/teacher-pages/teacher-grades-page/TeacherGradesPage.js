@@ -18,6 +18,7 @@ const TeacherGradesPage = () => {
     const getAllGrades = async () => {
         try {
             const allExercises = await GradeService.getGradesByExercises(gradeid);
+            console.log(allExercises);
             setExercises(allExercises);
             setFilteredData(allExercises);
         } catch (err) {

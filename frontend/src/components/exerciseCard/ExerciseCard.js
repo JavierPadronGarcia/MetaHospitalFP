@@ -3,7 +3,7 @@ import './ExerciseCard.css';
 import ArrowToggle from '../arrowToggle/ArrowToggle';
 import GradeCard from '../grade-card/GradeCard';
 
-const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }) => {
+const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -18,6 +18,9 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
           <div className='exercise-description'>
             <h2>{title}</h2>
             <p>Calificación: <span className='grade'>{finalGrade ?? '---'}</span></p>
+          </div>
+          <div className=''>
+            <p>{date}</p>
           </div>
           {itemGrades && itemGrades.length !== 0 &&
             <div className='display'>
