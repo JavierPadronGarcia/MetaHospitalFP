@@ -217,112 +217,119 @@ exports.findAllGradesOfTheGroupByUser = async (req, res) => {
 }
 
 exports.findGradesByStudentInExercise = async (req, res) => {
-  const { exerciseId } = req.params;
-  const { language } = req.body;
-  
-  const itemTranslationProps = getTranslationIncludeProps('item', language, true);
+  try {
+    const { exerciseId } = req.params;
+    const { language } = req.body;
 
-  if (!exerciseId) {
-    return res.status(400).send({
-      message: "Missing parameter: exerciseId"
-    });
-  }
+    const itemTranslationProps = getTranslationIncludeProps('item', language, true);
 
-  const gradesInExerciseGroupByStudent = await Student.findAll({
-    raw: true,
-    attributes: {
-      exclude: ['createdAt', 'updatedAt', 'age'],
-      include: [
-        [db.sequelize.col('Student.id'), 'studentId'],
-        [db.sequelize.col('Student.name'), 'studentName'],
-        [db.sequelize.col('Participations.id'), 'participationId'],
-        [db.sequelize.col('Participations.FinalGrade'), 'finalGrade'],
-        [db.sequelize.col('Participations.Exercise.Case.id'), 'caseId'],
-        [db.Sequelize.col('Participations.SubmittedAt'), 'submittedAt']
-      ]
-    },
-    include: [
-      {
-        model: Participation,
-        attributes: [],
-        where: { ExerciseID: exerciseId },
-        required: true,
+    if (!exerciseId) {
+      return res.status(400).send({
+        message: "Missing parameter: exerciseId"
+      });
+    }
+
+    const gradesInExerciseGroupByStudent = await Student.findAll({
+      raw: true,
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'age'],
         include: [
-          {
-            model: Exercise,
-            attributes: [],
-            include: [
-              {
-                model: Case,
-                attributes: [],
-                required: true,
-                include: [
-                  {
-                    model: WorkUnit,
-                    attributes: []
-                  }
-                ]
-              },
-            ]
-          },
-          {
-            raw: true,
-            model: Grade,
-            attributes: {
-              exclude: ['createdAt', 'updatedAt', 'ParticipationID'],
-            },
-            include: [
-              {
-                required: true,
-                model: ItemPlayerRole,
-                include: [
-                  {
-                    model: Item,
-                    include: [itemTranslationProps]
-                  }
-                ]
-              }
-            ]
-          },
+          [db.sequelize.col('Student.id'), 'studentId'],
+          [db.sequelize.col('Student.name'), 'studentName'],
+          [db.sequelize.col('participations.id'), 'participationId'],
+          [db.sequelize.col('participations.FinalGrade'), 'finalGrade'],
+          [db.sequelize.col('participations.exercise.case.id'), 'caseId'],
+          [db.sequelize.col('participations.SubmittedAt'), 'submittedAt']
         ]
       },
-    ]
-  });
+      include: [
+        {
+          model: Participation,
+          attributes: [],
+          where: { ExerciseID: exerciseId },
+          required: true,
+          include: [
+            {
+              model: Exercise,
+              attributes: [],
+              include: [
+                {
+                  model: Case,
+                  attributes: [],
+                  required: true,
+                  include: [
+                    {
+                      model: WorkUnit,
+                      attributes: []
+                    }
+                  ]
+                },
+              ]
+            },
+            {
+              raw: true,
+              model: Grade,
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'ParticipationID'],
+              },
+              include: [
+                {
+                  required: true,
+                  model: ItemPlayerRole,
+                  include: [
+                    {
+                      model: Item,
+                      include: [itemTranslationProps]
+                    }
+                  ]
+                }
+              ]
+            },
+          ]
+        },
+      ]
+    });
 
-  const studentsWithGrades = {};
+    const studentsWithGrades = {};
 
-  gradesInExerciseGroupByStudent.forEach(row => {
-    const { studentId, studentName, caseId, participationId, finalGrade } = row;
+    gradesInExerciseGroupByStudent.forEach(row => {
+      const { studentId, studentName, caseId, participationId, finalGrade, submittedAt } = row;
 
-    if (!studentsWithGrades[participationId]) {
-      studentsWithGrades[participationId] = {
-        studentId: studentId,
-        studentName: studentName,
-        finalGrade: finalGrade,
-        caseId: caseId,
-        participationId: participationId,
-        grades: []
-      };
-    }
-
-    if (row['participations.grades.id']) {
-
-      const groupedGrades = {
-        gradeId: row['participations.grades.id'],
-        gradeCorrect: row['participations.grades.correct'],
-        gradeValue: row['participations.grades.grade'],
-        itemId: row['participations.grades.ItemPlayerRole.item.id'],
-        itemName: row['participations.grades.ItemPlayerRole.item.itemTranslations.name']
+      if (!studentsWithGrades[participationId]) {
+        studentsWithGrades[participationId] = {
+          studentId: studentId,
+          studentName: studentName,
+          finalGrade: finalGrade,
+          caseId: caseId,
+          participationId: participationId,
+          grades: [],
+          submittedAt: submittedAt
+        };
       }
 
-      studentsWithGrades[participationId].grades.push(groupedGrades);
-    }
-  });
+      if (row['participations.grades.id']) {
 
-  const result = Object.values(studentsWithGrades);
+        const groupedGrades = {
+          gradeId: row['participations.grades.id'],
+          gradeCorrect: row['participations.grades.correct'],
+          gradeValue: row['participations.grades.grade'],
+          itemId: row['participations.grades.ItemPlayerRole.item.id'],
+          itemName: row['participations.grades.ItemPlayerRole.item.itemTranslations.name']
+        }
 
-  return res.send(result);
+        studentsWithGrades[participationId].grades.push(groupedGrades);
+      }
+    });
+
+    const result = Object.values(studentsWithGrades);
+
+    return res.send(result);
+  } catch (error) {
+    console.error("Error al buscar calificaciones por estudiante en el ejercicio:", error);
+    return res.status(500).send({ message: "Error interno del servidor" });
+  }
 }
+
 
 exports.findOne = (req, res) => {
   let id = req.params.id;

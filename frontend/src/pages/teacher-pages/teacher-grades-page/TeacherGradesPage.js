@@ -7,6 +7,7 @@ import Tag from '../../../components/tag/tag';
 import GradeService from '../../../services/grade.service';
 import './TeacherGradesPage.css';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
+import FilterComponent from '../../../components/filterDateComponent/filterDateComponent';
 
 const TeacherGradesPage = () => {
     const { name, id, workUnitId, workUnitName, gradeid } = useParams();
@@ -18,7 +19,6 @@ const TeacherGradesPage = () => {
     const getAllGrades = async () => {
         try {
             const allExercises = await GradeService.getGradesByExercises(gradeid);
-            console.log(allExercises);
             setExercises(allExercises);
             setFilteredData(allExercises);
         } catch (err) {
@@ -41,6 +41,7 @@ const TeacherGradesPage = () => {
                     key={index}
                     title={exercise.studentName}
                     participationGrades={{ finalGrade: exercise.finalGrade, itemGrades: exercise?.grades }}
+                    date={exercise.submittedAt}
                 />
             ))}
         </div>
@@ -50,12 +51,13 @@ const TeacherGradesPage = () => {
         <div className="student-home student-exercises">
             <Headers title={workUnitName} groupId={id} data={exercises} onSearch={handleSearch} fieldName="studentName" />
             <div className='container-scloll'>
+                <FilterComponent data={exercises} onFilter={handleSearch}></FilterComponent>
 
                 <Tag name="Ejercicios" className="tags" />
                 {showAssignedExercises()}
 
                 <FloatingExcelButton
-                    data={exercises}
+                    data={filteredData}
                     name={'Nota estudiantes'}
                     forGrades={true}
                 />
