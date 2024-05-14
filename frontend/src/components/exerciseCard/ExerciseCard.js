@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import './ExerciseCard.css';
 import ArrowToggle from '../arrowToggle/ArrowToggle';
 import GradeCard from '../grade-card/GradeCard';
+import dayjs from 'dayjs';
+import useDayjsLocale from '../../utils/shared/getDayjsLocale';
 
 const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date }) => {
-  const fecha = new Date('2024-04-12T10:25:04.000Z');
-  const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const opcionesHora = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+  dayjs.locale(useDayjsLocale());
 
-  const fechaBonita = fecha.toLocaleDateString('es-ES', opcionesFecha);
-  const horaBonita = fecha.toLocaleTimeString('es-ES', opcionesHora);
+  const formatDate = dayjs(date).format('dddd, DD MMMM YYYY');
+  const formatHour = dayjs(date).format('HH:mm');
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = (expandedState) => {
@@ -25,17 +26,17 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
             <div className='exercise-info'>
               <div className='exercise-info-item'>
                 <span className='info-label'>Fecha:</span>
-                <span className='info-value'>{fechaBonita}</span>
+                <span className='info-value'>{formatDate}</span>
               </div>
               <div className='exercise-info-item'>
                 <span className='info-label'>Hora:</span>
-                <span className='info-value'>{horaBonita}</span>
+                <span className='info-value'>{formatHour}</span>
               </div>
             </div>
           </div>
           <div className='grade-container'>
             <span className='info-label'>Calificación:</span>
-            <span className={`grade ${finalGrade && finalGrade > 5 ? 'green' : 'red'}`} style={{fontSize: '1.5rem'}}>
+            <span className={`grade ${finalGrade && finalGrade > 5 ? 'green' : 'red'}`} style={{ fontSize: '1.5rem' }}>
               {finalGrade ?? '---'}
             </span>
           </div>
