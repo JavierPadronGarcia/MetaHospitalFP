@@ -51,7 +51,7 @@ const UserProfilePage = () => {
       }
 
       if (err.response && err.code === 500) {
-        errorMessage('No se ha podido encontrar su usuario', 'Inténtalo de nuevo');
+        errorMessage(t('user_not_found'), t('try_again'));
       }
     }
   };
@@ -69,8 +69,8 @@ const UserProfilePage = () => {
               {user.codeExpirationDate && <div>{t('expiration')}: {dayjs(user.codeExpirationDate).format('DD-MM-YYYY')}</div>}
             </>}
             {(user && !user.code) && <>
-              <div>No hay codigo generado</div>
-              <Button onClick={generateCode} type="primary" className="generate-button">Generar codigo</Button>
+              <div>{t('no_code_generated')}</div>
+              <Button onClick={generateCode} type="primary" className="generate-button">{t('generate_code')}</Button>
             </>}
           </div>
           <form className="form-container" onSubmit={handleChangePassword}>
@@ -78,7 +78,7 @@ const UserProfilePage = () => {
             <div className="input-password">
               <Input.Password
                 ref={passwordRef}
-                placeholder="Nueva contraseña"
+                placeholder={t('new_password')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

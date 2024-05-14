@@ -14,9 +14,18 @@ import SearchComponent from '../../../components/search/search';
 import { useTranslation } from 'react-i18next';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 
+
 function CoursesAdmin() {
   const [t] = useTranslation('global');
-  const { noConnectionError } = useNotification();
+  const {
+    noConnectionError,
+    fillAllFields,
+    courseCreateSuccessful,
+    courseUpdateOrCreateFail,
+    courseDeleteFail,
+    courseDeleteSuccessful,
+    courseUpdateSuccessful
+  } = useNotification();
   const [Courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [acronyms, setAcronyms] = useState('');
@@ -58,9 +67,20 @@ function CoursesAdmin() {
     </>
   );
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderCoursesImputs = () => (
     <>
-      <h1>{String(mode)}</h1>
+      <h1>{getTranslation(String(mode))}</h1>
       <p>{t('name_s')}</p>
       <Input placeholder={t('name_s')}
         value={name}
@@ -76,9 +96,9 @@ function CoursesAdmin() {
     try {
       await CoursesService.deleteCourse(id);
       getCourses();
-      message.error('Curso eliminado correctamente');
+      courseDeleteSuccessful();
     } catch (error) {
-      message.error('No se pudo eliminar el curso');
+      courseDeleteFail();
     }
   }
 
@@ -113,7 +133,7 @@ function CoursesAdmin() {
 
         await CoursesService.updateCourse(Id, coursesToEdit);
 
-        message.success('Curso actualizado correctamente');
+        courseUpdateSuccessful();
         getCourses();
       } else {
         const courses = {
@@ -123,16 +143,16 @@ function CoursesAdmin() {
 
         await CoursesService.createNewCourse(courses);
         getCourses();
-        message.success('Curso creado correctamente');
+        courseCreateSuccessful();
       }
       Cancel();
     } catch (error) {
       if (error.message === 'No fields filled') {
-        message.error('Rellena todos los campos');
+        fillAllFields();
       } else if (error.message === 'Network Error') {
         noConnectionError();
       } else {
-        message.error('Error al crear/actualizar el curso');
+        courseUpdateOrCreateFail();
       }
     }
   }
