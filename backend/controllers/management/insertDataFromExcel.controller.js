@@ -73,7 +73,7 @@ exports.createCompleteCase = async (req, res) => {
     insertedData.itemCases = await insertItemCases(dataToInsert, transaction);
     insertedData.itemPlayerRoles = await insertItemPlayerRoles(dataToInsert, transaction);
 
-    await transaction.rollback();
+    await transaction.commit();
     return res.status(200).send({ message: 'Data inserted successfully', insertedData, syncedData });
   } catch (error) {
 
