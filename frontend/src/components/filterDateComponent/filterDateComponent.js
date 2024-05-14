@@ -51,28 +51,30 @@ const FilterComponent = ({ data, onFilter }) => {
             />
           </div>
           <div className="filter-label">
-            <label>Rango de horas:</label>
-            <div className="hour-range">
-              <span>{selectedStartHour}:00</span>
-              <span>{selectedEndHour}:00</span>
+            <div >
+              <label>Rango de horas:</label>
+              <div className="hour-range">
+                <span>{selectedStartHour}:00</span>
+                <span>{selectedEndHour}:00</span>
+              </div>
+              <Slider
+                min={0}
+                max={24}
+                range
+                defaultValue={[selectedStartHour, selectedEndHour]}
+                onChange={handleHourRangeChange}
+                trackStyle={{ backgroundColor: "#ff704a", height: 10 }}
+                railStyle={{ backgroundColor: "#ffffff", height: 10 }}
+                handleStyle={{
+                  borderColor: "#646269",
+                  height: 20,
+                  width: 20,
+                  backgroundColor: "#646269"
+                }}
+              />
             </div>
-            <Slider
-              min={0}
-              max={24}
-              range
-              defaultValue={[selectedStartHour, selectedEndHour]}
-              onChange={handleHourRangeChange}
-              trackStyle={{ backgroundColor: "#ff704a", height: 10 }}
-              railStyle={{ backgroundColor: "#ffffff", height: 10 }}
-              handleStyle={{
-                borderColor: "#646269",
-                height: 20,
-                width: 20,
-                backgroundColor: "#646269"
-              }}
-            />
+            <button className="filter-button" onClick={handleFilter}>Filtrar</button>
           </div>
-          <button className="filter-button" onClick={handleFilter}>Filtrar</button>
         </div>
       )}
     </div>

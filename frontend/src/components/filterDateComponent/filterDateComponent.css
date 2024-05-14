@@ -1,5 +1,5 @@
 .react-calendar {
-  width: 350px;
+  width: 97%;
   max-width: 100%;
   background: #fff;
   color: #222222;
@@ -165,7 +165,11 @@
 }
 
 .filter-label {
-  display: block;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   margin-bottom: 10px;
   color: #333; 
 }
@@ -190,7 +194,19 @@
 
 .filter-content {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: nowrap;
   margin-top: 10px;
 }
 
+.hour-range{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 750px) {
+  .filter-content {
+    flex-wrap: wrap;
+  }
+}
