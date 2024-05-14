@@ -37,7 +37,7 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
           <div className='grade-container'>
             <span className='info-label'>Calificación:</span>
             <span className={`grade ${finalGrade && finalGrade > 5 ? 'green' : 'red'}`} style={{ fontSize: '1.5rem' }}>
-              {finalGrade ?? '---'}
+              {Number(finalGrade).toFixed(2) ?? '---'}
             </span>
           </div>
           {itemGrades && itemGrades.length !== 0 &&
