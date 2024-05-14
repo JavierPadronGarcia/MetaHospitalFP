@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import './ExerciseCard.css';
 import ArrowToggle from '../arrowToggle/ArrowToggle';
 import GradeCard from '../grade-card/GradeCard';
+import dayjs from 'dayjs';
+import useDayjsLocale from '../../utils/shared/getDayjsLocale';
 
-const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }) => {
+const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date }) => {
+  dayjs.locale(useDayjsLocale());
+
+  const formatDate = dayjs(date).format('dddd, DD MMMM YYYY');
+  const formatHour = dayjs(date).format('HH:mm');
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -12,12 +18,27 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
   }
 
   return (
-    <div className="exercise-card-container" >
+    <div className="exercise-card-container">
       <div className='exercise-card'>
+        <h2 className='exercise-title'>{title}</h2>
         <div className='exercise-head'>
           <div className='exercise-description'>
-            <h2>{title}</h2>
-            <p>Calificación: <span className='grade'>{finalGrade ?? '---'}</span></p>
+            <div className='exercise-info'>
+              <div className='exercise-info-item'>
+                <span className='info-label'>Fecha:</span>
+                <span className='info-value'>{formatDate}</span>
+              </div>
+              <div className='exercise-info-item'>
+                <span className='info-label'>Hora:</span>
+                <span className='info-value'>{formatHour}</span>
+              </div>
+            </div>
+          </div>
+          <div className='grade-container'>
+            <span className='info-label'>Calificación:</span>
+            <span className={`grade ${finalGrade && finalGrade > 5 ? 'green' : 'red'}`} style={{ fontSize: '1.5rem' }}>
+              {finalGrade ?? '---'}
+            </span>
           </div>
           {itemGrades && itemGrades.length !== 0 &&
             <div className='display'>
@@ -44,3 +65,4 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
 };
 
 export default ExerciseCard;
+
