@@ -39,6 +39,7 @@ const StudentExercises = () => {
           key={index}
           title={exercise.caseName}
           participationGrades={{ finalGrade: exercise.finalGrade, itemGrades: exercise?.grades }}
+          date={exercise.submittedAt}
         />
       ))}
     </div>

@@ -193,6 +193,7 @@ exports.findAllExercisesAssignedToStudent = async (req, res) => {
         [db.sequelize.col('exercise.case.caseTranslations.name'), 'caseName'],
         [db.sequelize.col('participation.FinalGrade'), 'finalGrade'],
         [db.sequelize.col('participation.id'), 'participationId'],
+        [db.sequelize.col('participation.SubmittedAt'), 'submittedAt'],
       ],
       include: [
         {

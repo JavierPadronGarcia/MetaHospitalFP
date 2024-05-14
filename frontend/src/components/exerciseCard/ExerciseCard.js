@@ -11,6 +11,8 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
   const formatDate = dayjs(date).format('dddd, DD MMMM YYYY');
   const formatHour = dayjs(date).format('HH:mm');
 
+  console.log(formatDate, formatHour, date)
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = (expandedState) => {
