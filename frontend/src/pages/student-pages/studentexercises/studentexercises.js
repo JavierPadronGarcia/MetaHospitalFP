@@ -6,6 +6,7 @@ import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
 import exercisesService from '../../../services/exercises.service';
 import './StudentExercises.css';
+import FilterComponent from '../../../components/filterDateComponent/filterDateComponent';
 
 const StudentExercises = () => {
   const workUnit = JSON.parse(localStorage.getItem('actualWorkUnit'));
@@ -69,6 +70,7 @@ const StudentExercises = () => {
       <div className='container-scloll'>
 
         <Tag name="Ejercicios" className="tags" />
+        <FilterComponent data={exercises} onFilter={handleSearch} />
         {showAssignedExercises()}
 
         {/* <Tag name="Ejercicios no evaluados" className="tags" />

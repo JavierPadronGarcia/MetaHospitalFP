@@ -3,8 +3,10 @@ import Calendar from 'react-calendar';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './filterDateComponent.css';
+import i18next from 'i18next';
 
 const FilterComponent = ({ data, onFilter }) => {
+
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [selectedStartHour, setSelectedStartHour] = useState(0);
   const [selectedEndHour, setSelectedEndHour] = useState(24);
@@ -33,13 +35,14 @@ const FilterComponent = ({ data, onFilter }) => {
           (logHour < selectedEndHour || (logHour === selectedEndHour && logMinute <= 0)))
       );
     });
+
     onFilter(filteredData);
   };
 
   return (
     <div className="filter-container">
-      <summary onClick={() => setIsFilterOpen(!isFilterOpen)}>
-        <button className="filter-button">Mostrar filtro</button>
+      <summary >
+        <button className="filter-button" onClick={() => setIsFilterOpen(!isFilterOpen)}>Mostrar filtro</button>
       </summary>
       {isFilterOpen && (
         <div className="filter-content">
@@ -48,6 +51,7 @@ const FilterComponent = ({ data, onFilter }) => {
             <Calendar
               onChange={handleDayChange}
               value={selectedDay}
+              locale={i18next.language}
             />
           </div>
           <div className="filter-label">
