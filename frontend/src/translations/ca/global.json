@@ -123,5 +123,10 @@
   "exercise_s": "Exercici",
   "exercise_p": "Exercicis",
   "select_filter": "Seleccionar filtre",
-  "score": "Qualificació"
+  "score": "Qualificació",
+  "time": "Hora",
+  "show_filter": "Mostra filtre",
+  "day": "Dia",
+  "hour_rage": "Rang d'hores",
+  "filter": "Filtrar"
 }

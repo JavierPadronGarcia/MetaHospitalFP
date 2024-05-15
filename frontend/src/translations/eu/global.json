@@ -123,5 +123,10 @@
   "exercise_s": "Ariketa",
   "exercise_p": "Ariketak",
   "select_filter": "Hautatu iragazkia",
-  "score": "Titulazioa"
+  "score": "Titulazioa",
+  "time": "Ordua",
+  "show_filter": "Erakutsi iragazkia",
+  "day": "Eguna",
+  "hour_rage": "Ordu tartea",
+  "filter": "Iragazkia"
 }

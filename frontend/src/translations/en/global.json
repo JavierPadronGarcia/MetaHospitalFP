@@ -123,5 +123,10 @@
   "exercise_s": "Exercise",
   "exercise_p": "Exercises",
   "select_filter": "Select filter",
-  "score": "Score"
+  "score": "Score",
+  "time": "Time",
+  "show_filter": "Show filter",
+  "day": "Day",
+  "hour_rage": "Hour range",
+  "filter": "Filter"
 }

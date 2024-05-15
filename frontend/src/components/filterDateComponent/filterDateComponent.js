@@ -4,9 +4,11 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './filterDateComponent.css';
 import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const FilterComponent = ({ data, onFilter }) => {
 
+  const [t] = useTranslation('global');
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [selectedStartHour, setSelectedStartHour] = useState(0);
   const [selectedEndHour, setSelectedEndHour] = useState(24);
@@ -42,12 +44,12 @@ const FilterComponent = ({ data, onFilter }) => {
   return (
     <div className="filter-container">
       <summary >
-        <button className="filter-button" onClick={() => setIsFilterOpen(!isFilterOpen)}>Mostrar filtro</button>
+        <button className="filter-button" onClick={() => setIsFilterOpen(!isFilterOpen)}>{t('show_filter')}</button>
       </summary>
       {isFilterOpen && (
         <div className="filter-content">
           <div className="filter-label">
-            <label>Día:</label>
+            <label>{t('day')}:</label>
             <Calendar
               onChange={handleDayChange}
               value={selectedDay}
@@ -56,7 +58,7 @@ const FilterComponent = ({ data, onFilter }) => {
           </div>
           <div className="filter-label">
             <div >
-              <label>Rango de horas:</label>
+              <label>{t('hour_range')}:</label>
               <div className="hour-range">
                 <span>{selectedStartHour}:00</span>
                 <span>{selectedEndHour}:00</span>
@@ -77,7 +79,7 @@ const FilterComponent = ({ data, onFilter }) => {
                 }}
               />
             </div>
-            <button className="filter-button" onClick={handleFilter}>Filtrar</button>
+            <button className="filter-button" onClick={handleFilter}>{t('filter')}</button>
           </div>
         </div>
       )}
