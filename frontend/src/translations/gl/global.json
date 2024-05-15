@@ -114,5 +114,14 @@
   "no_code_generated": "Non hai ningún código xerado",
   "generate_code": "Xerar código",
   "new_password": "novo contrasinal",
-  "submit": "Confirmar"
+  "submit": "Confirmar",
+  "my_groups": "meus grupos",
+  "updating": "Actualizando",
+  "image_update_successful": "A imaxe actualizouse correctamente",
+  "user_image": "Imaxe do usuario _",
+  "go_back": "Volve atrás",
+  "exercise_s": "Exercicio",
+  "exercise_p": "Exercicios",
+  "select_filter": "Seleccionar filtro",
+  "score": "Cualificación"
 }

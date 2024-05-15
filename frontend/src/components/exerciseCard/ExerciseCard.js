@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import './ExerciseCard.css';
 import ArrowToggle from '../arrowToggle/ArrowToggle';
 import GradeCard from '../grade-card/GradeCard';
+import { useTranslation } from 'react-i18next';
 
 const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }) => {
 
+  const [t] = useTranslation('global');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = (expandedState) => {
@@ -17,7 +19,7 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades } }
         <div className='exercise-head'>
           <div className='exercise-description'>
             <h2>{title}</h2>
-            <p>Calificación: <span className='grade'>{finalGrade ?? '---'}</span></p>
+            <p>{t('score')}: <span className='grade'>{finalGrade ?? '---'}</span></p>
           </div>
           {itemGrades && itemGrades.length !== 0 &&
             <div className='display'>

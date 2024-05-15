@@ -32,13 +32,13 @@ const LanguageSelector = () => {
 
   return (
     <div className="language-selector-container">
-      <div className="selected-language" onClick={() => setShowOptions(!showOptions)}>
-        <img src={languages.find(lang => lang.code === selectedLanguage)?.flag} alt={selectedLanguage} />
+      <div className="selected-language" >
+        <img src={languages.find(lang => lang.code === selectedLanguage)?.flag} alt={selectedLanguage} onClick={() => setShowOptions(!showOptions)} />
       </div>
       <div className={`language-options ${showOptions ? 'show' : ''}`}>
         {selectableLanguages.map(lang => (
-          <div key={lang.code} className="language-option" onClick={() => changeLanguage(lang.code)}>
-            <img src={lang.flag} alt={lang.code} />
+          <div key={lang.code} className="language-option">
+            <img src={lang.flag} alt={lang.code} onClick={() => changeLanguage(lang.code)} />
           </div>
         ))}
       </div>

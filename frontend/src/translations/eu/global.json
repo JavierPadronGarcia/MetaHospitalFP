@@ -114,5 +114,14 @@
   "no_code_generated": "Ez da koderik sortu",
   "generate_code": "Sortu kodea",
   "new_password": "pasahitz berria",
-  "submit": "Berretsi"
+  "submit": "Berretsi",
+  "my_groups": "nire taldeak",
+  "updating": "Eguneratzea",
+  "image_update_successful": "Irudia behar bezala eguneratu da",
+  "user_image": "_ erabiltzailearen irudia",
+  "go_back": "Atzera egin",
+  "exercise_s": "Ariketa",
+  "exercise_p": "Ariketak",
+  "select_filter": "Hautatu iragazkia",
+  "score": "Titulazioa"
 }

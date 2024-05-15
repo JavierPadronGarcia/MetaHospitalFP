@@ -8,6 +8,7 @@ import usersService from '../../services/users.service';
 import useNotification from '../../utils/shared/errorHandler';
 import { useTranslation } from "react-i18next";
 import "./profile.css";
+import LanguageSelector from "../../components/Language-button/LanguageSelector";
 
 const UserProfilePage = () => {
   const [t] = useTranslation('global');
@@ -85,11 +86,12 @@ const UserProfilePage = () => {
             </div>
             <div className="form-button">
               <Button htmlType="submit" type="primary" disabled={!password}>
-                Confirmar
+                {t('submit')}
               </Button>
             </div>
           </form>
         </div>
+        <LanguageSelector />
       </div>
     </>
   );

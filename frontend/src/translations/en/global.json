@@ -114,5 +114,14 @@
   "no_code_generated": "No code generated",
   "generate_code": "Generate code",
   "new_password": "New Password",
-  "submit": "Confirm"
+  "submit": "Submit",
+  "my_groups": "My groups",
+  "updating": "Updating",
+  "image_update_successful": "Image successfully updated",
+  "user_image": "Image by user _",
+  "go_back": "Go back",
+  "exercise_s": "Exercise",
+  "exercise_p": "Exercises",
+  "select_filter": "Select filter",
+  "score": "Score"
 }
