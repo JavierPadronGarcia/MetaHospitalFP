@@ -239,6 +239,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
           [db.sequelize.col('participations.id'), 'participationId'],
           [db.sequelize.col('participations.FinalGrade'), 'finalGrade'],
           [db.sequelize.col('participations.exercise.case.id'), 'caseId'],
+          [db.sequelize.col('participations.SubmittedAt'), 'submittedAt']
         ]
       },
       include: [
@@ -292,7 +293,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
     const studentsWithGrades = {};
 
     gradesInExerciseGroupByStudent.forEach(row => {
-      const { studentId, studentName, caseId, participationId, finalGrade } = row;
+      const { studentId, studentName, caseId, participationId, finalGrade, submittedAt } = row;
 
       if (!studentsWithGrades[participationId]) {
         studentsWithGrades[participationId] = {
@@ -301,7 +302,8 @@ exports.findGradesByStudentInExercise = async (req, res) => {
           finalGrade: finalGrade,
           caseId: caseId,
           participationId: participationId,
-          grades: []
+          grades: [],
+          submittedAt: submittedAt
         };
       }
 

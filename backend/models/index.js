@@ -11,9 +11,9 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(process.env[config.use_env_variable], { ...config, }); // logging: false
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(config.database, config.username, config.password, { ...config, });
 }
 
 db.Sequelize = Sequelize;
@@ -159,16 +159,16 @@ db.activitySubscription.belongsTo(db.userAccounts, { foreignKey: 'UserID' });
 db.course.belongsTo(db.school, { throw: 'SchoolId' })
 
 //translations
-db.item.hasMany(db.itemTranslation, { foreignKey: 'ItemID' });
 db.case.hasMany(db.caseTranslation, { foreignKey: 'CaseID' });
-
-db.itemTranslation.belongsTo(db.item, { foreignKey: 'ItemID' });
-db.itemTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
-
 db.caseTranslation.belongsTo(db.case, { foreignKey: 'CaseID' });
-db.caseTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
+
+db.item.hasMany(db.itemTranslation, { foreignKey: 'ItemID' });
+db.itemTranslation.belongsTo(db.item, { foreignKey: 'ItemID' });
 
 db.translationLanguage.hasMany(db.itemTranslation, { foreignKey: 'LanguageID' });
 db.translationLanguage.hasMany(db.caseTranslation, { foreignKey: 'LanguageID' });
+
+db.itemTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
+db.caseTranslation.belongsTo(db.translationLanguage, { foreignKey: 'LanguageID' });
 
 module.exports = db;

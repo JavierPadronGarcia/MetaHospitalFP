@@ -95,5 +95,6 @@ require("./routes/administration/school.routes")(app);
 require("./routes/educational/participation.routes")(app);
 require('./routes/administration/activitySubscription.routes')(app);
 require('./routes/educational/messages.routes')(app);
+require('./routes/management/educationalManagement.routes')(app);
 
 module.exports = app;

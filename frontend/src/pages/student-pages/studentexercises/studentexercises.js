@@ -6,6 +6,7 @@ import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
 import exercisesService from '../../../services/exercises.service';
 import './StudentExercises.css';
+import FilterComponent from '../../../components/filterDateComponent/filterDateComponent';
 import { useTranslation } from 'react-i18next';
 
 const StudentExercises = () => {
@@ -41,6 +42,7 @@ const StudentExercises = () => {
           key={index}
           title={exercise.caseName}
           participationGrades={{ finalGrade: exercise.finalGrade, itemGrades: exercise?.grades }}
+          date={exercise.submittedAt}
         />
       ))}
     </div>
@@ -70,6 +72,7 @@ const StudentExercises = () => {
       <div className='container-scloll'>
 
         <Tag name={t('exercise_p')} className="tags" />
+        <FilterComponent data={exercises} onFilter={handleSearch} />
         {showAssignedExercises()}
 
         {/* <Tag name="Ejercicios no evaluados" className="tags" />
