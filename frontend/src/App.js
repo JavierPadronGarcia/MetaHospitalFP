@@ -20,7 +20,6 @@ import AdminCourse from './pages/admin-pages/admincourse/admincourse';
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
-import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
 import TeacherGradesPage from './pages/teacher-pages/teacher-grades-page/TeacherGradesPage';
 
 import Studenthome from './pages/student-pages/studenthome/studenthome';

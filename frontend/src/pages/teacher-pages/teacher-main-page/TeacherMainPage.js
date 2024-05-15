@@ -6,10 +6,12 @@ import { LoadingOutlined } from '@ant-design/icons';
 import useNotification from '../../../utils/shared/errorHandler';
 import Headers from '../../../components/headers/headers';
 import CardUnits from '../../../components/cardUnits/cardunits';
+import { useTranslation } from 'react-i18next';
 
 function TeacherMainPage() {
 
-  const { noConnectionError, errorMessage } = useNotification();
+  const [t] = useTranslation('global');
+  const { noConnectionError, errorGettingGroups } = useNotification();
   const [allGroups, setAllGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const teacher = decodeToken();
@@ -27,7 +29,7 @@ function TeacherMainPage() {
       }
 
       if (err.response && err.code === 500) {
-        errorMessage('Hubo un error buscando sus cursos', 'Intentelo de nuevo');
+        errorGettingGroups();
       }
       setLoading(false);
     }
@@ -49,7 +51,7 @@ function TeacherMainPage() {
 
   return (
     <div className="teacher-page">
-      <Headers title='Mis grupos' data={allGroups.map(item => item.group)} onSearch={handleSearch} fieldName="name" />
+      <Headers title={t('my_groups')} data={allGroups.map(item => item.group)} onSearch={handleSearch} fieldName="name" />
       <div className='teacher-page-main'>
         {loading &&
           <LoadingOutlined style={{ fontSize: 60, color: '#08c', display: 'flex', justifyContent: 'center' }} />
