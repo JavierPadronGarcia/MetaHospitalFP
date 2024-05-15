@@ -127,6 +127,11 @@
   "time": "Hora",
   "show_filter": "Mostra filtre",
   "day": "Dia",
-  "hour_rage": "Rang d'hores",
-  "filter": "Filtrar"
+  "hour_range": "Rang d'hores",
+  "filter": "Filtrar",
+  "select_student": "Selecciona un estudiant",
+  "successful_password_restart": "La contrasenya de l'estudiant ha estat restablida",
+  "error_restarting_student_password": "Error en restablir la contrasenya de l'estudiant",
+  "student_grades": "Qualificacions estudiants",
+  "exercises_get_fail": "Error en obtenir exercicis"
 }

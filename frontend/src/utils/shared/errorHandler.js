@@ -30,6 +30,15 @@ const useNotification = () => {
     });
   }
 
+  const errorGettingGroups = () => {
+    notification.error({
+      message: t('group_get_fail'),
+      description: t('try_again'),
+      placement: 'top',
+      duration: 5
+    });
+  }
+
   const fillAllFields = () => {
     message.error(t('fill_all_fields'))
   }
@@ -166,6 +175,10 @@ const useNotification = () => {
     message.error(t('student_delete_fail'))
   }
 
+  const exerciseGetError = () => {
+    message.error(t('exercise_get_fail'))
+  }
+
   return {
     noConnectionError,
     errorOnLogin,
@@ -203,7 +216,9 @@ const useNotification = () => {
     teacherUpdateSuccessful,
     teacherUpdateOrCreateFail,
     teacherDeleteSuccessful,
-    teacherDeleteFail
+    teacherDeleteFail,
+    errorGettingGroups,
+    exerciseGetError
   };
 }
 

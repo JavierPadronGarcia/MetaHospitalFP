@@ -127,6 +127,11 @@
   "time": "Ordua",
   "show_filter": "Erakutsi iragazkia",
   "day": "Eguna",
-  "hour_rage": "Ordu tartea",
-  "filter": "Iragazkia"
+  "hour_range": "Ordu tartea",
+  "filter": "Iragazkia",
+  "select_student": "Aukeratu ikasle bat",
+  "successful_password_restart": "Ikaslearen pasahitza berrezarri da",
+  "error_restarting_student_password": "Errore bat gertatu da ikaslearen pasahitza berrezartzean",
+  "student_grades": "Ikasleen kalifikazioak",
+  "exercises_get_fail": "Errore bat gertatu da ariketak eskuratzean"
 }

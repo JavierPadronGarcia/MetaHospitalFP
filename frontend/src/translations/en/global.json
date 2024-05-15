@@ -127,6 +127,11 @@
   "time": "Time",
   "show_filter": "Show filter",
   "day": "Day",
-  "hour_rage": "Hour range",
-  "filter": "Filter"
+  "hour_range": "Hour range",
+  "filter": "Filter",
+  "select_student": "Select students",
+  "successful_password_restart": "Student password has been reset",
+  "error_restarting_student_password": "Error resetting student password",
+  "student_grades": "Student grades",
+  "exercises_get_fail": "Error getting exercises"
 }

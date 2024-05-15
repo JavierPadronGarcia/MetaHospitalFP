@@ -127,6 +127,11 @@
   "time": "Hora",
   "show_filter": "Mostrar filtro",
   "day": "Día",
-  "hour_rage": "Intervalo horario",
-  "filter": "Filtro"
+  "hour_range": "Intervalo horario",
+  "filter": "Filtro",
+  "select_student": "Selecciona un alumno",
+  "successful_password_restart": "Restableceuse o contrasinal do alumno",
+  "error_restarting_student_password": "Produciuse un erro ao restablecer o contrasinal do alumno",
+  "student_grades": "Cualificacións dos estudantes",
+  "exercises_get_fail": "Erro ao conseguir exercicios"
 }
