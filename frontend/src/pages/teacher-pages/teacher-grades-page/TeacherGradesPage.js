@@ -59,9 +59,8 @@ const TeacherGradesPage = () => {
         <div className="student-home student-exercises">
             <Headers title={workUnitName} groupId={id} data={exercises} onSearch={handleSearch} fieldName="studentName" />
             <div className='container-scloll'>
-                <FilterComponent data={exercises} onFilter={handleSearch}></FilterComponent>
-
                 <Tag name={t('exercise_p')} className="tags" />
+                <FilterComponent data={exercises} onFilter={handleSearch}></FilterComponent>
                 {showAssignedExercises()}
 
                 <FloatingExcelButton
