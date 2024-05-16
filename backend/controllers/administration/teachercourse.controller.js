@@ -64,6 +64,15 @@ exports.findAllOrderedByGroupDesc = (req, res) => {
 
 exports.findAllTeachersNotInAGroup = (req, res) => {
   Teacher.findAll({
+    where: {
+      id: {
+        [Op.notIn]: db.Sequelize.literal(`(
+          SELECT TeacherID 
+          FROM ${TeacherGroup.tableName}
+          WHERE ${TeacherGroup.tableName}.GroupID = ${req.params.groupId}
+        )`)
+      }
+    },
     include: [
       {
         model: TeacherGroup,
@@ -76,9 +85,6 @@ exports.findAllTeachersNotInAGroup = (req, res) => {
         },
       }
     ],
-    where: {
-      '$TeacherGroups.TeacherID$': null
-    }
   }).then(users => {
     const teachers = [];
 

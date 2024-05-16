@@ -25,9 +25,9 @@ async function getAllOrderedByGroupDesc() {
   }
 }
 
-async function getAllTeachersNotInAGroup() {
+async function getAllTeachersNotInAGroup(groupId) {
   try {
-    const response = await axios.get(backendTeacherGroupEndpoint + '/teachernotinagroup',
+    const response = await axios.get(backendTeacherGroupEndpoint + '/teachernotinagroup/' + groupId,
       getOptions(localStorage.getItem('token'))
     );
     return response.data;

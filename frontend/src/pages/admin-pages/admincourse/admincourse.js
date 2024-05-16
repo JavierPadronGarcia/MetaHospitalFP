@@ -56,7 +56,7 @@ function AdminCourse() {
 
   const getTeachers = async () => {
     try {
-      const teacherlist = await teacherGroupService.getAllTeachersNotInAGroup();
+      const teacherlist = await teacherGroupService.getAllTeachersNotInAGroup(localStorage.getItem("groupsId"));
       setTeachers(teacherlist);
     } catch (error) {
       console.error('Error fetching all teachers:', error);
@@ -77,7 +77,7 @@ function AdminCourse() {
 
   const getStudents = async () => {
     try {
-      const studentslist = await groupEnrolementService.getAllStudentsNotInAGroup();
+      const studentslist = await groupEnrolementService.getAllStudentsNotInAGroup(localStorage.getItem("groupsId"));
       setStudents(studentslist);
     } catch (error) {
       console.error('Error fetching all students:', error);
