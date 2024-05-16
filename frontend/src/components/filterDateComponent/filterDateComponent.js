@@ -61,14 +61,16 @@ const FilterComponent = ({ data, onFilter }) => {
           <DatePicker onChange={handleDayChange} />
         </div>
         <div className="filter-label slider">
+          <span>{t('hour_range')}</span>
           <Slider
             range={{
               draggableTrack: true,
             }}
             tooltip={{
+              open: true,
               formatter: (value) => `${value}:00`,
               placement: 'bottom',
-              color: '#646269',
+              color: '#3E94E7',
             }}
             onChange={handleHourRangeChange}
             max={24}
