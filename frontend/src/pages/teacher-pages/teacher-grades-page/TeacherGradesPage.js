@@ -8,9 +8,13 @@ import GradeService from '../../../services/grade.service';
 import './TeacherGradesPage.css';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 import FilterComponent from '../../../components/filterDateComponent/filterDateComponent';
+import { useTranslation } from 'react-i18next';
+import useNotification from '../../../utils/shared/errorHandler';
 
 const TeacherGradesPage = () => {
-    const { name, id, workUnitId, workUnitName, gradeid } = useParams();
+    const { id, workUnitName, gradeid } = useParams();
+    const [t] = useTranslation('global');
+    const { noConnectionError, exerciseGetError } = useNotification();
 
     const [exercises, setExercises] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
@@ -22,7 +26,11 @@ const TeacherGradesPage = () => {
             setExercises(allExercises);
             setFilteredData(allExercises);
         } catch (err) {
-            message.error('Error al obtener ejercicios');
+            if (!err.response) {
+                noConnectionError();
+            } else {
+                exerciseGetError();
+            }
         }
     }
 
@@ -51,14 +59,13 @@ const TeacherGradesPage = () => {
         <div className="student-home student-exercises">
             <Headers title={workUnitName} groupId={id} data={exercises} onSearch={handleSearch} fieldName="studentName" />
             <div className='container-scloll'>
+                <Tag name={t('exercise_p')} className="tags" />
                 <FilterComponent data={exercises} onFilter={handleSearch}></FilterComponent>
-
-                <Tag name="Ejercicios" className="tags" />
                 {showAssignedExercises()}
 
                 <FloatingExcelButton
                     data={filteredData}
-                    name={'Nota estudiantes'}
+                    name={t('student_grades')}
                     forGrades={true}
                 />
             </div>

@@ -3,19 +3,21 @@ import Headers from '../../../components/headers/headers';
 import BasicList from '../../../components/basiclist/basiclist';
 import PopForm from '../../../components/popform/popform';
 import groupEnrolementService from '../../../services/groupEnrolement.service';
-import { Select, message, notification } from 'antd';
+import { Select, message } from 'antd';
 import { useParams } from 'react-router-dom';
 import { Consts } from '../../../constants/modes';
 import authService from '../../../services/auth.service';
+import { useTranslation } from 'react-i18next';
 
 const TeacherGroupStudents = () => {
+    const [t] = useTranslation('global');
     const { id, name } = useParams();
     const [students, setStudents] = useState([]);
     const [mode, setMode] = useState(Consts.ADD_MODE);
     const [studentsInGroup, setstudentsInGroup] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedStudentId, setSelectedStudentId] = useState(null);
-    const Headlines = ['Nombre', 'Codigo'];
+    const Headlines = [t('name_s'), t('code')];
     const [filteredData, setFilteredData] = useState([]);
 
     const getStudents = async () => {
@@ -29,16 +31,15 @@ const TeacherGroupStudents = () => {
 
     const columnTypes = [{
         type: {
-          1: 'string',
+            1: 'string',
         }, name: {
-          1: 'name',
+            1: 'name',
         }
-      }];
+    }];
 
     const getStudentsInGroup = async () => {
         try {
             const studentslist = await groupEnrolementService.getAllStudentsInAGroup(id);
-            console.log(studentslist);
             setstudentsInGroup(studentslist);
             setFilteredData(studentslist);
         } catch (err) {
@@ -48,7 +49,6 @@ const TeacherGroupStudents = () => {
 
     useEffect(() => {
         getStudentsInGroup();
-        console.log(studentsInGroup);
         getStudents();
     }, []);
 
@@ -85,8 +85,18 @@ const TeacherGroupStudents = () => {
         </>
     );
 
-    const renderSchoolInputs = () => {
+    const getTranslation = (mode) => {
+        switch (mode) {
+            case Consts.ADD_MODE:
+                return t('add');
+            case Consts.EDIT_MODE:
+                return t('edit');
+            default:
+                return mode;
+        }
+    }
 
+    const renderSchoolInputs = () => {
 
         const handleStudentChange = (value, option) => {
             setSelectedStudent(value);
@@ -95,12 +105,12 @@ const TeacherGroupStudents = () => {
 
         return (
             <>
-                <h1>{String(mode)}</h1>
-                <p>Estudiantes</p>
+                <h1>{getTranslation(String(mode))}</h1>
+                <p>{t('student_p')}</p>
                 <Select
                     showSearch
                     style={{ width: 280 }}
-                    placeholder="Selecciona un estudiante"
+                    placeholder={t('select_student')}
                     optionFilterProp="children"
                     filterOption={(input, option) => (option?.label ?? '').includes(input)}
                     filterSort={(optionA, optionB) =>
@@ -120,10 +130,10 @@ const TeacherGroupStudents = () => {
     const onEdit = async (studentId) => {
         try {
             await authService.resetPassword(studentId);
-            message.success('La contraseña del estudiante ha sido reestablecida');
+            message.success(t('successful_password_restart'));
         } catch (error) {
             console.log(error);
-            message.error("Error al restablecer la contraseña del estudiante");
+            message.error(t('error_restarting_student_password'));
         }
     }
 

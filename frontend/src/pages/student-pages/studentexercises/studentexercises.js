@@ -6,8 +6,11 @@ import Headers from '../../../components/headers/headers';
 import Tag from '../../../components/tag/tag';
 import exercisesService from '../../../services/exercises.service';
 import './StudentExercises.css';
+import FilterComponent from '../../../components/filterDateComponent/filterDateComponent';
+import { useTranslation } from 'react-i18next';
 
 const StudentExercises = () => {
+  const [t] = useTranslation('global');
   const workUnit = JSON.parse(localStorage.getItem('actualWorkUnit'));
   const studentGroup = JSON.parse(localStorage.getItem('studentGroup'));
   const title = workUnit.name;
@@ -68,7 +71,8 @@ const StudentExercises = () => {
       />
       <div className='container-scloll'>
 
-        <Tag name="Ejercicios" className="tags" />
+        <Tag name={t('exercise_p')} className="tags" />
+        <FilterComponent data={exercises} onFilter={handleSearch} />
         {showAssignedExercises()}
 
         {/* <Tag name="Ejercicios no evaluados" className="tags" />

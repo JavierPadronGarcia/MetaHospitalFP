@@ -30,6 +30,19 @@ const useNotification = () => {
     });
   }
 
+  const errorGettingGroups = () => {
+    notification.error({
+      message: t('group_get_fail'),
+      description: t('try_again'),
+      placement: 'top',
+      duration: 5
+    });
+  }
+
+  const fillAllFields = () => {
+    message.error(t('fill_all_fields'))
+  }
+
   const schoolCreateFail = () => {
     message.error(t("school_create_fail"));
   }
@@ -55,11 +68,11 @@ const useNotification = () => {
   }
 
   const userUpdatedSuccessfully = () => {
-    message.error(t('user_update_successfull'))
+    message.success(t('user_update_successfull'))
   }
 
   const userDeletedSuccessfully = () => {
-    message.error(t('user_delete_successfull'))
+    message.success(t('user_delete_successfull'))
   }
 
   const userDeleteFailed = () => {
@@ -67,7 +80,7 @@ const useNotification = () => {
   }
 
   const userCreateSuccessful = () => {
-    message.error(t('user_create_successfull'));
+    message.success(t('user_create_successfull'));
   }
 
   const userUpdateOrCreateFail = () => {
@@ -83,7 +96,7 @@ const useNotification = () => {
   }
 
   const groupDeleteSuccessful = () => {
-    message.error(t('group_delete_successful'))
+    message.success(t('group_delete_successful'))
   }
 
   const groupDeleteFail = () => {
@@ -91,11 +104,11 @@ const useNotification = () => {
   }
 
   const groupCreateSuccessful = () => {
-    message.error(t('group_create_successful'))
+    message.success(t('group_create_successful'))
   }
 
   const groupUpdateSuccessful = () => {
-    message.error(t('group_update_successful'))
+    message.success(t('group_update_successful'))
   }
 
   const groupUpdateOrCreateFail = () => {
@@ -103,7 +116,7 @@ const useNotification = () => {
   }
 
   const courseDeleteSuccessful = () => {
-    message.error(t('course_delete_successful'))
+    message.success(t('course_delete_successful'))
   }
 
   const courseDeleteFail = () => {
@@ -111,17 +124,66 @@ const useNotification = () => {
   }
 
   const courseCreateSuccessful = () => {
-    message.error(t('course_create_successful'))
+    message.success(t('course_create_successful'))
+  }
+
+  const courseUpdateSuccessful = () => {
+    message.success(t('course_update_successful'))
   }
 
   const courseUpdateOrCreateFail = () => {
     message.error(t('course_update_create_fail'))
   }
 
+  const teacherCreateSuccessful = () => {
+    message.success(t('teacher_create_successful'))
+  }
+
+  const teacherUpdateSuccessful = () => {
+    message.success(t('teacher_update_successful'))
+  }
+
+  const teacherUpdateOrCreateFail = () => {
+    message.error(t('teacher_update_create_fail'))
+  }
+
+  const teacherDeleteSuccessful = () => {
+    message.success(t('teacher_delete_successful'))
+  }
+
+  const teacherDeleteFail = () => {
+    message.error(t('teacher_delete_fail'))
+  }
+
+  const studentCreateSuccessful = () => {
+    message.success(t('student_create_successful'))
+  }
+
+  const studentUpdateSuccessful = () => {
+    message.success(t('student_update_successful'))
+  }
+
+  const studentUpdateOrCreateFail = () => {
+    message.error(t('student_update_create_fail'))
+  }
+
+  const studentDeleteSuccessful = () => {
+    message.success(t('student_delete_successful'))
+  }
+
+  const studentDeleteFail = () => {
+    message.error(t('student_delete_fail'))
+  }
+
+  const exerciseGetError = () => {
+    message.error(t('exercise_get_fail'))
+  }
+
   return {
     noConnectionError,
     errorOnLogin,
     errorMessage,
+    fillAllFields,
     schoolCreateFail,
     schoolGetFail,
     noNameError,
@@ -143,7 +205,20 @@ const useNotification = () => {
     courseDeleteFail,
     courseDeleteSuccessful,
     courseUpdateOrCreateFail,
-    groupUpdateSuccessful
+    courseUpdateSuccessful,
+    groupUpdateSuccessful,
+    studentCreateSuccessful,
+    studentUpdateSuccessful,
+    studentUpdateOrCreateFail,
+    studentDeleteSuccessful,
+    studentDeleteFail,
+    teacherCreateSuccessful,
+    teacherUpdateSuccessful,
+    teacherUpdateOrCreateFail,
+    teacherDeleteSuccessful,
+    teacherDeleteFail,
+    errorGettingGroups,
+    exerciseGetError
   };
 }
 

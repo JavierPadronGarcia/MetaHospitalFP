@@ -14,13 +14,12 @@ function TeacherActivitiesPage() {
 
   const [t] = useTranslation('global');
 
-  const { noConnectionError, errorMessage } = useNotification();
+  const { noConnectionError, exerciseGetError } = useNotification();
 
   const { name, id, workUnitId, workUnitName } = useParams();
   const colors = JSON.parse(sessionStorage.getItem('colors'));
 
   const [assignedExercises, setAssignedExercises] = useState([]);
-  // const [unAssignedExercises, setUnAssignedExercises] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
   const navigate = useNavigate();
@@ -30,14 +29,11 @@ function TeacherActivitiesPage() {
     exercisesService.getAllExercisesOfTheGroup(id, workUnitId).then(exercises => {
       setAssignedExercises(exercises);
       setFilteredData(exercises);
-      // setUnAssignedExercises(exercises);
     }).catch(err => {
       if (!err.response) {
         noConnectionError();
-      }
-
-      if (err.response && err.code === 500) {
-        errorMessage('Hubo un error buscando las actividades', 'Intentelo de nuevo');
+      } else {
+        exerciseGetError();
       }
     });
   }
@@ -45,21 +41,6 @@ function TeacherActivitiesPage() {
   useEffect(() => {
     getAllExercises();
   }, [])
-
-  const handleDelete = (activityId) => {
-    exercisesService.deleteExercise(activityId).then(response => {
-      message.success('Actividad eliminada correctamente', 2);
-      getAllExercises();
-    }).catch(err => {
-      if (!err.response) {
-        noConnectionError();
-      }
-
-      if (err.response && err.code === 500) {
-        errorMessage('No se ha podido eliminar la actividad', 'Intentelo de nuevo');
-      }
-    })
-  }
 
   const navigateTo = (id) => {
     const route = location.pathname + '/' + id;

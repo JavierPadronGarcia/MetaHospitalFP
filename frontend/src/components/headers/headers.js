@@ -6,8 +6,10 @@ import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import './headers.css';
 import SearchComponent from '../search/search';
+import { useTranslation } from 'react-i18next';
 
 const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, fieldName }) => {
+  const [t] = useTranslation('global');
   const RoleContext = useContext(RolesContext);
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -46,27 +48,23 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
   const ItemsByRole = () => {
     const teacherItems = [
       {
-        label: 'Inicio',
+        label: t('home'),
         key: 'home',
       },
       {
-        label: 'Perfil',
+        label: t('profile'),
         key: 'profile',
       },
     ];
 
     const studentItems = [
       {
-        label: 'Inicio',
+        label: t('home'),
         key: 'home',
       },
       {
-        label: 'Perfil',
+        label: t('profile'),
         key: 'profile',
-      },
-      {
-        label: 'Chat de grupo',
-        key: 'chat',
       },
     ];
 
@@ -82,10 +80,10 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
 
     if (Page === 'selected') {
       updatedItems.push({
-        label: 'Mis alumnos',
+        label: t('my_students'),
         key: 'students',
       }, {
-        label: 'Unidades',
+        label: t('unit_p'),
         key: 'units',
       });
     }
@@ -95,7 +93,7 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
         type: 'divider'
       },
       {
-        label: 'Cerrar Sesión',
+        label: t('logout'),
         key: 'logout',
       });
 
@@ -115,12 +113,11 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
 
   useEffect(() => {
     ItemsByRole();
-    console.log(data); 
   }, []);
 
   return (
     <div className='headers' style={{ backgroundColor: color }}>
-      <div  className="header-content">
+      <div className="header-content">
         <h1>{title}</h1>
         <ul className='menu-list'>
           {showMenuList()}
@@ -135,7 +132,7 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
           </div>
         </Dropdown>
       </div>
-      <SearchComponent data={data} onSearch={onSearch} fieldName={fieldName}/>
+      <SearchComponent data={data} onSearch={onSearch} fieldName={fieldName} />
     </div>
   );
 }

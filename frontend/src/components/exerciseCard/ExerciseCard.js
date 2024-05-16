@@ -4,6 +4,7 @@ import ArrowToggle from '../arrowToggle/ArrowToggle';
 import GradeCard from '../grade-card/GradeCard';
 import dayjs from 'dayjs';
 import useDayjsLocale from '../../utils/shared/getDayjsLocale';
+import { useTranslation } from 'react-i18next';
 
 const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date }) => {
   dayjs.locale(useDayjsLocale());
@@ -11,8 +12,7 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
   const formatDate = dayjs(date).format('dddd, DD MMMM YYYY');
   const formatHour = dayjs(date).format('HH:mm');
 
-  console.log(formatDate, formatHour, date)
-
+  const [t] = useTranslation('global');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = (expandedState) => {
@@ -27,17 +27,17 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
           <div className='exercise-description'>
             <div className='exercise-info'>
               <div className='exercise-info-item'>
-                <span className='info-label'>Fecha:</span>
+                <span className='info-label'>{t('date')}:</span>
                 <span className='info-value'>{formatDate}</span>
               </div>
               <div className='exercise-info-item'>
-                <span className='info-label'>Hora:</span>
+                <span className='info-label'>{t('time')}:</span>
                 <span className='info-value'>{formatHour}</span>
               </div>
             </div>
           </div>
           <div className='grade-container'>
-            <span className='info-label'>Calificación:</span>
+            <span className='info-label'>{t('score')}:</span>
             <span className={`grade ${finalGrade && finalGrade > 5 ? 'green' : 'red'}`} style={{ fontSize: '1.5rem' }}>
               {Number(finalGrade).toFixed(2) ?? '---'}
             </span>
