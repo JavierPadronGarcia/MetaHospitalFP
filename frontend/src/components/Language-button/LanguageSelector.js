@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Cookies from 'js-cookie';
 import './LanguageSelector.css';
+import { LanguageContext } from '../../context/language';
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
   const [showOptions, setShowOptions] = useState(false);
+  const { changeLanguage } = useContext(LanguageContext);
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
 
   const languages = [
@@ -16,8 +18,9 @@ const LanguageSelector = () => {
     { code: 'es', label: 'Español', flag: 'assets/icons/es.svg' }
   ];
 
-  const changeLanguage = (language) => {
+  const handleChangeLanguage = (language) => {
     i18n.changeLanguage(language);
+    changeLanguage(language);
     setSelectedLanguage(() => {
       Cookies.set("userLanguage",
         language,
@@ -38,7 +41,7 @@ const LanguageSelector = () => {
       <div className={`language-options ${showOptions ? 'show' : ''}`}>
         {selectableLanguages.map(lang => (
           <div key={lang.code} className="language-option">
-            <img src={lang.flag} alt={lang.code} onClick={() => changeLanguage(lang.code)} />
+            <img src={lang.flag} alt={lang.code} onClick={() => handleChangeLanguage(lang.code)} />
           </div>
         ))}
       </div>
