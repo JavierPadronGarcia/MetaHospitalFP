@@ -1,5 +1,7 @@
+const { raw } = require("express");
 const db = require("../../models");
 const { getTranslationIncludeProps } = require("../../utils/translationProps");
+const { where } = require("sequelize");
 const Grade = db.grade;
 const Student = db.student;
 const Participation = db.participation;
@@ -9,6 +11,8 @@ const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
 const ItemPlayerRole = db.itemPlayerRole;
 const Item = db.item;
+const StudentGroup = db.studentGroup;
+const Group = db.groups;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -215,6 +219,120 @@ exports.findActivityGradesOfTheUser = async (req, res) => {
 exports.findAllGradesOfTheGroupByUser = async (req, res) => {
   // TODO
 }
+
+exports.findAllGradesOfTheGroup = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const { language } = req.body;
+
+    const itemTranslationProps = getTranslationIncludeProps('item', language, true);
+
+    if (!groupId) {
+      return res.status(400).send({
+        error: "Missing parameter: groupId"
+      });
+    }
+
+    // Obtener los IDs de los estudiantes en el grupo
+    const studentIdsInGroup = await StudentGroup.findAll({
+      where: { GroupID: groupId },
+      attributes: ['StudentId']
+    });
+
+    // Obtener los detalles de los estudiantes y sus participaciones
+    const studentsWithParticipations = await Student.findAll({
+      raw: true,
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'age'],
+        include: [
+          [db.sequelize.col('Student.id'), 'studentId'],
+          [db.sequelize.col('Student.name'), 'studentName'],
+          [db.sequelize.col('participations.id'), 'participationId'],
+          [db.sequelize.col('participations.FinalGrade'), 'finalGrade'],
+          [db.sequelize.col('participations.exercise.case.id'), 'caseId'],
+          [db.sequelize.col('participations.SubmittedAt'), 'submittedAt']
+        ]
+      },
+      where: { id: studentIdsInGroup.map(student => student.dataValues.StudentId) },
+      include: [
+        {
+          model: Participation,
+          include: [
+            {
+              model: Grade,
+              attributes: { exclude: ['createdAt', 'updatedAt', 'ParticipationID'] },
+              include: [
+                {
+                  model: ItemPlayerRole,
+                  include: [
+                    {
+                      model: Item,
+                      include: [itemTranslationProps]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              model: Exercise,
+              include: [
+                {
+                  model: Case
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+
+
+    const studentsWithGrades = {};
+
+    studentsWithParticipations.forEach(row => {
+      const { studentId, studentName, caseId, participationId, finalGrade, submittedAt } = row;
+
+      // Verificar si el estudiante tiene participaciones
+      if (participationId) {
+        if (!studentsWithGrades[participationId]) {
+          studentsWithGrades[participationId] = {
+            studentId: studentId,
+            studentName: studentName,
+            finalGrade: finalGrade,
+            caseId: caseId,
+            participationId: participationId,
+            grades: [],
+            submittedAt: submittedAt
+          };
+        }
+
+        if (row['participations.grades.id']) {
+
+          const groupedGrades = {
+            gradeId: row['participations.grades.id'],
+            gradeCorrect: row['participations.grades.correct'],
+            gradeValue: row['participations.grades.grade'],
+            itemId: row['participations.grades.ItemPlayerRole.item.id'],
+            itemName: row['participations.grades.ItemPlayerRole.item.itemTranslations.name']
+          }
+
+          studentsWithGrades[participationId].grades.push(groupedGrades);
+        }
+      }
+    });
+
+    const result = Object.values(studentsWithGrades);
+
+    return res.send(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      error: "Internal Server Error"
+    });
+  }
+};
+
+
 
 exports.findGradesByStudentInExercise = async (req, res) => {
   try {
