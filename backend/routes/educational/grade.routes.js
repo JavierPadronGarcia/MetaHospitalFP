@@ -19,6 +19,7 @@ module.exports = app => {
 
   router.get('/findGradesByStudentInExercise/:exerciseId', auth.isAuthenticated, getRequestedTranslation, grades.findGradesByStudentInExercise);
 
+  router.get('/findAllGradesOfTheGroup/:groupId', auth.isAuthenticated, getRequestedTranslation, grades.findAllGradesOfTheGroup);
   //retrieve a single grade by id
   router.get("/:id", auth.isAuthenticated, grades.findOne);
 

@@ -16,6 +16,7 @@ import AdminSchool from './pages/admin-pages/adminschool/adminschool';
 import StudentSchools from './pages/admin-pages/studentschool/studentschool';
 import CoursesAdmin from './pages/admin-pages/coursesadmin/coursesadmin';
 import AdminCourse from './pages/admin-pages/admincourse/admincourse';
+import GroupsGrades from './pages/admin-pages/groupsgrades/groupsgrades';
 
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
@@ -65,19 +66,20 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="/admin" element={<ExpireToken />}>
-            <Route element={<PrivateRoute permittedRole="admin" />}>
-              <Route path="control-panel" element={<AdminHome />} />
-              <Route path="users" element={<UserAdmin />} />
-              <Route path="schools" element={<SchoolsAdmin />} />
-              <Route path="school" element={<AdminSchool />} />
-              <Route path="groups" element={<GroupAdmin />} />
-              <Route path="group" element={<AdminCourse />} />
-              <Route path="courses" element={<CoursesAdmin />} />
-              <Route path="teachers" element={<TeacherSchools />} />
-              <Route path="students" element={<StudentSchools />} />
-            </Route>
-          </Route>
+        <Route path="/admin" element={<ExpireToken />}>
+          <Route element={<PrivateRoute permittedRole="admin" />}>
+            <Route path="control-panel" element={<AdminHome />} />
+            <Route path="users" element={<UserAdmin />} />
+            <Route path="schools" element={<SchoolsAdmin />} />
+            <Route path="school" element={<AdminSchool />} />
+            <Route path="groups" element={<GroupAdmin />} />
+            <Route path="group" element={<AdminCourse />} />
+            <Route path="courses" element={<CoursesAdmin />} />
+            <Route path="teachers" element={<TeacherSchools />} />
+            <Route path="students" element={<StudentSchools />} />
+            <Route path="groupsgrades" element={<GroupsGrades />} />
+           </Route>
+        </Route>
 
           <Route path="/teacher" element={<ExpireToken />}>
             <Route element={<PrivateRoute permittedRole='teacher' />}>
