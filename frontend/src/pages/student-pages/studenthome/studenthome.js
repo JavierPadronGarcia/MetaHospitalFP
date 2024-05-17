@@ -5,8 +5,10 @@ import Tag from '../../../components/tag/tag';
 import CardUnits from '../../../components/cardUnits/cardunits';
 import workUnitGroupsService from '../../../services/workUnitGroups.service';
 import './studenthome.css';
+import { useTranslation } from 'react-i18next';
 
 const Studenthome = () => {
+  const [t] = useTranslation('global');
   const [title, setTitle] = useState('');
   const [groupId, setGroupId] = useState(null);
   const [workUnits, setWorkUnits] = useState([]);
@@ -44,9 +46,9 @@ const Studenthome = () => {
 
   return (
     <div className="student-home">
-      <Headers title={title} groupId={groupId} data={workUnits} onSearch={handleSearch} fieldName="workUnit.name"/>
+      <Headers title={title} groupId={groupId} data={workUnits} onSearch={handleSearch} fieldName="workUnit.name" />
       <div className='container-scroll'>
-        <Tag name="Unidades" className="tags" />
+        <Tag name={t('unit_p')} className="tags" />
         {filteredData.map((workUnit, index) => {
           if (workUnit.visibility)
             return <CardUnits key={index}

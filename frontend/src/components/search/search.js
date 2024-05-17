@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 function SearchComponent({ data, onSearch, filter, fieldName }) {
     const [searchTerm, setSearchTerm] = useState('');
-    const [t, i18n] = useTranslation('global');
+    const [t] = useTranslation('global');
     const [selectedFilter, setSelectedFilter] = useState('');
 
     useEffect(() => {
@@ -43,7 +43,11 @@ function SearchComponent({ data, onSearch, filter, fieldName }) {
     };
 
     const handleFilterChange = (e) => {
-        setSelectedFilter(filter.find(item => item.value === e.target.value));
+        if (e.target.value === '') {
+            setSelectedFilter('');
+        } else {
+            setSelectedFilter(filter.find(item => item.value === e.target.value));
+        }
     };
 
     const renderOptionsFilter = () => {
@@ -64,8 +68,8 @@ function SearchComponent({ data, onSearch, filter, fieldName }) {
             <div className="search-icon-container">
                 {!filter && <SearchOutlined className="search-icon" />}
                 {filter && (
-                    <select onChange={handleFilterChange} className="search-icon" style={{height: '2.3rem', border: 'none'}}>
-                        <option value="">Select Filter</option>
+                    <select onChange={handleFilterChange} className="search-icon" style={{ height: '2.3rem', border: 'none' }}>
+                        <option value="">{t('select_filter')}</option>
                         {renderOptionsFilter()}
                     </select>
                 )}

@@ -18,7 +18,7 @@ module.exports = app => {
   router.get("/teachercount/group/:id", auth.isAuthenticated, teachercourse.getCountOfTeachersInCourse);
 
   //retrieve all teachers not in this table
-  router.get("/teachernotinagroup", auth.isAuthenticated, teachercourse.findAllTeachersNotInAGroup);
+  router.get("/teachernotinagroup/:groupId", auth.isAuthenticated, teachercourse.findAllTeachersNotInAGroup);
 
   //retrieve all teachers not in this table
   router.get("/allGroupsAssignedToTeacher/:id", auth.isAuthenticated, teachercourse.findAllGroupsByTeacher);

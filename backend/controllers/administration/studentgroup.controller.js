@@ -71,10 +71,19 @@ exports.findAllOrderedByGroupDesc = (req, res) => {
 
 exports.findAllStudentsNotInAGroup = (req, res) => {
   Student.findAll({
+    where: {
+      id: {
+        [Op.notIn]: db.Sequelize.literal(`(
+          SELECT StudentID 
+          FROM ${StudentGroup.tableName}
+          WHERE ${StudentGroup.tableName}.GroupID = ${req.params.groupId}
+        )`)
+      }
+    },
     include: [
       {
         model: StudentGroup,
-        attributes: []
+        attributes: [],
       },
       {
         model: UserAccounts,
@@ -83,9 +92,6 @@ exports.findAllStudentsNotInAGroup = (req, res) => {
         },
       }
     ],
-    where: {
-      '$StudentGroups.StudentID$': null
-    }
   }).then(users => {
     const students = [];
 
@@ -98,6 +104,7 @@ exports.findAllStudentsNotInAGroup = (req, res) => {
     })
     res.send(students);
   }).catch(err => {
+    console.log(err)
     res.status(500).send({
       message: err.message || "Error retrieving users not in a group."
     });

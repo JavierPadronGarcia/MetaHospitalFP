@@ -3,16 +3,22 @@ import { useParams } from 'react-router-dom';
 import Headers from '../../../components/headers/headers';
 import Square from '../../../components/square/square';
 import './teacher-selectionn.css';
+import { useTranslation } from 'react-i18next';
 
 const TeacherSelection = () => {
-    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+    const [t] = useTranslation('global');
+
+    const currentPath = window.location.pathname;
+
     const { name, id } = useParams();
+
     const initialData = [
-        { teacherSearch: 'Estudiantes', route: currentPath + '/students', icon: '/assets/imgs/users.svg' },
-        { teacherSearch: 'Unidades', route: currentPath + '/units', icon: '/assets/imgs/schools.svg' }
+        { teacherSearch: t('student_p'), route: currentPath + '/students', icon: '/assets/imgs/users.svg' },
+        { teacherSearch: t('unit_p'), route: currentPath + '/units', icon: '/assets/imgs/schools.svg' }
     ];
-    const [data, setData] = useState(initialData);
-    const [searchResult, setSearchResult] = useState(data);
+
+    const [searchResult, setSearchResult] = useState(initialData);
 
     const handleSearch = (filteredData) => {
         setSearchResult(filteredData);
@@ -37,7 +43,7 @@ const TeacherSelection = () => {
                 title={name}
                 Page={'selected'}
                 groupData={{ groupId: id, groupName: name }}
-                data={data}
+                data={initialData}
                 onSearch={handleSearch}
                 fieldName={'teacherSearch'}
             />
