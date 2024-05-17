@@ -233,13 +233,11 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
       });
     }
 
-    // Obtener los IDs de los estudiantes en el grupo
     const studentIdsInGroup = await StudentGroup.findAll({
       where: { GroupID: groupId },
       attributes: ['StudentId']
     });
 
-    // Obtener los detalles de los estudiantes y sus participaciones
     const studentsWithParticipations = await Student.findAll({
       raw: true,
       attributes: {
@@ -250,7 +248,9 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
           [db.sequelize.col('participations.id'), 'participationId'],
           [db.sequelize.col('participations.FinalGrade'), 'finalGrade'],
           [db.sequelize.col('participations.exercise.case.id'), 'caseId'],
-          [db.sequelize.col('participations.SubmittedAt'), 'submittedAt']
+          [db.sequelize.col('participations.SubmittedAt'), 'submittedAt'],
+          [db.sequelize.col('participations.exercise.case.WorkUnit.id'), 'workUnitId'],
+          [db.sequelize.col('participations.exercise.case.WorkUnit.name'), 'workUnitName'],
         ]
       },
       where: { id: studentIdsInGroup.map(student => student.dataValues.StudentId) },
@@ -277,7 +277,13 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
               model: Exercise,
               include: [
                 {
-                  model: Case
+                  model: Case,
+                  include: [
+                    {
+                      model: WorkUnit,
+                      attributes: []
+                    }
+                  ]
                 }
               ]
             }
@@ -290,9 +296,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
     const studentsWithGrades = {};
 
     studentsWithParticipations.forEach(row => {
-      const { studentId, studentName, caseId, participationId, finalGrade, submittedAt } = row;
+      const { studentId, studentName, caseId, participationId, workUnitId, workUnitName, finalGrade, submittedAt } = row;
 
-      // Verificar si el estudiante tiene participaciones
       if (participationId) {
         if (!studentsWithGrades[participationId]) {
           studentsWithGrades[participationId] = {
@@ -301,6 +306,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
             finalGrade: finalGrade,
             caseId: caseId,
             participationId: participationId,
+            workUnitId: workUnitId,
+            workUnitName: workUnitName,
             grades: [],
             submittedAt: submittedAt
           };

@@ -16,6 +16,7 @@ import AdminSchool from './pages/admin-pages/adminschool/adminschool';
 import StudentSchools from './pages/admin-pages/studentschool/studentschool';
 import CoursesAdmin from './pages/admin-pages/coursesadmin/coursesadmin';
 import AdminCourse from './pages/admin-pages/admincourse/admincourse';
+import GroupsGrades from './pages/admin-pages/groupsgrades/groupsgrades';
 
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
@@ -71,6 +72,7 @@ function App() {
             <Route path="courses" element={<CoursesAdmin />} />
             <Route path="teachers" element={<TeacherSchools />} />
             <Route path="students" element={<StudentSchools />} />
+            <Route path="groupsgrades" element={<GroupsGrades />} />
           </Route>
         </Route>
 
