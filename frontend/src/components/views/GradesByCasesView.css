@@ -1,0 +1,15 @@
+.grades-by-cases-view {
+  min-height: 400px;
+}
+
+.grades-by-cases-view-accordion {
+  background-color: #EEF7FF;
+}
+
+.grades-by-cases-view-accordion-item {
+  background-color: #CDF5FD;
+}
+
+.grades-by-cases-view-exercise-card>div {
+  background-color: #f5f5f5;
+}

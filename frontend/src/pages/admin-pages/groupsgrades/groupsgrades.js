@@ -64,7 +64,7 @@ function GroupsGrades() {
                 <Menu2 />
                 <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
                 <SearchComponent data={grades} onSearch={handleSearch} fieldName={'studentName'} />
-                {showWorkUnits()}
+                {/* {showWorkUnits()} */}
             </div>
             <div className='container-right'>
                 <Rightmenu />

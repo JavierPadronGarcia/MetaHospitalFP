@@ -13,6 +13,8 @@ const ItemPlayerRole = db.itemPlayerRole;
 const Item = db.item;
 const StudentGroup = db.studentGroup;
 const Group = db.groups;
+const ItemTranslation = db.itemTranslation;
+const TranslationLanguage = db.translationLanguage;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -226,6 +228,7 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
     const { language } = req.body;
 
     const itemTranslationProps = getTranslationIncludeProps('item', language, true);
+    const caseTranslationProps = getTranslationIncludeProps('case', language, true);
 
     if (!groupId) {
       return res.status(400).send({
@@ -248,6 +251,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
           [db.sequelize.col('participations.id'), 'participationId'],
           [db.sequelize.col('participations.FinalGrade'), 'finalGrade'],
           [db.sequelize.col('participations.exercise.case.id'), 'caseId'],
+          [db.sequelize.col('participations.exercise.case.caseNumber'), 'caseNumber'],
+          [db.sequelize.col('participations.exercise.case.caseTranslations.name'), 'caseName'],
           [db.sequelize.col('participations.SubmittedAt'), 'submittedAt'],
           [db.sequelize.col('participations.exercise.case.WorkUnit.id'), 'workUnitId'],
           [db.sequelize.col('participations.exercise.case.WorkUnit.name'), 'workUnitName'],
@@ -282,7 +287,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
                     {
                       model: WorkUnit,
                       attributes: []
-                    }
+                    },
+                    { ...caseTranslationProps }
                   ]
                 }
               ]
@@ -295,8 +301,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
 
     const studentsWithGrades = {};
 
-    studentsWithParticipations.forEach(row => {
-      const { studentId, studentName, caseId, participationId, workUnitId, workUnitName, finalGrade, submittedAt } = row;
+    for (const row of studentsWithParticipations) {
+      const { studentId, studentName, caseId, caseName, caseNumber, participationId, workUnitId, workUnitName, finalGrade, submittedAt } = row;
 
       if (participationId) {
         if (!studentsWithGrades[participationId]) {
@@ -305,6 +311,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
             studentName: studentName,
             finalGrade: finalGrade,
             caseId: caseId,
+            caseName: caseName,
+            caseNumber: caseNumber,
             participationId: participationId,
             workUnitId: workUnitId,
             workUnitName: workUnitName,
@@ -314,19 +322,33 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
         }
 
         if (row['participations.grades.id']) {
-
           const groupedGrades = {
             gradeId: row['participations.grades.id'],
             gradeCorrect: row['participations.grades.correct'],
             gradeValue: row['participations.grades.grade'],
             itemId: row['participations.grades.ItemPlayerRole.item.id'],
             itemName: row['participations.grades.ItemPlayerRole.item.itemTranslations.name']
-          }
+          };
 
+          if (!groupedGrades.itemId) {
+            const itemId = row['participations.grades.ItemID'];
+
+            try {
+              const handWashItem = await Item.findOne({
+                raw: true,
+                where: { id: itemId },
+                include: [itemTranslationProps]
+              });
+
+              groupedGrades.itemName = handWashItem['itemTranslations.name'];
+            } catch (error) {
+              console.error('Error fetching hand wash item:', error);
+            }
+          }
           studentsWithGrades[participationId].grades.push(groupedGrades);
         }
       }
-    });
+    }
 
     const result = Object.values(studentsWithGrades);
 
@@ -399,7 +421,6 @@ exports.findGradesByStudentInExercise = async (req, res) => {
               },
               include: [
                 {
-                  required: true,
                   model: ItemPlayerRole,
                   include: [
                     {
@@ -417,7 +438,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
 
     const studentsWithGrades = {};
 
-    gradesInExerciseGroupByStudent.forEach(row => {
+    for (const row of gradesInExerciseGroupByStudent) {
       const { studentId, studentName, caseId, participationId, finalGrade, submittedAt } = row;
 
       if (!studentsWithGrades[participationId]) {
@@ -433,18 +454,35 @@ exports.findGradesByStudentInExercise = async (req, res) => {
       }
 
       if (row['participations.grades.id']) {
-
         const groupedGrades = {
           gradeId: row['participations.grades.id'],
           gradeCorrect: row['participations.grades.correct'],
           gradeValue: row['participations.grades.grade'],
           itemId: row['participations.grades.ItemPlayerRole.item.id'],
           itemName: row['participations.grades.ItemPlayerRole.item.itemTranslations.name']
+        };
+
+        if (!groupedGrades.itemId) {
+          const itemId = row['participations.grades.ItemID'];
+
+          try {
+            const handWashItem = await Item.findOne({
+              raw: true,
+              where: {
+                id: itemId
+              },
+              include: [itemTranslationProps]
+            });
+
+            groupedGrades.itemName = handWashItem['itemTranslations.name'];
+          } catch (error) {
+            console.error('Error fetching hand wash item:', error);
+          }
         }
 
         studentsWithGrades[participationId].grades.push(groupedGrades);
       }
-    });
+    }
 
     const result = Object.values(studentsWithGrades);
 
