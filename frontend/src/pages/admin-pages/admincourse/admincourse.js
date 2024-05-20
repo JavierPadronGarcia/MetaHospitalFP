@@ -256,7 +256,7 @@ function AdminCourse() {
         />
       </div>
       <div className='container-right'>
-        <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={location.pathname} />
+        <Rightmenu renderImputs={renderSchoolImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={'/admin/courses'} />
       </div>
     </div>
   );
