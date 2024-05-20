@@ -133,5 +133,15 @@
   "successful_password_restart": "Student password has been reset",
   "error_restarting_student_password": "Error resetting student password",
   "student_grades": "Student grades",
-  "exercises_get_fail": "Error getting exercises"
+  "exercises_get_fail": "Error getting exercises",
+  "final_grade": "Final grade",
+  "submit_date": "Submit date",
+  "date_generated": "Generation date",
+  "excel_general_student_information": "General student information",
+  "excel_general_information": "General information",
+  "submit_time": "Submit time",
+  "global_view": "Global",
+  "workUnit_view": "Work Units",
+  "view_p": "View",
+  "view_s": "Views"
 }

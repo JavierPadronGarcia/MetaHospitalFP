@@ -1,0 +1,44 @@
+ .views-selector {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding-block: 10px;
+ }
+
+ .views-selector-items {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+   padding-block: 10px;
+ }
+
+
+ .views-selector-item {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin-right: 10px;
+   cursor: pointer;
+   border: none;
+   position: relative;
+ }
+
+ .views-selector-item.selected {
+   background-color: #08c;
+   color: white;
+ }
+
+ .views-selector-item:hover {
+   background-color: #eee;
+ }
+
+ .views-selector-item-selected {
+   background-color: #08c;
+   color: white;
+ }
+
+ .views-selector-item-selected:hover {
+   background-color: #08c;
+ }

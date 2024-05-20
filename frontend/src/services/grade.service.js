@@ -38,7 +38,19 @@ async function getAllGradesOnAGroup(groupId) {
   }
 }
 
+async function getAllGradesOnAGroupForExcel(groupId) {
+  try {
+    const response = await axios.get(`${backendGradesEndpoint}/findAllGradesInGroupForExcel/${groupId}`,
+      getOptions(localStorage.getItem('token'))
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export default {
   getGradesByExercises,
-  getAllGradesOnAGroup
+  getAllGradesOnAGroup,
+  getAllGradesOnAGroupForExcel
 }
