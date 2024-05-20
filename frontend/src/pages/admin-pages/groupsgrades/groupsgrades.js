@@ -8,51 +8,15 @@ import GradesService from '../../../services/grade.service';
 import ExerciseCard from '../../../components/exerciseCard/ExerciseCard';
 import workUnitGroupsService from '../../../services/workUnitGroups.service';
 import WorkUnitComponent from '../../../components/work-unit/WorkUnitComponent';    
+import UnitsCasesGradesView from '../../../components/views/units-cases-grades-view/units-cases-grades-view';
 
 function GroupsGrades() {
     const [t] = useTranslation();
+    const groupId = localStorage.getItem('groupsId');
     const [grades, setGrades] = React.useState([]);
     const [filteredData, setFilteredData] = React.useState([]);
     const [allWorkUnits, setAllWorkUnits] = React.useState([]);
 
-    const getAllGradesOnAGroup = async () => {
-        try {
-            const gradesresponse = await GradesService.getAllGradesOnAGroup(localStorage.getItem('groupsId'));
-            console.log(gradesresponse);
-            setGrades(gradesresponse);
-            setFilteredData(gradesresponse);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const getWorkUnits = async () => {
-        try {
-            const workUnits = await workUnitGroupsService.getAllWorkUnitsWithColorsByGroup(localStorage.getItem('groupsId'));
-            console.log(workUnits);
-            setAllWorkUnits(workUnits);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getAllGradesOnAGroup();
-        getWorkUnits();
-    }, []);
-
-    const showAssignedExercises = () => (
-        <div className='student-exercises-assigned-exercises'>
-            {filteredData.map((exercise, index) => (
-                <ExerciseCard
-                    key={index}
-                    title={exercise.studentName}
-                    participationGrades={{ finalGrade: exercise.finalGrade, itemGrades: exercise?.grades }}
-                    date={exercise.submittedAt}
-                />
-            ))}
-        </div>
-    )
 
     const handleSearch = (filteredData) => {
         setFilteredData(filteredData);
@@ -64,10 +28,10 @@ function GroupsGrades() {
                 <Menu2 />
                 <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
                 <SearchComponent data={grades} onSearch={handleSearch} fieldName={'studentName'} />
-                {showWorkUnits()}
+                <UnitsCasesGradesView groupId={groupId} />
             </div>
             <div className='container-right'>
-                <Rightmenu />
+                <Rightmenu currentRoute={'/admin/courses'} />
             </div>
         </div >
     );

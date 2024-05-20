@@ -237,7 +237,7 @@ function GroupsAdmin() {
         <FloatingExcelButton data={groups} name={`${t('group_p')} - ${localStorage.getItem('schoolName')}`} />
       </div>
       <div className='container-right'>
-        <Rightmenu renderImputs={renderGroupsImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} />
+        <Rightmenu renderImputs={renderGroupsImputs} cancel={Cancel} mode={mode} onSubmit={onSubmit} currentRoute={'/admin/courses'} />
       </div>
     </div>
   );
