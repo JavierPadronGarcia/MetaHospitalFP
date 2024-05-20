@@ -1,23 +1,33 @@
 import { useEffect, useState } from "react";
-import Accordion from "../accordion/Accordion";
-import ExerciseCard from "../exerciseCard/ExerciseCard";
+import Accordion from "../../accordion/Accordion";
+import ExerciseCard from "../../exerciseCard/ExerciseCard";
 import "./GradesByCasesView.css";
-import gradeService from "../../services/grade.service";
+import gradeService from "../../../services/grade.service";
 
-const GradesByCasesView = ({ groupId }) => {
+const GradesByCasesView = ({ groupId, dataFetched, prefetchedData }) => {
 
   const [gradesContent, setGradesContent] = useState([]);
 
   useEffect(() => {
 
     async function getGradesContent() {
-      const data = await gradeService.getAllGradesOnAGroup(groupId);
-      let dataGroupedByWorkUnit = groupReturnedData(data);
-      setGradesContent(dataGroupedByWorkUnit);
+      try {
+        const data = await gradeService.getAllGradesOnAGroup(groupId);
+        let dataGroupedByWorkUnit = groupReturnedData(data);
+        setGradesContent(dataGroupedByWorkUnit);
+        if (dataFetched) dataFetched();
+      } catch (err) {
+        if (dataFetched) dataFetched(err);
+      }
     }
 
-    getGradesContent();
-  }, []);
+    if (!prefetchedData) {
+      getGradesContent();
+    } else {
+      let dataGroupedByWorkUnit = groupReturnedData(prefetchedData);
+      setGradesContent(dataGroupedByWorkUnit);
+    }
+  }, [prefetchedData]);
 
   const groupReturnedData = (data) => {
     return data.reduce((acc, item) => {

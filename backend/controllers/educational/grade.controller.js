@@ -1,7 +1,5 @@
-const { raw } = require("express");
 const db = require("../../models");
 const { getTranslationIncludeProps } = require("../../utils/translationProps");
-const { where } = require("sequelize");
 const Grade = db.grade;
 const Student = db.student;
 const Participation = db.participation;
@@ -13,8 +11,6 @@ const ItemPlayerRole = db.itemPlayerRole;
 const Item = db.item;
 const StudentGroup = db.studentGroup;
 const Group = db.groups;
-const ItemTranslation = db.itemTranslation;
-const TranslationLanguage = db.translationLanguage;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -254,8 +250,8 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
           [db.sequelize.col('participations.exercise.case.caseNumber'), 'caseNumber'],
           [db.sequelize.col('participations.exercise.case.caseTranslations.name'), 'caseName'],
           [db.sequelize.col('participations.SubmittedAt'), 'submittedAt'],
-          [db.sequelize.col('participations.exercise.case.WorkUnit.id'), 'workUnitId'],
-          [db.sequelize.col('participations.exercise.case.WorkUnit.name'), 'workUnitName'],
+          [db.sequelize.col('participations.exercise.case.workUnit.id'), 'workUnitId'],
+          [db.sequelize.col('participations.exercise.case.workUnit.name'), 'workUnitName'],
         ]
       },
       where: { id: studentIdsInGroup.map(student => student.dataValues.StudentId) },
@@ -336,7 +332,7 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
             try {
               const handWashItem = await Item.findOne({
                 raw: true,
-                where: { id: itemId },
+                where: { itemNumber: itemId + 1, WorkUnitID: workUnitId },
                 include: [itemTranslationProps]
               });
 
@@ -361,7 +357,37 @@ exports.findAllGradesOfTheGroup = async (req, res) => {
   }
 };
 
+exports.findAllGradesInGroupForExcel = async (req, res) => {
+  try {
+    const { groupId } = req.params;
 
+    const result = await db.sequelize.query(`
+      SELECT 
+        wku.name as 'UT',
+        c.caseNumber as 'Case',
+        ROUND(p.FinalGrade, 2) as 'Final grade',
+        DATE(p.SubmittedAt) as 'Submit Date', 
+        TIME(p.SubmittedAt) as 'Submit Time',
+        st.name as 'Student'
+      FROM \`${WorkUnit.tableName}\` as wku
+      JOIN \`${Case.tableName}\` as c on c.WorkUnitID = wku.id
+      JOIN \`${Exercise.tableName}\` as ex on ex.CaseID = c.id
+      JOIN \`${Participation.tableName}\` as p on p.ExerciseID = ex.id
+      JOIN \`${Student.tableName}\` as st on st.id = p.StudentID
+      JOIN \`${StudentGroup.tableName}\` as stg on stg.StudentID = st.id
+      JOIN \`${Group.tableName}\` as g on g.id = stg.GroupID
+      AND g.id = ${groupId}
+    `, { type: db.Sequelize.QueryTypes.SELECT });
+
+    return res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      error: "Internal Server Error",
+      message: error.message
+    });
+  }
+}
 
 exports.findGradesByStudentInExercise = async (req, res) => {
   try {

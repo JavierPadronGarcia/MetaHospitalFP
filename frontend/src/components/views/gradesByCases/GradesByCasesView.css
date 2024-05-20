@@ -1,5 +1,6 @@
 .grades-by-cases-view {
   min-height: 400px;
+  width: 100%;
 }
 
 .grades-by-cases-view-accordion {
