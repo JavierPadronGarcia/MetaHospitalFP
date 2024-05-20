@@ -11,6 +11,8 @@ import FloatingExcelButton from '../../../components/FloatingExcelButton/Floatin
 import { useTranslation } from 'react-i18next';
 import ViewsSelector from '../../../components/views/viewsSelector/ViewsSelector';
 import gradeService from '../../../services/grade.service';
+import UnitsCasesGradesView from '../../../components/views/units-cases-grades-view/units-cases-grades-view';
+import dayjs from 'dayjs';
 
 function TeacherGroupPage() {
 
@@ -64,27 +66,6 @@ function TeacherGroupPage() {
     setSearchParams({ selectedView: view });
   }, [view]);
 
-  const handleUpdateVisibility = async (workUnitId, visibility) => {
-    try {
-      await workUnitGroupService.updateWorkUnitVisibility(id, workUnitId, visibility);
-    } catch (err) {
-      if (!err.response) {
-        noConnectionError();
-      }
-    }
-  }
-
-  const showWorkUnits = () => (
-    filteredData.map((workUnitGroup) => (
-      <WorkUnitComponent
-        workUnit={workUnitGroup.workUnit}
-        unitVisibility={workUnitGroup.visibility}
-        key={workUnitGroup.workUnit.id}
-        notifyUpdateVisibility={(workUnitId, visibility) => handleUpdateVisibility(workUnitId, visibility)}
-      />
-    ))
-  )
-
   const handleSearch = (filteredData) => {
     setFilteredData(filteredData);
   };
@@ -111,7 +92,7 @@ function TeacherGroupPage() {
           </div>
         )
       case views.workUnits:
-        return showWorkUnits()
+        return <UnitsCasesGradesView groupId={id} />
     }
   }
 
@@ -132,7 +113,7 @@ function TeacherGroupPage() {
         }
         {returnView()}
       </div>
-      <FloatingExcelButton forGrades={true} name={t('grades') + "-" + name} />
+      <FloatingExcelButton forGrades={true} name={t('grades') + "-" + name + "-" + dayjs().format('YYYY-MM-DD')} />
     </div>
   );
 }
