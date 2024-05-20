@@ -29,6 +29,7 @@
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
 }
 
 .language-option {
@@ -38,7 +39,6 @@
     overflow: hidden;
     cursor: pointer;
     margin-top: 5px;
-    /* Agregamos separación entre las opciones */
 }
 
 .language-option img {
@@ -49,7 +49,11 @@
 
 .language-options.show {
     opacity: 1;
-    /* Mostramos las opciones */
     transform: translateY(0);
-    /* Las opciones se desplazan hacia arriba */
+    pointer-events: all;
+}
+
+.language-options.show>img {
+    pointer-events: all;
+    cursor: pointer;
 }

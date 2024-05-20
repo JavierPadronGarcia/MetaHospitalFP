@@ -12,14 +12,26 @@ import Menu2 from '../../../components/menu2/menu2';
 import './admincourse.css';
 import SearchComponent from '../../../components/search/search';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
+import useNotification from '../../../utils/shared/errorHandler';
+import { useTranslation } from 'react-i18next';
 
 function AdminCourse() {
+  const [t] = useTranslation('global');
+  const {
+    teacherCreateSuccessful,
+    teacherDeleteSuccessful,
+    studentCreateSuccessful,
+    studentDeleteSuccessful,
+    userDeleteFailed,
+    userUpdateOrCreateFail
+  } = useNotification();
+
   const [teachers, setTeachers] = useState([]);
   const [teachersInGroup, setTeachersInGroup] = useState([]);
   const [students, setStudents] = useState([]);
   const [studentsInGroup, setStudentsInGroup] = useState([]);
   const [Id, setId] = useState('');
-  const Headlines = ['Nombre'];
+  const Headlines = [t('name_s')];
   const [mode, setMode] = useState(Consts.ADD_MODE);
   const location = useLocation();
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -44,7 +56,7 @@ function AdminCourse() {
 
   const getTeachers = async () => {
     try {
-      const teacherlist = await teacherGroupService.getAllTeachersNotInAGroup();
+      const teacherlist = await teacherGroupService.getAllTeachersNotInAGroup(localStorage.getItem("groupsId"));
       setTeachers(teacherlist);
     } catch (error) {
       console.error('Error fetching all teachers:', error);
@@ -65,7 +77,7 @@ function AdminCourse() {
 
   const getStudents = async () => {
     try {
-      const studentslist = await groupEnrolementService.getAllStudentsNotInAGroup();
+      const studentslist = await groupEnrolementService.getAllStudentsNotInAGroup(localStorage.getItem("groupsId"));
       setStudents(studentslist);
     } catch (error) {
       console.error('Error fetching all students:', error);
@@ -96,6 +108,17 @@ function AdminCourse() {
     </>
   );
 
+  const getTranslation = (mode) => {
+    switch (mode) {
+      case Consts.ADD_MODE:
+        return t('add');
+      case Consts.EDIT_MODE:
+        return t('edit');
+      default:
+        return mode;
+    }
+  }
+
   const renderSchoolImputs = () => {
 
     const handleTeacherChange = (value, option) => {
@@ -112,12 +135,12 @@ function AdminCourse() {
 
     return (
       <>
-        <h1>{String(mode)}</h1>
-        <p>Nombre del Profesor</p>
+        <h1>{getTranslation(String(mode))}</h1>
+        <p>{t('teacher_name')}</p>
         <Select
           showSearch
           style={{ width: 280 }}
-          placeholder="Nombre del Profesor"
+          placeholder={t('teacher_name')}
           optionFilterProp="children"
           filterOption={(input, option) => (option?.label ?? '').includes(input)}
           filterSort={(optionA, optionB) =>
@@ -131,11 +154,11 @@ function AdminCourse() {
             <Select.Option key={teacher.id} value={teacher.id}>{teacher.name}</Select.Option>
           ))}
         </Select>
-        <p>Nombre del Estudiante</p>
+        <p>{t('student_name')}</p>
         <Select
           showSearch
           style={{ width: 280 }}
-          placeholder="Nombre del Estudiante"
+          placeholder={t('student_name')}
           optionFilterProp="children"
           filterOption={(input, option) => (option?.label ?? '').includes(input)}
           filterSort={(optionA, optionB) =>
@@ -157,19 +180,19 @@ function AdminCourse() {
     try {
       if (deleteType === 'student') {
         await groupEnrolementService.unAssignStudentToGroup(id, localStorage.getItem("groupsId"));
-        message.success('Estudiante eliminado correctamente');
+        studentDeleteSuccessful();
         getStudents();
         getStudentInGroup();
 
       } else {
         await teacherGroupService.unAssignTeacherToGroup(id, localStorage.getItem("groupsId"));
 
-        message.success('Profesor eliminado correctamente');
+        teacherDeleteSuccessful();
         getTeachers();
         getTeachersInGroup();
       }
     } catch (error) {
-      message.error('No se pudo eliminar al usuario del grupo');
+      userDeleteFailed();
     }
   }
 
@@ -182,18 +205,18 @@ function AdminCourse() {
         getStudentInGroup();
 
 
-        message.success('Estudiante asignado correctamente');
+        studentCreateSuccessful();
       } else {
         await teacherGroupService.assignTeacherToGroup(Id, localStorage.getItem("groupsId"));
 
         getTeachers();
         getTeachersInGroup();
 
-        message.success('Profesor asignado correctamente');
+        teacherCreateSuccessful();
       }
     } catch (error) {
       console.log(error.message)
-      message.error('No se pudo asignar al usuario')
+      userUpdateOrCreateFail();
     } finally {
       setSelectedTeacher(null);
       setSelectedStudent(null);
@@ -216,20 +239,20 @@ function AdminCourse() {
       <div className='container-left'>
         <Menu2 />
         <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
-        <h2 className='list-titles'>Profesores</h2>
+        <h2 className='list-titles'>{t('teacher_p')}</h2>
         <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name" />
         <BasicList items={filteredTeacher} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>
-        <h2 className='list-titles'>Estudiantes</h2>
+        <h2 className='list-titles'>{t('student_p')}</h2>
         <SearchComponent data={studentsInGroup} onSearch={handleSearchstudents} fieldName="name" />
         <BasicList items={filteredStudents} renderRow={renderTeachersRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'student')} columnTypes={columnTypes} ></BasicList>
         <PopForm renderInputs={renderSchoolImputs} cancel={Cancel} onSubmit={onSubmit} />
         <FloatingExcelButton
           data={[
-            { sheetTitle: 'profesores', content: teachersInGroup },
-            { sheetTitle: 'estudiantes', content: studentsInGroup },
+            { sheetTitle: t('teacher_p'), content: teachersInGroup },
+            { sheetTitle: t('student_p'), content: studentsInGroup },
           ]}
           manySheets={true}
-          name={`estudiantes_profesores - ${localStorage.getItem('groupsName')} - ${localStorage.getItem('schoolName')}`}
+          name={`${t('student_p')}_${t('teacher_p')} - ${localStorage.getItem('groupsName')} - ${localStorage.getItem('schoolName')}`}
         />
       </div>
       <div className='container-right'>

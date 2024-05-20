@@ -8,6 +8,7 @@ import authService from '../../services/auth.service';
 import usersService from '../../services/users.service';
 import useNotification from '../../utils/shared/errorHandler';
 import { backendImageEndpoint } from '../../constants/backendEndpoints';
+import { t } from 'i18next';
 
 const ProfileHeader = ({ user, updateUserInfo }) => {
   const { noConnectionError } = useNotification();
@@ -26,12 +27,12 @@ const ProfileHeader = ({ user, updateUserInfo }) => {
       const response = await fetch(URL.createObjectURL(imageBlob));
       const blob = await response.blob();
 
-      message.loading('Actualizando...', 0);
+      message.loading(`${t('updating')}...`, 0);
       try {
         if (blob) {
           await usersService.updateUserWithImage(null, blob, prevFilename);
           message.destroy();
-          message.success('Imagen actualizada correctamente');
+          message.success(t('image_update_successful'));
         }
         updateUserInfo();
       } catch (err) {
@@ -65,7 +66,7 @@ const ProfileHeader = ({ user, updateUserInfo }) => {
         >
           {user?.filename != '' && user?.filename != null ? (
             <Avatar
-              icon={<img src={`${backendImageEndpoint}/${user.filename}`} alt={`imagen del usuario ${user && user.username}`} />}
+              icon={<img src={`${backendImageEndpoint}/${user.filename}`} alt={`${t('user_image').replace('_', user.username ?? '')}`} />}
               className="user-avatar"
             />
           ) : (
@@ -77,10 +78,10 @@ const ProfileHeader = ({ user, updateUserInfo }) => {
         </Upload>
       </div>
       <div className='go-back'>
-        <LeftOutlined onClick={() => navigate(-1)} >Cerrar sesión</LeftOutlined>
+        <LeftOutlined onClick={() => navigate(-1)} >{t('go_back')}</LeftOutlined>
       </div>
       <div className="actions">
-        <LogoutOutlined onClick={handleLogOut} >Cerrar sesión</LogoutOutlined>
+        <LogoutOutlined onClick={handleLogOut} >{t('logout')}</LogoutOutlined>
       </div>
     </div>
   );

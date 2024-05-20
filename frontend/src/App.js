@@ -21,7 +21,6 @@ import GroupsGrades from './pages/admin-pages/groupsgrades/groupsgrades';
 import TeacherMainPage from './pages/teacher-pages/teacher-main-page/TeacherMainPage';
 import TeacherGroupPage from './pages/teacher-pages/teacher-group-page/TeacherGroupPage';
 import TeacherActivitiesPage from './pages/teacher-pages/teacher-activities-page/TeacherActivitiesPage';
-import AddActivityPage from './pages/teacher-pages/teacher-add-activity-page/AddActivityPage';
 import TeacherGradesPage from './pages/teacher-pages/teacher-grades-page/TeacherGradesPage';
 
 import Studenthome from './pages/student-pages/studenthome/studenthome';
@@ -32,11 +31,16 @@ import UserProfilePage from './pages/profile/profile';
 import TeacherSelection from './pages/teacher-pages/teacher-selection/teacher-selection';
 import TeacherGroupStudents from './pages/teacher-pages/teacher-group-students/teacher-group-students';
 import ExpireToken from './utils/ExpireToken';
+import { ConfigProvider } from 'antd';
+import useAntDLocale from './utils/shared/getAntDLocale';
+import { LanguageProvider, LanguageContext } from './context/language';
 
 function App() {
 
   const logged = authService.isLoggedIn();
   const roles = useContext(RolesContext);
+  const { language } = useContext(LanguageContext);
+  const antdLocale = useAntDLocale(language);
 
   if (logged) {
 
@@ -48,18 +52,19 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
+    <ConfigProvider locale={antdLocale}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
 
-        <Route element={<PrivateRoute onlyLogged={true} />}>
-          <Route path="/myUser" element={<ExpireToken />}>
-            <Route path="" element={<UserProfilePage />} />
+          <Route element={<PrivateRoute onlyLogged={true} />}>
+            <Route path="/myUser" element={<ExpireToken />}>
+              <Route path="" element={<UserProfilePage />} />
+            </Route>
+            <Route path="/chat/:groupId" element={<ExpireToken />}>
+              <Route path="" element={<ChatComponent />} />
+            </Route>
           </Route>
-          <Route path="/chat/:groupId" element={<ExpireToken />}>
-            <Route path="" element={<ChatComponent />} />
-          </Route>
-        </Route>
 
         <Route path="/admin" element={<ExpireToken />}>
           <Route element={<PrivateRoute permittedRole="admin" />}>
@@ -73,30 +78,37 @@ function App() {
             <Route path="teachers" element={<TeacherSchools />} />
             <Route path="students" element={<StudentSchools />} />
             <Route path="groupsgrades" element={<GroupsGrades />} />
-          </Route>
+           </Route>
         </Route>
 
-        <Route path="/teacher" element={<ExpireToken />}>
-          <Route element={<PrivateRoute permittedRole='teacher' />}>
-            <Route path="main" element={<TeacherMainPage />} />
-            <Route path="main/group/:name/:id" element={<TeacherSelection />} />
-            <Route path="main/group/:name/:id/units" element={<TeacherGroupPage />} />
-            <Route path="main/group/:name/:id/students" element={<TeacherGroupStudents />} />
-            <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
-            <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/:gradeid" element={<TeacherGradesPage />} />
+          <Route path="/teacher" element={<ExpireToken />}>
+            <Route element={<PrivateRoute permittedRole='teacher' />}>
+              <Route path="main" element={<TeacherMainPage />} />
+              <Route path="main/group/:name/:id" element={<TeacherSelection />} />
+              <Route path="main/group/:name/:id/units" element={<TeacherGroupPage />} />
+              <Route path="main/group/:name/:id/students" element={<TeacherGroupStudents />} />
+              <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName" element={<TeacherActivitiesPage />} />
+              <Route path="main/group/:name/:id/unit/:workUnitId/:workUnitName/:gradeid" element={<TeacherGradesPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route path="/student" element={<ExpireToken />}>
-          <Route element={<PrivateRoute permittedRole="student" />}>
-            <Route path="home" element={<Studenthome />} />
-            <Route path="workUnit" element={<StudentExercises />} />
+          <Route path="/student" element={<ExpireToken />}>
+            <Route element={<PrivateRoute permittedRole="student" />}>
+              <Route path="home" element={<Studenthome />} />
+              <Route path="workUnit" element={<StudentExercises />} />
+            </Route>
           </Route>
-        </Route>
 
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </ConfigProvider>
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  );
+}
