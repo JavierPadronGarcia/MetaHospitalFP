@@ -80,6 +80,7 @@ db.admin.belongsTo(db.school, { foreignKey: "SchoolID" });
 db.student.hasMany(db.studentSchool, { foreignKey: 'StudentID' });
 db.student.hasMany(db.studentGroup, { foreignKey: 'StudentID' });
 db.studentSchool.belongsTo(db.student, { foreignKey: 'StudentID' });
+db.studentSchool.belongsTo(db.school, { foreignKey: 'SchoolID' });
 
 db.teacher.hasMany(db.teacherSchool, { foreignKey: 'TeacherID' });
 db.teacher.hasMany(db.teacherGroup, { foreignKey: 'TeacherID' });
