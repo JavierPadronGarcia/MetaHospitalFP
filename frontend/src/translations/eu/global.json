@@ -143,5 +143,6 @@
   "global_view": "Globala",
   "workUnit_view": "Lan-unitateak",
   "view_p": "Ikusi",
-  "view_s": "Ikuspegiak"
+  "view_s": "Ikuspegiak",
+  "error_while_generating_excel": "Errore bat gertatu da excel sortzean"
 }

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import BasicList from '../../../components/basiclist/basiclist';
 import Rightmenu from '../../../components/rightmenu/rightmenu';
-import { message, Select } from 'antd';
+import { Button, message, Select } from 'antd';
 import { Consts } from '../../../constants/modes';
 import PopForm from '../../../components/popform/popform';
 import Tag from '../../../components/tag/tag';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import teacherGroupService from '../../../services/teacherGroup.service';
 import groupEnrolementService from '../../../services/groupEnrolement.service';
 import Menu2 from '../../../components/menu2/menu2';
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 function AdminCourse() {
   const [t] = useTranslation('global');
+  const navigate = useNavigate();
   const {
     teacherCreateSuccessful,
     teacherDeleteSuccessful,
@@ -33,7 +34,6 @@ function AdminCourse() {
   const [Id, setId] = useState('');
   const Headlines = [t('name_s')];
   const [mode, setMode] = useState(Consts.ADD_MODE);
-  const location = useLocation();
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
@@ -238,7 +238,11 @@ function AdminCourse() {
     <div className='container admincourse-page'>
       <div className='container-left'>
         <Menu2 />
-        <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
+        <Tag
+          name={localStorage.getItem('groupsName')}
+          color={'#FF704A'}
+          leftButton={() => <Button type='primary' onClick={() => navigate('/admin/groupsgrades')} shape='round'>{t('student_grades')}</Button>}
+        />
         <h2 className='list-titles'>{t('teacher_p')}</h2>
         <SearchComponent data={teachersInGroup} onSearch={handleSearchteachers} fieldName="name" />
         <BasicList items={filteredTeacher} renderRow={renderStudentsRow} Headlines={Headlines} onDelete={(itemId) => onDelete(itemId, 'teacher')} ></BasicList>

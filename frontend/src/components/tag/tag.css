@@ -1,17 +1,30 @@
 .Tag {
-    width: auto;
+    display: flex;
+    justify-content: space-between;
     background-color: #69ACF4;
     color: white;
     border-radius: 30px;
     padding: 20px;
     margin: 10px;
     user-select: none;
+    position: relative;
 }
 
-.Tag p{
+.Tag p {
     margin: 0;
     text-align: center;
     justify-content: center;
+    align-items: center;
     display: flex;
     font-family: 'Roboto', sans-serif;
+    width: 100%;
+}
+
+.Tag-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    margin-inline: 10px;
 }

@@ -143,5 +143,6 @@
   "global_view": "Global",
   "workUnit_view": "Unidades de traballo",
   "view_p": "Ver",
-  "view_s": "Vistas"
+  "view_s": "Vistas",
+  "error_while_generating_excel": "Erro ao xerar Excel"
 }

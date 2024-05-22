@@ -13,6 +13,7 @@ import ViewsSelector from '../../../components/views/viewsSelector/ViewsSelector
 import gradeService from '../../../services/grade.service';
 import UnitsCasesGradesView from '../../../components/views/units-cases-grades-view/units-cases-grades-view';
 import dayjs from 'dayjs';
+import { Button } from 'antd';
 
 function TeacherGroupPage() {
 
@@ -100,12 +101,12 @@ function TeacherGroupPage() {
     <div className='teacher-group-page'>
       <Headers title={name} Page={'selected'} groupData={{ groupId: id, groupName: name }} data={allWorkUnits} onSearch={handleSearch} fieldName="workUnit.name" />
       <ViewsSelector selectedView={view} onViewChange={handleViewChange}>
-        <button className="views-selector-item" view={views.global}>
+        <Button className="views-selector-item" type='default' view={views.global}>
           <div className="views-selector-item-text">{t('global_view')}</div>
-        </button>
-        <button className="views-selector-item" view={views.workUnits}>
+        </Button>
+        <Button className="views-selector-item" type='default' view={views.workUnits}>
           <div className="views-selector-item-text">{t('workUnit_view')}</div>
-        </button>
+        </Button>
       </ViewsSelector>
       <div className='teacher-group-page-main'>
         {(loading) &&

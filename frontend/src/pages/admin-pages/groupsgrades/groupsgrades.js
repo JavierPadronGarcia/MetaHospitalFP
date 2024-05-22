@@ -5,13 +5,17 @@ import Rightmenu from '../../../components/rightmenu/rightmenu';
 import { useTranslation } from 'react-i18next';
 import GradesService from '../../../services/grade.service';
 import UnitsCasesGradesView from '../../../components/views/units-cases-grades-view/units-cases-grades-view';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useNotification from '../../../utils/shared/errorHandler';
 import GradesByCasesView from '../../../components/views/gradesByCases/GradesByCasesView';
 import ViewsSelector from '../../../components/views/viewsSelector/ViewsSelector';
+import { Button } from 'antd';
+import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
+import dayjs from 'dayjs';
 
 function GroupsGrades() {
   const groupId = localStorage.getItem('groupsId');
+  const navigate = useNavigate();
 
   const views = {
     "global": 'global',
@@ -22,7 +26,7 @@ function GroupsGrades() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { noConnectionError } = useNotification();
 
-  const [view, setView] = useState(searchParams.get('selectedView') || views.workUnits);
+  const [view, setView] = useState(searchParams.get('selectedView') || views.global);
   const [grades, setGrades] = useState([]);
 
   useEffect(() => {
@@ -71,18 +75,21 @@ function GroupsGrades() {
     <div className='container groupsgrades-page'>
       <div className='container-left'>
         <Menu2 />
-        <Tag name={localStorage.getItem('groupsName')} color={'#FF704A'} />
-
+        <Tag
+          name={localStorage.getItem('groupsName')}
+          color={'#FF704A'}
+          leftButton={() => <Button type='primary' onClick={() => navigate('/admin/group')} shape='round'>{t('go_back')}</Button>}
+        />
         <ViewsSelector selectedView={view} onViewChange={handleViewChange}>
-          <button className="views-selector-item" view={views.global}>
+          <Button className="views-selector-item" type='default' view={views.global}>
             <div className="views-selector-item-text">{t('global_view')}</div>
-          </button>
-          <button className="views-selector-item" view={views.workUnits}>
+          </Button>
+          <Button className="views-selector-item" view={views.workUnits}>
             <div className="views-selector-item-text">{t('workUnit_view')}</div>
-          </button>
+          </Button>
         </ViewsSelector>
-
         {returnView()}
+        <FloatingExcelButton forGrades={true} name={t('student_grades').replace(' ', '-') + "-" + localStorage.getItem('groupsName') + "-" + dayjs().format('YYYY-MM-DD')} />
       </div>
       <div className='container-right'>
         <Rightmenu currentRoute={'/admin/courses'} />
