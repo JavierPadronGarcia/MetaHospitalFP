@@ -157,7 +157,7 @@ function LoginBox() {
               </div>
               <label className='buttons-container'>
                 <Button className='button' htmlType='submit' loading={loading}>{t('login')}</Button>
-                <a href="/assets/help/Ayuda.html">{t('help')}</a>
+                <a href="/assets/help/Iniciodesesion.html">{t('help')}</a>
               </label>
             </form>
           </main>
