@@ -133,5 +133,16 @@
   "successful_password_restart": "La contrasenya de l'estudiant ha estat restablida",
   "error_restarting_student_password": "Error en restablir la contrasenya de l'estudiant",
   "student_grades": "Qualificacions estudiants",
-  "exercises_get_fail": "Error en obtenir exercicis"
+  "exercises_get_fail": "Error en obtenir exercicis",
+  "final_grade": "Nota final",
+  "submit_date": "Data de finalització",
+  "date_generated": "Data de generació",
+  "excel_general_student_information": "Informació general dels estudiants",
+  "excel_general_information": "Informació general",
+  "submit_time": "Hora de finalització",
+  "global_view": "Global",
+  "workUnit_view": "Unitats de treball",
+  "view_p": "Vista",
+  "view_s": "Vistes",
+  "error_while_generating_excel": "Error en generar excel"
 }

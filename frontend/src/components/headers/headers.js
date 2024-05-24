@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Dropdown } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { HomeOutlined, MenuOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { RolesContext } from '../../context/roles';
 import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
@@ -40,6 +40,12 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
         if (RoleContext.role === 'teacher')
           navigate(`/teacher/main/group/${groupData.groupName}/${groupData.groupId}/students`);
         break;
+      case 'teacherhelp':
+        window.open('/assets/help/Profesorado.html', '_blank');
+        break;
+      case 'studenthelp':
+        window.open('/assets/help/Estudiantes.html', '_blank');
+        break;
       default:
         break;
     }
@@ -50,10 +56,17 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
       {
         label: t('home'),
         key: 'home',
+        icon: <HomeOutlined />,
+      },
+      {
+        label: <div>{t('help')}</div>,
+        key: 'teacherhelp',
+        icon: <QuestionCircleOutlined />,
       },
       {
         label: t('profile'),
         key: 'profile',
+        icon: <UserOutlined />,
       },
     ];
 
@@ -61,10 +74,17 @@ const Headers = ({ title, color, groupId, Page, groupData, data, onSearch, field
       {
         label: t('home'),
         key: 'home',
+        icon: <HomeOutlined />,
+      },
+      {
+        label: <div>{t('help')}</div>,
+        key: 'studenthelp',
+        icon: <QuestionCircleOutlined />,
       },
       {
         label: t('profile'),
         key: 'profile',
+        icon: <UserOutlined />,
       },
     ];
 

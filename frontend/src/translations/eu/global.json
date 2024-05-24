@@ -133,5 +133,16 @@
   "successful_password_restart": "Ikaslearen pasahitza berrezarri da",
   "error_restarting_student_password": "Errore bat gertatu da ikaslearen pasahitza berrezartzean",
   "student_grades": "Ikasleen kalifikazioak",
-  "exercises_get_fail": "Errore bat gertatu da ariketak eskuratzean"
+  "exercises_get_fail": "Errore bat gertatu da ariketak eskuratzean",
+  "final_grade": "Azken nota",
+  "submit_date": "Amaitzeko data",
+  "date_generated": "Sorkuntza data",
+  "excel_general_student_information": "Ikasleen informazio orokorra",
+  "excel_general_information": "Informazio orokorra",
+  "submit_time": "Bidalketa Ordua",
+  "global_view": "Globala",
+  "workUnit_view": "Lan-unitateak",
+  "view_p": "Ikusi",
+  "view_s": "Ikuspegiak",
+  "error_while_generating_excel": "Errore bat gertatu da excel sortzean"
 }

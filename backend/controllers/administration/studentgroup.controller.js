@@ -3,6 +3,7 @@ const userController = require('../roleManagement/user.controller');
 const UserAccounts = db.userAccounts;
 const Student = db.student;
 const StudentGroup = db.studentGroup;
+const StudentSchool = db.studentSchool;
 const Group = db.groups;
 const Op = db.Sequelize.Op;
 
@@ -70,38 +71,59 @@ exports.findAllOrderedByGroupDesc = (req, res) => {
 }
 
 exports.findAllStudentsNotInAGroup = (req, res) => {
-  Student.findAll({
-    include: [
-      {
-        model: StudentGroup,
-        attributes: []
-      },
-      {
-        model: UserAccounts,
-        attributes: {
-          exclude: ['password']
-        },
-      }
-    ],
-    where: {
-      '$StudentGroups.StudentID$': null
-    }
-  }).then(users => {
-    const students = [];
+  const groupId = req.params.groupId;
 
-    users.map((student) => {
-      students.push({
+  Group.findOne({
+    where: {
+      id: groupId
+    }
+  })
+    .then(group => {
+      if (!group) {
+        return res.status(404).send({ message: "Group not found" });
+      }
+
+      const schoolId = group.SchoolID;
+
+      return Student.findAll({
+        where: {
+          id: {
+            [Op.notIn]: db.Sequelize.literal(`(
+            SELECT StudentID 
+            FROM ${StudentGroup.tableName}
+            WHERE ${StudentGroup.tableName}.GroupID = ${req.params.groupId}
+          )`)
+          }
+        },
+        include: [
+          {
+            model: StudentSchool,
+            where: {
+              SchoolId: schoolId
+            },
+            required: true
+          },
+          {
+            model: UserAccounts,
+            attributes: {
+              exclude: ['password']
+            },
+          }
+        ],
+      });
+    })
+    .then(students => {
+      const studentList = students.map(student => ({
         id: student.id,
         name: student.name,
         username: student.UserAccount.username
-      })
+      }));
+      res.send(studentList);
     })
-    res.send(students);
-  }).catch(err => {
-    res.status(500).send({
-      message: err.message || "Error retrieving users not in a group."
+    .catch(err => {
+      console.error(err);
+      res.status(500).send({ message: "Error retrieving students" });
     });
-  });
 }
 
 exports.findAllStudentsInGroup = (req, res) => {

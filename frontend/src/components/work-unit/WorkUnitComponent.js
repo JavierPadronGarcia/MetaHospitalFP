@@ -4,7 +4,7 @@ import { EyeOutlined, EyeInvisibleOutlined, SettingOutlined } from "@ant-design/
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';;
 
-function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility }) {
+function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility, handleState }) {
 
   const navigate = useNavigate();
   const componentRef = useRef(null);
@@ -25,9 +25,7 @@ function WorkUnitComponent({ workUnit, unitVisibility, notifyUpdateVisibility })
 
   const handleNavigateToWorkUnit = () => {
     sessionStorage.setItem('colors', JSON.stringify(colors));
-    const newPath = currentPath.replace('/units', `/unit/${workUnit.id}/${workUnit.name}`);
-    console.log(newPath);
-    navigate(newPath);
+    handleState(workUnit.id, null);
   }
 
   const showFirstLine = () => (

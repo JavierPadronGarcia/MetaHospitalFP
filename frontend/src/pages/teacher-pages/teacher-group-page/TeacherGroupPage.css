@@ -1,11 +1,13 @@
-
 .teacher-group-page-main {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 40px;
   padding-bottom: 4rem;
-  padding-top: 4rem;
+}
+
+.teacher-group-page-main .grades-view {
+  width: 100%;
 }
 
 .teacher-group-page-main .work-unit-component-selection {
@@ -23,6 +25,11 @@
     padding-bottom: 4rem;
   }
 
+  .teacher-group-page-main .grades-view {
+    width: 90%;
+  }
+
+
   .teacher-group-page-main .work-unit-component-selection {
     width: 40%;
   }
@@ -33,5 +40,5 @@
   .teacher-group-page-main .work-unit-component-selection {
     width: 30%;
   }
-  
+
 }

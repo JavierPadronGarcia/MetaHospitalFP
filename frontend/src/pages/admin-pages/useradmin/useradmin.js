@@ -78,13 +78,13 @@ function UserAdmin() {
       const userList = response.map((user => {
         switch (user.role) {
           case 'admin':
-            user.role = t('admin_s');
+            user.roleName = t('admin_s');
             break;
           case 'teacher':
-            user.role = t('teacher_s');
+            user.roleName = t('teacher_s');
             break;
           case 'student':
-            user.role = t('student_s');
+            user.roleName = t('student_s');
             break;
           default:
             break;
@@ -139,7 +139,7 @@ function UserAdmin() {
       ) : (
         <td>---</td>
       )}
-      <td>{user.role}</td>
+      <td>{user.roleName}</td>
     </>
   );
 

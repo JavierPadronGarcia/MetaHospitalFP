@@ -39,10 +39,10 @@ async function getAllStudentsInAGroup(groupId) {
 }
 
 
-async function getAllStudentsNotInAGroup() {
+async function getAllStudentsNotInAGroup(groupId) {
   try {
     const response = await axios.get(
-      backendGroupEnrolementEndpoint + '/studentsnotinagroup',
+      backendGroupEnrolementEndpoint + '/studentsnotinagroup/' + groupId,
       getOptions(localStorage.getItem('token'))
     );
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import './menu2.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { DownOutlined, LogoutOutlined, MenuOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, LogoutOutlined, MenuOutlined, QuestionCircleOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Space, Button } from 'antd';
 import authService from '../../services/auth.service';
 import { useTranslation } from 'react-i18next';
@@ -47,6 +47,9 @@ function Menu2() {
       case 'groups':
         navigate('/admin/groups');
         break;
+      case 'help':
+        window.open('/assets/help/Administraciondecentro.html', '_blank');
+        break;
       case 'courses':
         navigate('/admin/courses');
         break;
@@ -57,6 +60,11 @@ function Menu2() {
   }
 
   const dropdownItems = [
+    {
+      label: <div>{t('help')}</div>,
+      key: 'help',
+      icon: <QuestionCircleOutlined />,
+    },
     {
       label: <div>{t('my_profile')}</div>,
       icon: <UserOutlined />,
@@ -99,6 +107,11 @@ function Menu2() {
     },
     {
       type: 'divider',
+    },
+    {
+      label: <div>{t('help')}</div>,
+      key: 'help',
+      icon: <QuestionCircleOutlined />,
     },
     {
       label: <div>{t('my_profile')}</div>,

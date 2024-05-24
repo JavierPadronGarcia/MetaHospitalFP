@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import useDayjsLocale from '../../utils/shared/getDayjsLocale';
 import { useTranslation } from 'react-i18next';
 
-const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date }) => {
+const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date, customClass }) => {
   dayjs.locale(useDayjsLocale());
 
   const formatDate = dayjs(date).format('dddd, DD MMMM YYYY');
@@ -14,13 +14,38 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
 
   const [t] = useTranslation('global');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [handWashCount, setHandWashCount] = useState(0);
 
   const toggleExpanded = (expandedState) => {
     setIsExpanded(expandedState);
   }
 
+  const renderGrades = (itemGrades) => {
+    if (itemGrades && itemGrades.length !== 0) {
+
+      const handWashes = itemGrades.filter(({ itemId }) => !itemId);
+      const grades = itemGrades.filter(({ itemId }) => itemId);
+
+      if (handWashes.length === 2) {
+        grades.unshift(handWashes[1]);
+        grades.push(handWashes[0]);
+      }
+
+      return grades.map(({ gradeId, gradeCorrect, gradeValue, itemName, itemId }, index) => {
+        return (
+          <GradeCard
+            key={index}
+            title={itemName}
+            grade={gradeValue}
+            correct={gradeCorrect}
+          />
+        )
+      });
+    }
+  };
+
   return (
-    <div className="exercise-card-container">
+    <div className={`exercise-card-container ${customClass}`}>
       <div className='exercise-card'>
         <h2 className='exercise-title'>{title}</h2>
         <div className='exercise-head'>
@@ -50,15 +75,7 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
         </div>
         <div className={`grades-container ${!isExpanded && 'hidden'}`}>
           <div className='grades-scroll'>
-            {itemGrades &&
-              itemGrades.map(({ gradeId, gradeCorrect, gradeValue, itemName }, index) => (
-                <GradeCard
-                  key={gradeId}
-                  title={itemName}
-                  grade={gradeValue}
-                  correct={gradeCorrect}
-                />
-              ))}
+            {renderGrades(itemGrades)}
           </div>
         </div>
       </div>

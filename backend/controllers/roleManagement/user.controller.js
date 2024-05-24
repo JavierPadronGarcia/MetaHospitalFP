@@ -189,8 +189,8 @@ exports.findOne = (req, res) => {
 }
 
 exports.update = async (req, res) => {
-
   const id = req.params.id;
+
   if (!req.body.username && !req.body.name && !req.body.role) {
     return res.status(400).send({
       error: true,
@@ -198,126 +198,129 @@ exports.update = async (req, res) => {
     });
   }
 
-  const userFound = await User.findOne({
-    where: {
-      id: id
-    },
-    include: [
-      { model: Admin },
-      { model: Teacher },
-      { model: Student },
-    ]
-  });
+  const transaction = await db.sequelize.transaction();
 
-  const actualUserRole = await UserRole.findOne({
-    where: {
-      UserID: userFound.id,
-      AppID: 1
-    },
-    include: [{ model: Role }]
-  })
+  try {
+    const userFound = await User.findOne({
+      where: { id: id },
+      include: [
+        { model: Admin },
+        { model: Teacher },
+        { model: Student },
+      ],
+      transaction
+    });
 
+    if (!userFound) {
+      await transaction.rollback();
+      return res.status(404).send({ error: true, message: 'User not found' });
+    }
 
-  if (actualUserRole.Role.name !== req.body.role && req.body.role !== '') {
-    const newRole = await Role.findOne({
-      where: {
-        name: req.body.role
+    const actualUserRole = await UserRole.findOne({
+      where: { UserID: userFound.id, AppID: 1 },
+      include: [{ model: Role }],
+      transaction
+    });
+
+    if (actualUserRole.Role.name !== req.body.role && req.body.role !== '') {
+      const newRole = await Role.findOne({
+        where: { name: req.body.role },
+        transaction
+      });
+
+      let oldRoleName = actualUserRole.Role.name;
+      let oldUserInTableRole = null;
+
+      oldUserInTableRole = await deleteUserInTableRole(oldRoleName, oldUserInTableRole, transaction, userFound, actualUserRole);
+
+      if (req.body.name !== '') {
+        oldUserInTableRole.name = req.body.name;
+        req.body.name = '';
       }
-    })
-    let oldRoleName = actualUserRole.Role.name;
-    let oldUserInTableRole = null;
 
-    oldUserInTableRole = await deleteUserInTableRole(oldRoleName, oldUserInTableRole);
+      await UserRole.update(
+        { RoleID: newRole.id },
+        { where: { UserID: userFound.id, RoleID: actualUserRole.RoleID, AppID: 1 }, transaction }
+      );
+
+      await createUserInTableRole(newRole.name, oldUserInTableRole, transaction);
+    }
 
     if (req.body.name !== '') {
-      oldUserInTableRole.name = req.body.name;
-      req.body.name = '';
+      switch (actualUserRole.Role.name) {
+        case 'admin':
+          const adminUser = await Admin.findOne({ where: { id: userFound.id }, transaction });
+          if (adminUser) {
+            adminUser.name = req.body.name;
+            await adminUser.save({ transaction });
+          }
+          break;
+        case 'teacher':
+          const teacherUser = await Teacher.findOne({ where: { id: userFound.id }, transaction });
+          if (teacherUser) {
+            teacherUser.name = req.body.name;
+            await teacherUser.save({ transaction });
+          }
+          break;
+        case 'student':
+          const studentUser = await Student.findOne({ where: { id: userFound.id }, transaction });
+          if (studentUser) {
+            studentUser.name = req.body.name;
+            await studentUser.save({ transaction });
+          }
+          break;
+      }
     }
 
-    await UserRole.update(
-      {
-        RoleID: newRole.id,
-      },
-      {
-        where: {
-          UserID: userFound.id,
-          RoleID: actualUserRole.RoleID,
-          AppID: 1
-        }
-      });
-    await createUserInTableRole(newRole.name, oldUserInTableRole);
-  }
-
-  if (req.body.name !== '') {
-    switch (actualUserRole.Role.name) {
-      case 'admin':
-        const adminUser = await Admin.findOne({ where: { id: userFound.id } });
-        adminUser.name = req.body.name;
-        await adminUser.save();
-        break;
-      case 'teacher':
-        const teacherUser = await Teacher.findOne({ where: { id: userFound.id } });
-        teacherUser.name = req.body.name;
-        await teacherUser.save();
-        break;
-      case 'student':
-        const studentUser = await Student.findOne({ where: { id: userFound.id } });
-        studentUser.name = req.body.name;
-        await studentUser.save();
-        break;
+    if (req.body.username !== '') {
+      userFound.username = req.body.username;
+      await userFound.save({ transaction });
     }
-  }
 
-  if (req.body.username !== '') {
-    userFound.username = req.body.username;
-    await userFound.save();
-  }
-
-  if (req.body.schoolId !== null) {
-    switch (actualUserRole.Role.name) {
-      case 'admin':
-        const adminUser = await Admin.findOne({ where: { id: userFound.id } });
-        if (adminUser) {
-          adminUser.SchoolID = req.body.schoolId;
-          await adminUser.save();
-        }
-        break;
-      case 'teacher':
-        await TeacherToSchool.updateTeacherSchoolById(userFound.id, req.body.schoolId);
-        break;
-      case 'student':
-        await StudentToSchool.updateStudentSchoolById(userFound.id, req.body.schoolId);
-        break;
+    if (req.body.schoolId !== null) {
+      switch (actualUserRole.Role.name) {
+        case 'admin':
+          const adminUser = await Admin.findOne({ where: { id: userFound.id }, transaction });
+          if (adminUser) {
+            adminUser.SchoolID = req.body.schoolId;
+            await adminUser.save({ transaction });
+          }
+          break;
+        case 'teacher':
+          await TeacherToSchool.updateTeacherSchoolById(userFound.id, req.body.schoolId, transaction);
+          break;
+        case 'student':
+          await StudentToSchool.updateStudentSchoolById(userFound.id, req.body.schoolId, transaction);
+          break;
+      }
     }
+
+    await transaction.commit();
+    return res.send();
+  } catch (error) {
+    await transaction.rollback();
+    return res.status(500).send({ error: true, message: 'An error occurred', details: error.message });
   }
 
-  return res.send();
-
-  async function deleteUserInTableRole(oldRoleName, oldUserInTableRole) {
+  async function deleteUserInTableRole(oldRoleName, oldUserInTableRole, transaction, userFound, actualUserRole) {
     switch (oldRoleName) {
       case 'admin':
         oldUserInTableRole = userFound.Admin;
-        await Admin.destroy({
-          where: { id: actualUserRole.UserID }
-        })
+        await Admin.destroy({ where: { id: actualUserRole.UserID }, transaction });
         break;
       case 'teacher':
         oldUserInTableRole = userFound.Teacher;
-        await Teacher.destroy({
-          where: { id: actualUserRole.UserID }
-        })
+        await Teacher.destroy({ where: { id: actualUserRole.UserID }, transaction });
         break;
       case 'student':
         oldUserInTableRole = userFound.Student;
-        await Student.destroy({
-          where: { id: actualUserRole.UserID }
-        })
+        await Student.destroy({ where: { id: actualUserRole.UserID }, transaction });
         break;
     }
-    return oldUserInTableRole
+    return oldUserInTableRole;
   }
 
-  async function createUserInTableRole(newRoleName, oldUserInTableRole) {
+  async function createUserInTableRole(newRoleName, oldUserInTableRole, transaction) {
     switch (newRoleName) {
       case 'admin':
         await Admin.create({
@@ -325,27 +328,28 @@ exports.update = async (req, res) => {
           name: oldUserInTableRole.name,
           age: oldUserInTableRole.age,
           SchoolID: req.body.schoolId
-        })
+        }, { transaction });
         break;
       case 'teacher':
         await Teacher.create({
           id: oldUserInTableRole.id,
           name: oldUserInTableRole.name,
           age: oldUserInTableRole.age,
-        })
-        TeacherToSchool.updateTeacherSchoolById(oldUserInTableRole.id, req.body.schoolId);
+        }, { transaction });
+        await TeacherToSchool.updateTeacherSchoolById(oldUserInTableRole.id, req.body.schoolId, transaction);
         break;
       case 'student':
         await Student.create({
           id: oldUserInTableRole.id,
           name: oldUserInTableRole.name,
           age: oldUserInTableRole.age,
-        })
-        StudentToSchool.updateStudentSchoolById(oldUserInTableRole.id, req.body.schoolId);
+        }, { transaction });
+        await StudentToSchool.updateStudentSchoolById(oldUserInTableRole.id, req.body.schoolId, transaction);
         break;
     }
   }
-}
+};
+
 
 async function generateUUID() {
   let uuid = "";

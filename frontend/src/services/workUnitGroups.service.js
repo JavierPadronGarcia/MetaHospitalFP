@@ -16,7 +16,7 @@ function getOptions(token) {
 
 
 async function getAllWorkUnitsWithColorsByGroup(groupId) {
-  try {
+  try {;
     const response = await axios.get(`${backendWorkUnitsGroupsEndpoint}/${groupId}`,
       getOptions(localStorage.getItem('token'))
     );

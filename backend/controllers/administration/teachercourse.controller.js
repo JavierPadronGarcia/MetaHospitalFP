@@ -1,5 +1,6 @@
 const db = require("../../models");
 const TeacherGroup = db.teacherGroup;
+const TeacherSchool = db.teacherSchool;
 const User = db.users;
 const UserAccount = db.userAccounts;
 const Teacher = db.teacher;
@@ -63,39 +64,59 @@ exports.findAllOrderedByGroupDesc = (req, res) => {
 }
 
 exports.findAllTeachersNotInAGroup = (req, res) => {
-  Teacher.findAll({
-    include: [
-      {
-        model: TeacherGroup,
-        attributes: []
-      },
-      {
-        model: UserAccount,
-        attributes: {
-          exclude: ['password']
-        },
-      }
-    ],
-    where: {
-      '$TeacherGroups.TeacherID$': null
-    }
-  }).then(users => {
-    const teachers = [];
+  const groupId = req.params.groupId;
 
-    users.map((teacher) => {
-      teachers.push({
+  Group.findOne({
+    where: {
+      id: groupId
+    }
+  })
+    .then(group => {
+      if (!group) {
+        return res.status(404).send({ message: "Group not found" });
+      }
+
+      const schoolId = group.SchoolID;
+
+      return Teacher.findAll({
+        where: {
+          id: {
+            [Op.notIn]: db.Sequelize.literal(`(
+            SELECT TeacherID 
+            FROM ${TeacherGroup.tableName}
+            WHERE ${TeacherGroup.tableName}.GroupID = ${req.params.groupId}
+          )`)
+          }
+        },
+        include: [
+          {
+            model: TeacherSchool,
+            where: {
+              SchoolId: schoolId
+            },
+            required: true
+          },
+          {
+            model: UserAccount,
+            attributes: {
+              exclude: ['password']
+            },
+          }
+        ],
+      });
+    })
+    .then(teachers => {
+      const teacherList = teachers.map(teacher => ({
         id: teacher.id,
         name: teacher.name,
-        username: teacher.UserAccount.username
-      })
+        username: teacher.UserAccount.username,
+      }));
+      res.send(teacherList);
     })
-
-    res.send(teachers);
-  }).catch(err => {
-    res.status(500).send({
-      message: err.message || "Error retrieving users not in a group."
+    .catch(err => {
+      console.error(err);
+      res.status(500).send({ message: "Error retrieving teachers" });
     });
-  });
 }
 
 exports.findAllTeacherInCourse = (req, res) => {

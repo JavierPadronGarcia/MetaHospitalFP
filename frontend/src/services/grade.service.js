@@ -27,6 +27,30 @@ async function getGradesByExercises(exerciseId) {
   }
 }
 
+async function getAllGradesOnAGroup(groupId) {
+  try {
+    const response = await axios.get(`${backendGradesEndpoint}/findAllGradesOfTheGroup/${groupId}`,
+      getOptions(localStorage.getItem('token'))
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getAllGradesOnAGroupForExcel(groupId) {
+  try {
+    const response = await axios.get(`${backendGradesEndpoint}/findAllGradesInGroupForExcel/${groupId}`,
+      getOptions(localStorage.getItem('token'))
+    );
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export default {
-  getGradesByExercises
+  getGradesByExercises,
+  getAllGradesOnAGroup,
+  getAllGradesOnAGroupForExcel
 }

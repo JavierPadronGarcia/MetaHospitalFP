@@ -133,5 +133,16 @@
   "successful_password_restart": "Restableceuse o contrasinal do alumno",
   "error_restarting_student_password": "Produciuse un erro ao restablecer o contrasinal do alumno",
   "student_grades": "Cualificacións dos estudantes",
-  "exercises_get_fail": "Erro ao conseguir exercicios"
+  "exercises_get_fail": "Erro ao conseguir exercicios",
+  "final_grade": "Nota final",
+  "submit_date": "Data de remate",
+  "date_generated": "Data de xeración",
+  "excel_general_student_information": "Información xeral do alumnado",
+  "excel_general_information": "Información xeral",
+  "submit_time": "Tempo de remate",
+  "global_view": "Global",
+  "workUnit_view": "Unidades de traballo",
+  "view_p": "Ver",
+  "view_s": "Vistas",
+  "error_while_generating_excel": "Erro ao xerar Excel"
 }

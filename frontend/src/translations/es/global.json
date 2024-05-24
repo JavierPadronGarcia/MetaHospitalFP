@@ -133,5 +133,16 @@
   "successful_password_restart": "La contraseña del estudiante ha sido reestablecida",
   "error_restarting_student_password": "Error al restablecer la contraseña del estudiante",
   "student_grades": "Notas estudiantes",
-  "exercises_get_fail": "Error al obtener ejercicios"
+  "exercises_get_fail": "Error al obtener ejercicios",
+  "final_grade": "Nota final",
+  "submit_date": "Fecha de finalización",
+  "date_generated": "Fecha de generación",
+  "excel_general_student_information": "Información general de los estudiantes",
+  "excel_general_information": "Información general",
+  "submit_time": "Hora de finalización",
+  "global_view": "Global",
+  "workUnit_view": "Unidades de trabajo",
+  "view_p": "Vista",
+  "view_s": "Vistas",
+  "error_while_generating_excel": "Error al generar excel"
 }
