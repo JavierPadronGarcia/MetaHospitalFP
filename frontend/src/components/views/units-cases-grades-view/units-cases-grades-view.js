@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import WorkUnitComponent from '../../../components/work-unit/WorkUnitComponent';
 import workUnitGroupService from '../../../services/workUnitGroups.service';
 import exercisesService from '../../../services/exercises.service';
 import GradeService from '../../../services/grade.service';
 import useNotification from '../../../utils/shared/errorHandler';
 import ExerciseCard from '../../exerciseCard/ExerciseCard';
+import FilterComponent from '../../../components/filterDateComponent/filterDateComponent';
 import { Card, message, Button } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,9 @@ function UnitsCasesGradesView({ groupId }) {
     const [allWorkUnits, setAllWorkUnits] = useState([]);
     const [assignedExercises, setAssignedExercises] = useState([]);
     const [state, setState] = useState('WorkUnits');
+    const [filteredData, setFilteredData] = useState([]);
+    const [open, setOpen] = useState(true);
+    const divRef = useRef(null);
 
     const fetchAllWorkUnits = async () => {
         try {
@@ -47,7 +51,9 @@ function UnitsCasesGradesView({ groupId }) {
 
     const fetchAllGrades = async () => {
         try {
+            console.log(exerciseId);
             const grades = await GradeService.getGradesByExercises(exerciseId);
+            setFilteredData(grades);
             setGrades(grades);
         } catch (err) {
             message.error('Error al obtener ejercicios');
@@ -69,6 +75,27 @@ function UnitsCasesGradesView({ groupId }) {
             fetchAllGrades();
         }
     }, [exerciseId]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (divRef.current.scrollTop > 10) {
+                setOpen(false);
+            } else {
+                setOpen(true);
+            }
+        };
+
+        const element = divRef.current;
+        if (element) {
+            element.addEventListener('scroll', handleScroll);
+        }
+
+        return () => {
+            if (element) {
+                element.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
 
     const handleUpdateVisibility = async (workUnitId, visibility) => {
         try {
@@ -112,7 +139,7 @@ function UnitsCasesGradesView({ groupId }) {
                 title={`${t('case_s')} ${exercise.caseNumber}`}
                 style={{ margin: '1rem', width: '90%' }}
                 key={exercise.id}
-                onClick={() => handleState(workUnitId, exercise.id)}>
+                onClick={() => handleState(workUnitId, exercise.exerciseId)}>
                 {exercise.name}
             </Card>
         ))
@@ -134,7 +161,7 @@ function UnitsCasesGradesView({ groupId }) {
 
     const showGrades = () => (
         <div className='student-exercises-assigned-exercises'>
-            {grades.map((grade, index) => (
+            {filteredData.map((grade, index) => (
                 <ExerciseCard
                     key={index}
                     title={grade.studentName}
@@ -145,8 +172,12 @@ function UnitsCasesGradesView({ groupId }) {
         </div>
     );
 
+    const handleSearch = (filteredData) => {
+        setFilteredData(filteredData);
+    };
+
     return (
-        <div className='units-cases-grades-view'>
+        <div className='units-cases-grades-view' ref={divRef}>
             <div className='Buttons' style={{ display: 'flex', marginTop: '1rem' }}>
                 <Button
                     type="primary"
@@ -167,6 +198,9 @@ function UnitsCasesGradesView({ groupId }) {
 
             {state === 'WorkUnits' && showWorkUnits()}
             {state === 'Exercises' && showAssignedExercises()}
+            <div style={{ marginTop: '1rem' ,width: '100%' }}>
+                {state === 'Activities' && <FilterComponent data={grades} onFilter={handleSearch} open={open} />}
+            </div>
             {state === 'Activities' && showGrades()}
         </div>
     );
