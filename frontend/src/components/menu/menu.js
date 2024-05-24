@@ -2,7 +2,7 @@ import React from 'react';
 import './menu.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Dropdown, Space } from 'antd';
-import { DownOutlined, LogoutOutlined, MenuOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, LogoutOutlined, MenuOutlined, QuestionCircleOutlined, SettingFilled, UserOutlined } from '@ant-design/icons';
 import authService from '../../services/auth.service';
 import { useTranslation } from 'react-i18next';
 
@@ -42,6 +42,9 @@ function Menu() {
       case 'schools':
         navigate('/admin/schools');
         break;
+      case 'help':
+        window.open('/assets/help/Administracionglobal.html', '_blank');
+        break;
       default:
         navigate('/admin/control-panel');
         break;
@@ -49,6 +52,11 @@ function Menu() {
   }
 
   const dropdownItems = [
+    {
+      label: <div>{t('help')}</div>,
+      key: 'help',
+      icon: <QuestionCircleOutlined />,
+    },
     {
       label: <div>{t('my_profile')}</div>,
       icon: <UserOutlined />,
@@ -80,6 +88,11 @@ function Menu() {
     },
     {
       type: 'divider',
+    },
+    {
+      label: <div>{t('help')}</div>,
+      key: 'help',
+      icon: <QuestionCircleOutlined />,
     },
     {
       label: <div>{t('my_profile')}</div>,
