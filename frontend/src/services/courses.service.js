@@ -53,7 +53,7 @@ export const updateCourse = async ( id, updatedCoursesData) => {
 
 export const createNewCourse = async (postCourse) => {
     try {
-        const response = await axios.post(backendCoursesEndpoint + '/' + localStorage.getItem("schoolId") , postCourse, {
+        const response = await axios.post(backendCoursesEndpoint + '/add', postCourse, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`,
             }

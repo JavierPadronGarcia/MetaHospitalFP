@@ -22,7 +22,7 @@ const TeacherGroupStudents = () => {
 
     const getStudents = async () => {
         try {
-            const response = await groupEnrolementService.getAllStudentsNotInAGroup();
+            const response = await groupEnrolementService.getAllStudentsNotInAGroup(id);
             setStudents(response)
         } catch (err) {
             console.log('Error:', err);
