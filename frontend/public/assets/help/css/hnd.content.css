@@ -57,45 +57,59 @@ a.rvts10, span.rvts10
  color: #008000;
  text-decoration: underline;
 }
-span.rvts11
+a.rvts11, span.rvts11
 {
- color: #000000;
+ color: #0000ff;
+ text-decoration: underline;
 }
-span.rvts12
-{
- color: #000000;
- background-color: #ffffff;
-}
-span.rvts13 /* Font Style */
+span.rvts12 /* Font Style */
 {
  font-family: 'Tahoma', 'Geneva', sans-serif;
  font-style: italic;
  color: #c0c0c0;
 }
-a.rvts14, span.rvts14 /* Font Style */
+a.rvts13, span.rvts13 /* Font Style */
 {
  font-family: 'Tahoma', 'Geneva', sans-serif;
  font-style: italic;
  color: #6666ff;
  text-decoration: underline;
 }
+span.rvts14
+{
+ color: #000000;
+}
 span.rvts15
+{
+ color: #000000;
+ background-color: #ffffff;
+}
+span.rvts16
 {
  font-size: 13pt;
  font-weight: bold;
 }
-span.rvts16
+span.rvts17
 {
  color: #0000ff;
-}
-a.rvts17, span.rvts17
-{
- color: #0000ff;
- text-decoration: underline;
 }
 span.rvts18
 {
  font-weight: bold;
+}
+span.rvts19
+{
+ font-size: 13pt;
+ font-weight: bold;
+}
+span.rvts20
+{
+ font-size: 12pt;
+ font-weight: bold;
+}
+span.rvts21
+{
+ font-size: 12pt;
 }
 /* ========== Para Styles ========== */
 p,ul,ol /* Paragraph Style */
@@ -116,14 +130,7 @@ p,ul,ol /* Paragraph Style */
 {
  text-align: center;
 }
-.rvps4
-{
- text-align: justify;
- text-justify: inter-word;
- text-align-last: auto;
- background: #ffffff;
-}
-.rvps5 /* Paragraph Style */
+.rvps4 /* Paragraph Style */
 {
  text-align: center;
  border-color: #c0c0c0;
@@ -133,6 +140,13 @@ p,ul,ol /* Paragraph Style */
  border-left: none;
  padding: 2px 0px 2px 0px;
  margin: 7px 0px 7px 0px;
+}
+.rvps5
+{
+ text-align: justify;
+ text-justify: inter-word;
+ text-align-last: auto;
+ background: #ffffff;
 }
 .rvps6
 {
