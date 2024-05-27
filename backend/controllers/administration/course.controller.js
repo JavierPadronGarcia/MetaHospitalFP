@@ -2,14 +2,15 @@ const db = require("../../models");
 const Course = db.course;
 
 exports.create = (req, res) => {
-    if (!req.body.name || !req.body.acronyms) {
+    if (!req.body.name || !req.body.acronyms || !req.body.schoolId) {
         res.status(500).send({ error: "name is mandatory" });
         return;
     }
 
     const CourseData = {
         name: req.body.name,
-        acronyms: req.body.acronyms
+        acronyms: req.body.acronyms,
+        SchoolId: req.body.schoolId
     };
 
     Course.create(CourseData)
@@ -27,6 +28,22 @@ exports.findAll = (req, res) => {
     Course.findAll()
         .then((allCourses) => {
             res.send(allCourses);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: "Server error. Couldn't find Courses.",
+            });
+        });
+};
+
+exports.findBySchoolId = (req, res) => {
+    const SchoolId = req.params.schoolId;
+
+    Course.findAll({
+        where: { SchoolId },
+    })
+        .then((courses) => {
+            res.send(courses);
         })
         .catch((err) => {
             res.status(500).send({
@@ -62,7 +79,7 @@ exports.update = (req, res) => {
 
     const updatedCourseData = {
         name: req.body.name,
-        acronyms: req.body.acronyms
+        acronyms: req.body.acronyms,
     };
 
     Course.update(updatedCourseData, {
