@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 dayjs.extend(localeData);
 
-const FilterComponent = ({ data, onFilter }) => {
+const FilterComponent = ({ data, onFilter, open }) => {
 
   const [t] = useTranslation('global');
   dayjs.locale(useDayjsLocale());
@@ -67,7 +67,7 @@ const FilterComponent = ({ data, onFilter }) => {
               draggableTrack: true,
             }}
             tooltip={{
-              open: true,
+              open: open,
               formatter: (value) => `${value}:00`,
               placement: 'bottom',
               color: '#3E94E7',

@@ -72,7 +72,7 @@ const StudentExercises = () => {
       <div className='container-scloll'>
 
         <Tag name={t('exercise_p')} className="tags" />
-        <FilterComponent data={exercises} onFilter={handleSearch} />
+        <FilterComponent data={exercises} onFilter={handleSearch} open={true} />
         {showAssignedExercises()}
 
         {/* <Tag name="Ejercicios no evaluados" className="tags" />

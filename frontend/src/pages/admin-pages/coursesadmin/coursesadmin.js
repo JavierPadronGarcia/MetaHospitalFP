@@ -139,6 +139,7 @@ function CoursesAdmin() {
         const courses = {
           name: name,
           acronyms: acronyms,
+          schoolId: localStorage.getItem('schoolId')
         };
 
         await CoursesService.createNewCourse(courses);
