@@ -131,7 +131,7 @@ exports.submitGrade = async (req, res) => {
     const participationId = participation.id;
     participation.FinalGrade = finalGrade;
     participation.Role = role;
-    participation.SubmittedAt = dayjs(submittedTime, 'DD-MM-YYYY HH:mm:ss').utcOffset(60);
+    participation.SubmittedAt = dayjs(submittedTime, 'DD-MM-YYYY HH:mm:ss');
     await participation.save({ transaction });
 
     if (items && items?.length !== 0
