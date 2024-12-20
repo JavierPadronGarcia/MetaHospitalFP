@@ -1,7 +1,12 @@
 import axios from 'axios';
+import dayjs from "dayjs";
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import i18next from 'i18next';
 import { backendExercisesEndpoint } from '../constants/backendEndpoints';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 function getOptions(token) {
   let bearerAccess = 'Bearer ' + token;
@@ -32,10 +37,20 @@ async function getAllExercisesAssignedToStudent(groupId, workUnitId) {
     const response = await axios.get(`${backendExercisesEndpoint}/exercisesAssignedToStudent/${groupId}/${workUnitId}`,
       getOptions(localStorage.getItem('token'))
     );
-    return response.data;
+    return parseDate(response).data;
   } catch (err) {
     throw err;
   }
+}
+
+function parseDate(response) {
+  if (response.data.length !== 0) {
+    const userTimeZone = dayjs.tz.guess();
+    response.data.forEach(participation => {
+      participation.submittedAt = dayjs(participation.submittedAt).tz(userTimeZone).format("YYYY-MM-DD HH:mm:ss");
+    })
+  }
+  return response;
 }
 
 async function addExercises(caseId, students, assigned, date, groupId, workUnitId) {
