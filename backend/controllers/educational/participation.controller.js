@@ -131,7 +131,11 @@ exports.submitGrade = async (req, res) => {
     const participationId = participation.id;
     participation.FinalGrade = finalGrade;
     participation.Role = role;
-    participation.SubmittedAt = dayjs(submittedTime, 'DD-MM-YYYY HH:mm:ss');
+
+    const [day, month, yearAndTime] = submittedTime.split('-');
+    const [year, time] = yearAndTime.split(' ');
+    const formattedSubmittedTime = `${year}-${month}-${day}T${time}`;
+    participation.SubmittedAt = new Date(formattedSubmittedTime);
     await participation.save({ transaction });
 
     if (items && items?.length !== 0
