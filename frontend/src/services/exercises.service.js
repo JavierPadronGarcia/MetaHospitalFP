@@ -47,7 +47,7 @@ function parseDate(response) {
   if (response.data.length !== 0) {
     const userTimeZone = dayjs.tz.guess();
     response.data.forEach(participation => {
-      participation.submittedAt = dayjs(participation.submittedAt).tz(userTimeZone).format("YYYY-MM-DD HH:mm:ss");
+      participation.submittedAt = dayjs(participation.submittedAt).utc().tz(userTimeZone).format("YYYY-MM-DD HH:mm:ss");
     })
   }
   return response;
