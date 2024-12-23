@@ -78,7 +78,7 @@ const GradesByCasesView = ({ groupId, dataFetched, prefetchedData }) => {
               customClass='grades-by-cases-view-accordion'
               key={workUnit.workUnitId}
             >
-              {workUnit.cases.map((workCase, index) => {
+              {workUnit.cases.sort((a, b) => a.caseNumber - b.caseNumber).map((workCase, index) => {
                 return (
                   <Accordion
                     title={workCase.caseNumber + ". " + workCase.caseName}
