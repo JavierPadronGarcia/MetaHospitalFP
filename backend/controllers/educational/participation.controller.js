@@ -135,7 +135,7 @@ exports.submitGrade = async (req, res) => {
     const [day, month, yearAndTime] = submittedTime.split('-');
     const [year, time] = yearAndTime.split(' ');
     const formattedSubmittedTime = `${year}-${month}-${day}T${time}`;
-    participation.SubmittedAt = new Date(formattedSubmittedTime);
+    participation.SubmittedAt = new Date();
     await participation.save({ transaction });
 
     if (items && items?.length !== 0
