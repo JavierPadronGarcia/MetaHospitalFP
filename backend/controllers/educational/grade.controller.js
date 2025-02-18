@@ -506,7 +506,13 @@ exports.findGradesByStudentInExercise = async (req, res) => {
           }
         }
 
-        studentsWithGrades[participationId].grades.push(groupedGrades);
+        const existingGrade = studentsWithGrades[participationId].grades.find(grade => grade.gradeId === groupedGrades.gradeId);
+
+        if (!existingGrade) {
+          studentsWithGrades[participationId].grades.push(groupedGrades);
+        } else {
+          console.log(`Grade with gradeId ${groupedGrades.gradeId} already exists.`);
+        }
       }
     }
 
