@@ -23,6 +23,8 @@ module.exports = app => {
 
   router.get('/findAllGradesInGroupForExcel/:groupId', auth.isAuthenticated, grades.findAllGradesInGroupForExcel);
 
+  router.get('/findAllGradesFiltered', auth.isAuthenticated, getRequestedTranslation, grades.findAllGradesFiltered);
+
   //retrieve a single grade by id
   router.get("/:id", auth.isAuthenticated, grades.findOne);
 

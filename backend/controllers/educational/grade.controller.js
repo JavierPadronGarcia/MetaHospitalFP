@@ -525,6 +525,153 @@ exports.findGradesByStudentInExercise = async (req, res) => {
   }
 }
 
+/*
+  TODO: HACER ESTA CONSULTA
+   estructura:
+     [
+       {
+       "studentId": <int>,        // ID del estudiante
+       "studentName": <string>,    // Nombre del estudiante
+       "finalGrade": <float>,      // Nota final del estudiante
+       "caseId": <int>,            // ID del caso asociado
+       "participationId": <int>,   // ID de la participación en el caso
+       "grades": [                 // Lista de calificaciones del estudiante
+         {
+           "gradeId": <int>,        // ID de la calificación
+           "gradeCorrect": <int>,   // Indica si la calificación es correcta (1) o no (0)
+           "gradeValue": <string>,  // Valor de la calificación (como string)
+           "itemId": <int|null>,    // ID del ítem evaluado (puede ser null)
+           "itemName": <string|null>// Nombre del ítem evaluado (puede ser null)
+         }
+       ],
+       "submittedAt": <string>     // Fecha y hora de envío en formato ISO 8601
+     }
+   ]
+
+   NECESARIO:
+   "Acordeon" para cada ut -> {uts: [{}{}{}]}
+   "Acordeon" para cada caso -> {casos: [{}{}{}]}
+   "Acordeon" para cada participacion -> {participaciones: [{}{}{}]}
+   "Acordeon" para cada calificacion -> {calificaciones: [{}{}{}]}
+
+   IDEA:
+   hacer primero la consulta sin filtro e ir reduciendo los acordeones a los filtros necesarios
+   y en en el frontend detectar qué se debe mostrar y qué no (saltandose x acordeones)
+ */
+exports.findAllGradesFiltered = async (req, res) => {
+  const { workUnitId, caseId, startDate, endDate, groupId } = req.query;
+  const { language } = req.body;
+
+  const itemTranslationProps = getTranslationIncludeProps('item', language, true);
+  const caseTranslationProps = getTranslationIncludeProps('case', language, true);
+
+  if (!groupId) {
+    return res.status(400).send({
+      error: "Missing parameter: groupId"
+    });
+  }
+
+  const responseDataTemplate = {
+    studentId: null,
+    studentName: null,
+    finalGrade: null,
+    caseId: null,
+    caseName: null,
+    caseNumber: null,
+    participationId: null,
+
+  };
+
+  const studentIdsInGroup = await StudentGroup.findAll({
+    where: { GroupID: groupId },
+    attributes: ['StudentId']
+  });
+
+  const whereCondition = {
+    id: studentIdsInGroup.map(student => student.dataValues.StudentId),
+  }
+
+  if (workUnitId) {
+    whereCondition['$participations.exercise.case.workUnit.id$'] = workUnitId;
+  }
+
+  if (caseId) {
+    whereCondition['$participations.exercise.case.id$'] = caseId;
+  }
+
+  if (startDate || endDate) {
+    whereCondition['$participations.createdAt$'] = {};
+
+    if (startDate) {
+      const startDateUTC = new Date(startDate).toISOString();
+      whereCondition['$participations.createdAt$'][Op.gte] = startDateUTC;
+    }
+    if (endDate) {
+      const endDateUTC = new Date(endDate).toISOString();
+      whereCondition['$participations.createdAt$'][Op.lte] = endDateUTC;
+    }
+  }
+
+  const studentsWithParticipations = await Student.findAll({
+    raw: true,
+    attributes: {
+      exclude: ['createdAt', 'updatedAt', 'age'],
+      include: [
+        [db.sequelize.col('Student.id'), 'studentId'],
+        [db.sequelize.col('Student.name'), 'studentName'],
+        [db.sequelize.col('participations.id'), 'participationId'],
+        [db.sequelize.col('participations.FinalGrade'), 'finalGrade'],
+        [db.sequelize.col('participations.exercise.case.id'), 'caseId'],
+        [db.sequelize.col('participations.exercise.case.caseNumber'), 'caseNumber'],
+        [db.sequelize.col('participations.exercise.case.caseTranslations.name'), 'caseName'],
+        [db.sequelize.col('participations.SubmittedAt'), 'submittedAt'],
+        [db.sequelize.col('participations.exercise.case.workUnit.id'), 'workUnitId'],
+        [db.sequelize.col('participations.exercise.case.workUnit.name'), 'workUnitName'],
+      ]
+    },
+    where: whereCondition,
+    include: [
+      {
+        model: Participation,
+        include: [
+          {
+            model: Grade,
+            attributes: { exclude: ['createdAt', 'updatedAt', 'ParticipationID'] },
+            include: [
+              {
+                model: ItemPlayerRole,
+                include: [
+                  {
+                    model: Item,
+                    include: [itemTranslationProps]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            model: Exercise,
+            include: [
+              {
+                model: Case,
+                include: [
+                  {
+                    model: WorkUnit,
+                    attributes: []
+                  },
+                  { ...caseTranslationProps }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  });
+
+  return res.json(studentsWithParticipations || { message: "no-content" });
+}
+
 
 exports.findOne = (req, res) => {
   let id = req.params.id;
