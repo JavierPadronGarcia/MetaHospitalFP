@@ -557,6 +557,43 @@ exports.findGradesByStudentInExercise = async (req, res) => {
    IDEA:
    hacer primero la consulta sin filtro e ir reduciendo los acordeones a los filtros necesarios
    y en en el frontend detectar qué se debe mostrar y qué no (saltandose x acordeones)
+
+   Estructura de ejemplo:
+
+  {
+    uts: [
+      {
+        id: 1,
+        name: 'ut1',
+        cases: [
+          {
+            id: 1,
+            name: 'caso1',
+            caseText: 'caseText',
+            participations: [
+              {
+                id: 1,
+                name: 'participacion1', 
+                participationText: 'participationText1',
+                studentName:' ',
+                finalGrade: 0,
+                SubtmittedAt: '2020-01-01T00:00:00.000Z',
+                grades: [
+                    {
+                      id: 1,
+                      name: 'grade1',
+                      grade: 0,
+                      correct: true,
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ] 
+  }
  */
 exports.findAllGradesFiltered = async (req, res) => {
   const { workUnitId, caseId, startDate, endDate, groupId } = req.query;
@@ -570,17 +607,6 @@ exports.findAllGradesFiltered = async (req, res) => {
       error: "Missing parameter: groupId"
     });
   }
-
-  const responseDataTemplate = {
-    studentId: null,
-    studentName: null,
-    finalGrade: null,
-    caseId: null,
-    caseName: null,
-    caseNumber: null,
-    participationId: null,
-
-  };
 
   const studentIdsInGroup = await StudentGroup.findAll({
     where: { GroupID: groupId },
@@ -627,6 +653,11 @@ exports.findAllGradesFiltered = async (req, res) => {
         [db.sequelize.col('participations.SubmittedAt'), 'submittedAt'],
         [db.sequelize.col('participations.exercise.case.workUnit.id'), 'workUnitId'],
         [db.sequelize.col('participations.exercise.case.workUnit.name'), 'workUnitName'],
+        [db.sequelize.col('participations.grades.ItemPlayerRole.item.itemTranslations.name'), 'gradeName'],
+        [db.sequelize.col('participations.grades.id'), 'gradeId'],
+        [db.sequelize.col('participations.grades.grade'), 'gradeGrade'],
+        [db.sequelize.col('participations.grades.correct'), 'gradeCorrect'],
+        [db.sequelize.col('participations.grades.ItemID'), 'gradeItemId'],
       ]
     },
     where: whereCondition,
@@ -669,9 +700,107 @@ exports.findAllGradesFiltered = async (req, res) => {
     ]
   });
 
-  return res.json(studentsWithParticipations || { message: "no-content" });
-}
+  const groupedData = {};
 
+  for (const student of studentsWithParticipations) {
+    const {
+      workUnitId,
+      workUnitName,
+      caseId,
+      caseName,
+      caseText,
+      participationId,
+      studentName,
+      finalGrade,
+      submittedAt,
+      gradeId,
+      gradeName,
+      gradeGrade,
+      gradeItemId,
+      gradeCorrect
+    } = student;
+
+    // Crear workUnit
+    if (!groupedData[workUnitId]) {
+      groupedData[workUnitId] = {
+        id: workUnitId,
+        name: workUnitName,
+        cases: {}
+      };
+    }
+
+    // Crear case
+    if (!groupedData[workUnitId].cases[caseId]) {
+      groupedData[workUnitId].cases[caseId] = {
+        id: caseId,
+        name: caseName,
+        caseText: caseText,
+        participations: {}
+      };
+    }
+
+    // Crear participation
+    if (!groupedData[workUnitId].cases[caseId].participations[participationId]) {
+      groupedData[workUnitId].cases[caseId].participations[participationId] = {
+        id: participationId,
+        studentName,
+        finalGrade,
+        submittedAt,
+        grades: []
+      };
+    }
+
+    // Agregar calificaciones
+    if (gradeId && gradeItemId) {
+
+      try {
+        const handWashItem = await Item.findOne({
+          raw: true,
+          where: {
+            itemNumber: gradeItemId + 1
+          },
+          include: [itemTranslationProps]
+        });
+
+        const gradeData = {
+          id: gradeId,
+          itemNumber: gradeItemId,
+          name: handWashItem['itemTranslations.name'],
+          grade: gradeGrade,
+          correct: gradeCorrect === 1
+        }
+
+        if (groupedData[workUnitId].cases[caseId].participations[participationId].grades[0].itemNumber === gradeItemId) {
+          groupedData[workUnitId].cases[caseId].participations[participationId].grades.push(gradeData);
+        } else {
+          groupedData[workUnitId].cases[caseId].participations[participationId].grades.unshift(gradeData);
+        }
+      } catch (error) {
+        console.error('Error fetching hand wash item:', error);
+      }
+    } else if (gradeId && !gradeItemId) {
+      groupedData[workUnitId].cases[caseId].participations[participationId].grades.push({
+        id: gradeId,
+        itemNumber: null,
+        name: gradeName,
+        grade: gradeGrade,
+        correct: gradeCorrect === 1
+      });
+    }
+  };
+
+  const formattedData = {
+    uts: Object.values(groupedData).map(workUnit => ({
+      ...workUnit,
+      cases: Object.values(workUnit.cases).map(caseItem => ({
+        ...caseItem,
+        participations: Object.values(caseItem.participations)
+      }))
+    }))
+  };
+
+  return res.json(formattedData);
+}
 
 exports.findOne = (req, res) => {
   let id = req.params.id;
@@ -715,4 +844,3 @@ exports.delete = (req, res) => {
       res.status(500).send({ error: err })
     })
 }
-
