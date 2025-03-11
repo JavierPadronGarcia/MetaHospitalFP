@@ -63,6 +63,29 @@ async function getAllGradesOnAGroupForExcel(groupId) {
   }
 }
 
+async function getFilteredGrades(workUnitId, caseId, startDate, endDate, groupId) {
+  try {
+
+    const params = new URLSearchParams();
+    if (workUnitId !== null && workUnitId !== undefined) params.append('workUnitId', workUnitId);
+    if (caseId !== null && caseId !== undefined) params.append('caseId', caseId);
+    if (startDate !== null && startDate !== undefined) params.append('startDate', startDate);
+    if (endDate !== null && endDate !== undefined) params.append('endDate', endDate);
+
+    params.append('groupId', groupId);
+
+    const response = await axios.get(`${backendGradesEndpoint}/findAllGradesFiltered`, {
+      ...getOptions(localStorage.getItem('token')),
+      params
+    });
+
+    return response.data;
+
+  } catch (err) {
+    throw err;
+  }
+}
+
 function parseDate(response) {
   if (response.data.length !== 0) {
     const userTimeZone = dayjs.tz.guess();
@@ -76,5 +99,6 @@ function parseDate(response) {
 export default {
   getGradesByExercises,
   getAllGradesOnAGroup,
-  getAllGradesOnAGroupForExcel
+  getAllGradesOnAGroupForExcel,
+  getFilteredGrades
 }

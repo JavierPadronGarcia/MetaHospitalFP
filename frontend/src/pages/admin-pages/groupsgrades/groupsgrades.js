@@ -12,6 +12,7 @@ import ViewsSelector from '../../../components/views/viewsSelector/ViewsSelector
 import { Button } from 'antd';
 import FloatingExcelButton from '../../../components/FloatingExcelButton/FloatingExcelButton ';
 import dayjs from 'dayjs';
+import FilteredGradesView from '../../../components/views/filteredGrades/FilteredGradesView';
 
 function GroupsGrades() {
   const groupId = localStorage.getItem('groupsId');
@@ -20,6 +21,7 @@ function GroupsGrades() {
   const views = {
     "global": 'global',
     "workUnits": 'workUnits',
+    "filteredGrades": 'filteredGrades'
   }
 
   const [t] = useTranslation('global');
@@ -68,6 +70,8 @@ function GroupsGrades() {
         )
       case views.workUnits:
         return <UnitsCasesGradesView groupId={groupId} />
+      case views.filteredGrades:
+        return <FilteredGradesView />
     }
   }
 
@@ -86,6 +90,9 @@ function GroupsGrades() {
           </Button>
           <Button className="views-selector-item" view={views.workUnits}>
             <div className="views-selector-item-text">{t('workUnit_view')}</div>
+          </Button>
+          <Button className="views-selector-item" view={views.filteredGrades}>
+            <div className="views-selector-item-text">{"Vista filtrada"}</div>
           </Button>
         </ViewsSelector>
         {returnView()}

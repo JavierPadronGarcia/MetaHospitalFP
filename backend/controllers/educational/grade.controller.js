@@ -527,26 +527,6 @@ exports.findGradesByStudentInExercise = async (req, res) => {
 
 /*
   TODO: HACER ESTA CONSULTA
-   estructura:
-     [
-       {
-       "studentId": <int>,        // ID del estudiante
-       "studentName": <string>,    // Nombre del estudiante
-       "finalGrade": <float>,      // Nota final del estudiante
-       "caseId": <int>,            // ID del caso asociado
-       "participationId": <int>,   // ID de la participación en el caso
-       "grades": [                 // Lista de calificaciones del estudiante
-         {
-           "gradeId": <int>,        // ID de la calificación
-           "gradeCorrect": <int>,   // Indica si la calificación es correcta (1) o no (0)
-           "gradeValue": <string>,  // Valor de la calificación (como string)
-           "itemId": <int|null>,    // ID del ítem evaluado (puede ser null)
-           "itemName": <string|null>// Nombre del ítem evaluado (puede ser null)
-         }
-       ],
-       "submittedAt": <string>     // Fecha y hora de envío en formato ISO 8601
-     }
-   ]
 
    NECESARIO:
    "Acordeon" para cada ut -> {uts: [{}{}{}]}
@@ -559,7 +539,6 @@ exports.findGradesByStudentInExercise = async (req, res) => {
    y en en el frontend detectar qué se debe mostrar y qué no (saltandose x acordeones)
 
    Estructura de ejemplo:
-
   {
     uts: [
       {
@@ -763,11 +742,11 @@ exports.findAllGradesFiltered = async (req, res) => {
         });
 
         const gradeData = {
-          id: gradeId,
+          gradeId: gradeId,
           itemNumber: gradeItemId,
-          name: handWashItem['itemTranslations.name'],
-          grade: gradeGrade,
-          correct: gradeCorrect === 1
+          itemName: handWashItem['itemTranslations.name'],
+          gradeValue: gradeGrade,
+          gradeCorrect: gradeCorrect
         }
 
         if (groupedData[workUnitId].cases[caseId].participations[participationId].grades[0].itemNumber === gradeItemId) {
@@ -780,11 +759,11 @@ exports.findAllGradesFiltered = async (req, res) => {
       }
     } else if (gradeId && !gradeItemId) {
       groupedData[workUnitId].cases[caseId].participations[participationId].grades.push({
-        id: gradeId,
+        gradeId: gradeId,
         itemNumber: null,
-        name: gradeName,
-        grade: gradeGrade,
-        correct: gradeCorrect === 1
+        itemName: gradeName,
+        gradeValue: gradeGrade,
+        gradeCorrect: gradeCorrect
       });
     }
   };

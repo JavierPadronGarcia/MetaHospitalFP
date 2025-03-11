@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import ArrowToggle from "../arrowToggle/ArrowToggle";
 import "./Accordion.css";
 
-const Accordion = ({ title, children, customClass }) => {
+const Accordion = ({ title, children, customClass, defaultOpen }) => {
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen || false);
 
   return (
     <div className={`accordion-container ${customClass ?? ""}`}>

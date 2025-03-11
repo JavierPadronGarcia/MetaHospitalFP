@@ -1,6 +1,7 @@
 module.exports = app => {
   const cases = require("../../controllers/educational/case.controller");
   const auth = require('../../controllers/roleManagement/auth');
+  const { getRequestedTranslation } = require('../../middlewares/translations');
 
   var router = require("express").Router();
 
@@ -8,7 +9,7 @@ module.exports = app => {
   router.post("/", auth.isAuthenticated, cases.create);
 
   //retrieve all cases in a group
-  router.get("/byGroup/:groupId/:workUnitId", auth.isAuthenticated, cases.findAllCasesInAGroup);
+  router.get("/byGroup/:groupId/:workUnitId", auth.isAuthenticated, getRequestedTranslation, cases.findAllCasesInAGroup);
 
   //retrieve all cases
   router.get("/", auth.isAuthenticated, cases.findAll);

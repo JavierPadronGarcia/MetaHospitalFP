@@ -3,6 +3,8 @@ const Case = db.case;
 const WorkUnit = db.workUnit;
 const WorkUnitGroup = db.workUnitGroup;
 const Group = db.groups;
+const CaseTranslations = db.caseTranslation;
+const TranslationLanguage = db.translationLanguage;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -50,16 +52,28 @@ exports.findOne = (req, res) => {
 
 exports.findAllCasesInAGroup = async (req, res) => {
   const { groupId, workUnitId } = req.params;
+  const { language } = req.body;
+
   try {
-    const result = await db.sequelize.query(`
-      SELECT c.id, c.name
+    const result = await db.sequelize.query(
+      `
+      SELECT c.id, ct.name
       FROM \`${Group.tableName}\` AS g
       JOIN \`${WorkUnitGroup.tableName}\` AS wkug ON wkug.GroupID = g.id 
       JOIN \`${WorkUnit.tableName}\` AS wku ON wku.id = wkug.WorkUnitID
       JOIN \`${Case.tableName}\` AS c ON c.WorkUnitId = wku.id
-      WHERE g.id = ${groupId} and wku.id = ${workUnitId}
-      GROUP BY c.id, c.WorkUnitId, c.name;
-    `, { type: db.Sequelize.QueryTypes.SELECT });
+      JOIN \`${CaseTranslations.tableName}\` AS ct ON ct.CaseID = c.id
+      JOIN \`${TranslationLanguage.tableName}\` AS tl ON tl.id = ct.LanguageID
+      WHERE g.id = :groupId 
+        AND wku.id = :workUnitId 
+        AND tl.languageShort = :language
+      GROUP BY c.id, ct.name;
+      `,
+      {
+        replacements: { groupId, workUnitId, language },
+        type: db.Sequelize.QueryTypes.SELECT,
+      }
+    );
     return res.send(result);
   } catch (err) {
     return res.status(500).send({

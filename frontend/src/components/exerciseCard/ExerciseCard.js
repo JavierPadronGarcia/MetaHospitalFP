@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import useDayjsLocale from '../../utils/shared/getDayjsLocale';
 import { useTranslation } from 'react-i18next';
 
-const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date, customClass }) => {
+const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, date, noReorderGrades, customClass }) => {
   dayjs.locale(useDayjsLocale());
 
   const formatDate = dayjs(date).format('dddd, DD MMMM YYYY');
@@ -22,13 +22,16 @@ const ExerciseCard = ({ title, participationGrades: { finalGrade, itemGrades }, 
 
   const renderGrades = (itemGrades) => {
     if (itemGrades && itemGrades.length !== 0) {
+      let grades = itemGrades;
 
-      const handWashes = itemGrades.filter(({ itemId }) => !itemId);
-      const grades = itemGrades.filter(({ itemId }) => itemId);
+      if (noReorderGrades === undefined) {
+        grades = itemGrades.filter(({ itemId }) => itemId);
+        const handWashes = itemGrades.filter(({ itemId }) => !itemId);
 
-      if (handWashes.length === 2) {
-        grades.unshift(handWashes[1]);
-        grades.push(handWashes[0]);
+        if (handWashes.length === 2) {
+          grades.unshift(handWashes[1]);
+          grades.push(handWashes[0]);
+        }
       }
 
       return grades.map(({ gradeId, gradeCorrect, gradeValue, itemName, itemId }, index) => {
