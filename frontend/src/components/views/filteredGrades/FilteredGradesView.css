@@ -1,3 +1,6 @@
-.filtered-grades-view{
+.filtered-grades-view {
   padding-inline: 2rem;
+  height: 70%;
+  overflow-y: scroll;
+  padding-bottom: 50px;
 }
