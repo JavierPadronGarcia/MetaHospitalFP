@@ -687,6 +687,7 @@ exports.findAllGradesFiltered = async (req, res) => {
       workUnitName,
       caseId,
       caseName,
+      caseNumber,
       caseText,
       participationId,
       studentName,
@@ -714,6 +715,7 @@ exports.findAllGradesFiltered = async (req, res) => {
         id: caseId,
         name: caseName,
         caseText: caseText,
+        caseNumber: caseNumber,
         participations: {}
       };
     }

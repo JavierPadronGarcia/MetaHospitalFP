@@ -1,19 +1,22 @@
 import { Button, DatePicker, Flex, Select, Space } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { utils, writeFile } from 'xlsx';
+import casesService from "../../../services/cases.service";
 import gradeService from "../../../services/grade.service";
 import workUnitGroupsService from "../../../services/workUnitGroups.service";
-import casesService from "../../../services/cases.service";
-import { useTranslation } from "react-i18next";
 import Accordion from "../../accordion/Accordion";
 import ExerciseCard from "../../exerciseCard/ExerciseCard";
 import './FilteredGradesView.css';
+import { DownloadOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 
 const FilteredGradesView = () => {
 
   const groupId = localStorage.getItem('groupsId');
+  const groupName = localStorage.getItem('groupsName');
   const [t] = useTranslation('global');
 
   const [timestamps, setTimestamps] = useState({ startDate: null, endDate: null });
@@ -45,7 +48,6 @@ const FilteredGradesView = () => {
     async function getCasesInWorkUnit() {
       try {
         const responseCases = await casesService.getAllCasesOfTheGroup(groupId, workUnitId);
-        console.log(responseCases)
         const casesData = responseCases.map((caseData) => ({
           value: caseData.id,
           label: caseData.name
@@ -164,6 +166,42 @@ const FilteredGradesView = () => {
     );
   }
 
+  const handleExportViewToXlsx = () => {
+    const wb = utils.book_new();
+    const uts = filterResponse.uts;
+
+    for (const indexUt in uts) {
+      const ut = uts[indexUt];
+
+      const utData = [];
+
+      for (const indexCase in ut.cases) {
+        const caseItem = ut.cases[indexCase];
+
+        for (const indexParticipation in caseItem.participations) {
+          const participation = caseItem.participations[indexParticipation];
+
+          const date = dayjs(participation.submittedAt);
+
+          const participationData = {
+            [t('case_s')]: caseItem.caseNumber,
+            [t('final_grade')]: participation.finalGrade,
+            [t('submit_date')]: date.format("YYYY-MM-DD"),
+            [t('submit_time')]: date.format("HH:mm"),
+            [t('student_s')]: participation.studentName
+          };
+
+          utData.push(participationData);
+        }
+      }
+
+      const utWorkSheet = utils.json_to_sheet(utData);
+      utils.book_append_sheet(wb, utWorkSheet, ut.name);
+    }
+
+    writeFile(wb, `${t('student_grades')} - ${groupName} - ${dayjs().format("YYYY-MM-DD")}.xlsx`);
+  }
+
   return (
     <div className="filtered-grades-view">
       <div className="filtered-grades-view-filters">
@@ -197,6 +235,7 @@ const FilteredGradesView = () => {
             />
             <RangePicker showTime onChange={handleChangeRangePicker} />
             <Button type="primary" onClick={filterGrades}>Filtrar</Button>
+            <Button type="primary" onClick={handleExportViewToXlsx}><DownloadOutlined />Exportar esta vista</Button>
           </Space>
 
           <Flex vertical style={{ width: '100%' }}>
