@@ -144,5 +144,7 @@
   "workUnit_view": "Lan-unitateak",
   "view_p": "Ikusi",
   "view_s": "Ikuspegiak",
-  "error_while_generating_excel": "Errore bat gertatu da excel sortzean"
+  "error_while_generating_excel": "Errore bat gertatu da excel sortzean",
+  "export_view": "Esportatu ikuspegi hau",
+  "filter_view_content": "Iragazi edukia ikusteko"
 }

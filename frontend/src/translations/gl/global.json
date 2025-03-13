@@ -144,5 +144,7 @@
   "workUnit_view": "Unidades de traballo",
   "view_p": "Ver",
   "view_s": "Vistas",
-  "error_while_generating_excel": "Erro ao xerar Excel"
+  "error_while_generating_excel": "Erro ao xerar Excel",
+  "export_view": "Exporta esta vista",
+  "filter_view_content": "Filtra para ver o contido"
 }

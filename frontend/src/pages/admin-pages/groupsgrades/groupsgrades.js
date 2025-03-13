@@ -59,19 +59,20 @@ function GroupsGrades() {
     switch (view) {
       case views.global:
         return (
-          <div className="grades-view">
-            <GradesByCasesView
-              groupId={groupId}
-              dataFetched={() => { }}
-              prefetchedData={grades}
-              updatePrefetchedData={getAllGrades}
-            />
-          </div>
+          // <div className="grades-view">
+          //   <GradesByCasesView
+          //     groupId={groupId}
+          //     dataFetched={() => { }}
+          //     prefetchedData={grades}
+          //     updatePrefetchedData={getAllGrades}
+          //   />
+          // </div>
+          <FilteredGradesView />
         )
       case views.workUnits:
         return <UnitsCasesGradesView groupId={groupId} />
-      case views.filteredGrades:
-        return <FilteredGradesView />
+      // case views.filteredGrades:
+      //   return <FilteredGradesView />
     }
   }
 
@@ -91,9 +92,9 @@ function GroupsGrades() {
           <Button className="views-selector-item" view={views.workUnits}>
             <div className="views-selector-item-text">{t('workUnit_view')}</div>
           </Button>
-          <Button className="views-selector-item" view={views.filteredGrades}>
+          {/* <Button className="views-selector-item" view={views.filteredGrades}>
             <div className="views-selector-item-text">{"Vista filtrada"}</div>
-          </Button>
+          </Button> */}
         </ViewsSelector>
         {returnView()}
         <FloatingExcelButton forGrades={true} name={t('student_grades').replace(' ', '-') + "-" + localStorage.getItem('groupsName') + "-" + dayjs().format('YYYY-MM-DD')} />

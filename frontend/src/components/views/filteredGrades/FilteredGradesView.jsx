@@ -1,4 +1,4 @@
-import { Button, DatePicker, Flex, Select, Space } from "antd";
+import { Button, DatePicker, Flex, Select, Space, Spin } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import workUnitGroupsService from "../../../services/workUnitGroups.service";
 import Accordion from "../../accordion/Accordion";
 import ExerciseCard from "../../exerciseCard/ExerciseCard";
 import './FilteredGradesView.css';
-import { DownloadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 
@@ -27,6 +27,8 @@ const FilteredGradesView = () => {
   const [possibleCases, setPossibleCases] = useState([]);
 
   const [filterResponse, setFilterResponse] = useState({});
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function getWorkUnits() {
@@ -84,11 +86,13 @@ const FilteredGradesView = () => {
 
   const filterGrades = () => {
     const { startDate, endDate } = timestamps;
-
+    setLoading(true);
     gradeService.getFilteredGrades(workUnitId, caseId, startDate, endDate, groupId).then(data => {
       setFilterResponse(data);
     }).catch(err => {
       console.log(err);
+    }).finally(() => {
+      setLoading(false);
     });
   }
 
@@ -234,14 +238,19 @@ const FilteredGradesView = () => {
               }
             />
             <RangePicker showTime onChange={handleChangeRangePicker} />
-            <Button type="primary" onClick={filterGrades}>Filtrar</Button>
-            <Button type="primary" onClick={handleExportViewToXlsx}><DownloadOutlined />Exportar esta vista</Button>
+            <Button type="primary" onClick={filterGrades} loading={loading}>{t('filter')}</Button>
+            <Button type="dashed" onClick={handleExportViewToXlsx}><DownloadOutlined />{t('export_view')}</Button>
           </Space>
 
           <Flex vertical style={{ width: '100%' }}>
-            {filterResponse.uts
-              ? renderContent(filterResponse)
-              : <div>Filtra para ver contenido</div>
+            {loading
+              ? <Spin indicator={<LoadingOutlined spin />} size="large" />
+              : <>
+                {filterResponse.uts
+                  ? renderContent(filterResponse)
+                  : <div style={{ margin: '0 auto', paddingTop: "100px" }}>{t('filter_view_content')}</div>
+                }
+              </>
             }
           </Flex>
 
