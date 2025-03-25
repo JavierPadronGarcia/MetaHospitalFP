@@ -495,7 +495,7 @@ exports.findGradesByStudentInExercise = async (req, res) => {
             const handWashItem = await Item.findOne({
               raw: true,
               where: {
-                id: itemId
+                itemNumber: itemId + 1
               },
               include: [itemTranslationProps]
             });
